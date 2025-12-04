@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Cartão ✱ Efêmero</title>
+    <title>Nota ✱ Efêmera</title>
     
     <!-- Configurações PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -52,7 +52,7 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* --- Main Area - Foco Total no Cartão --- */
+        /* --- Main Area - Foco Total na Nota --- */
         main {
             flex: 1;
             display: flex;
@@ -71,14 +71,38 @@
             justify-content: center;
             position: relative;
             overflow: hidden; 
-            /* Importante para performance de swipe */
+            /* Desabilitado o pan-x (horizontal) para garantir o toque por zona funcione */
             touch-action: pan-y; 
         }
+        
+        /* Adicionado estilo para indicar zonas de toque */
+        #composer-wrapper:not(.empty-state-mode) .composer-container:before,
+        #composer-wrapper:not(.empty-state-mode) .composer-container:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 30%; /* Zona de toque */
+            z-index: 5;
+            cursor: pointer;
+            /* Estilo visual opcional para indicar interatividade (ajustado para ser sutil) */
+            /* transition: background-color 0.2s; */
+        }
+
+        #composer-wrapper:not(.empty-state-mode) .composer-container:before {
+            left: 0;
+            /* background: rgba(0, 0, 0, 0.01); */
+        }
+        
+        #composer-wrapper:not(.empty-state-mode) .composer-container:after {
+            right: 0;
+            /* background: rgba(0, 0, 0, 0.01); */
+        }
+
 
         .composer-container {
             width: 100%;
             max-width: 500px;
-            /* CORREÇÃO: Usando vh para altura e max-height para evitar quebra no mobile */
             height: 75vh; 
             max-height: 700px;
             padding: 25px;
@@ -91,7 +115,7 @@
             transition: background-color 0.3s;
             position: relative;
             border: 1px solid rgba(0,0,0,0.05);
-            /* Garante que o container não seja selecionável durante o swipe */
+            /* Importante para que o toque não inicie seleção de texto fora do textarea */
             user-select: none; 
             -webkit-user-select: none;
         }
@@ -131,7 +155,6 @@
         }
 
         textarea#content-input {
-            /* CORREÇÃO CHAVE: Permite que a textarea cresça e use o scroll interno */
             flex: 1; 
             width: 100%;
             border: none;
@@ -143,24 +166,30 @@
             font-weight: 600;
             resize: none;
             background: transparent;
-            overflow-y: auto; /* Scroll apenas na textarea */
+            overflow-y: auto; 
             letter-spacing: -0.02em;
             touch-action: pan-y; 
+            /* Permite seleção de texto dentro do textarea */
             user-select: text; 
             -webkit-user-select: text;
-            min-height: 100px; /* Garante que ela sempre tenha um tamanho mínimo */
+            min-height: 100px; 
+            /* Z-index baixo para permitir toques nas laterais */
+            position: relative; 
+            z-index: 1;
         }
         textarea#content-input.over-limit { color: var(--danger-color); }
         textarea#content-input::placeholder { color: rgba(0,0,0,0.2); font-weight: 400; }
 
         .composer-footer {
-            /* flex-shrink: 0; Evita que o footer encolha */
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-top: 1px solid rgba(0,0,0,0.1);
             padding-top: 15px;
+            /* Z-index alto para garantir que botões sejam clicáveis */
+            position: relative;
+            z-index: 10;
         }
 
         .char-counter-wrapper {
@@ -192,7 +221,6 @@
         }
 
         .btn-action {
-            /* ... (estilos de botão) ... */
             background: rgba(0,0,0,0.05);
             border: none;
             border-radius: 12px;
@@ -226,18 +254,17 @@
         /* --- ESTILOS DO MODAL DE CONFIRMAÇÃO --- */
         /* -------------------------------------------------- */
 
-        /* 1. Overlay: Cobre a tela inteira, posicionamento fixo e z-index alto */
         .modal-overlay {
-            display: none; /* Mantido para ser ativado pelo JS */
+            display: none; 
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* Fundo semi-transparente */
-            backdrop-filter: blur(2px); /* Efeito suave no fundo */
-            z-index: 1000; /* Garante que fique acima de tudo */
-            display: flex; /* Usar flex para centralizar o cartão */
+            background-color: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(2px); 
+            z-index: 1000; 
+            display: flex; 
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -245,19 +272,17 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* 2. Cartão do Modal: Estilo e posicionamento interno */
         .modal-card {
             background: var(--bg-main);
             padding: 25px;
             border-radius: var(--radius-lg);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-width: 90%; /* Ajuste para mobile */
+            max-width: 90%; 
             min-width: 280px;
             transition: transform 0.3s, opacity 0.3s;
             transform: scale(1);
         }
 
-        /* 3. Títulos e Mensagens */
         .confirm-title {
             margin-top: 0;
             font-size: 18px;
@@ -271,7 +296,6 @@
             margin-bottom: 25px;
         }
 
-        /* 4. Ações (Botões) */
         .modal-actions {
             display: flex;
             justify-content: flex-end;
@@ -338,7 +362,6 @@
         /* --- Mobile Responsiveness --- */
         @media (max-width: 768px) {
             .composer-container { 
-                /* Ajuste para usar menos vh no mobile para evitar conflito com teclado */
                 height: 85vh; 
                 margin: 0 10px; 
                 padding: 20px;
@@ -376,19 +399,19 @@
     
     <main>
         
-        <!-- Contêiner para permitir a animação de deslize (SWIPE) -->
+        <!-- Contêiner para permitir a navegação por toque e teclado -->
         <div id="composer-wrapper">
         
             <div id="empty-state" class="empty-state" style="display: none;">
                 <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 20px;"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-1.5"></path><path d="M9 22H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2z"></path><path d="M10 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path></svg>
-                <h2>Todos os seus pensamentos se foram.</h2>
-                <p>Crie um novo cartão.</p>
-                <small style="color: rgba(0,0,0,0.5); margin-top: 15px;">Use a seta esquerda (←) ou deslize para a direita para começar.</small>
+                <h2>Todas as suas notas se foram.</h2>
+                <p>Crie uma nova nota.</p>
+                <small style="color: rgba(0,0,0,0.5); margin-top: 15px;">Toque na lateral esquerda ou use a seta esquerda (←) para começar.</small>
             </div>
 
             <div id="composer" class="composer-container" style="display: none;">
                 <div class="note-header">
-                    <span class="brand">✱ CARTÃO EFÊMERO</span>
+                    <span class="brand">✱ NOTA EFÊMERA</span>
                     <div class="timer">
                         <small>EXPIRA EM</small>
                         <span id="expiration-timer">00:00:00</span>
@@ -499,15 +522,8 @@
         const CIRCLE_CIRCUMFERENCE = 56.54;
         const ONE_DAY = 24 * 60 * 60 * 1000;
         
-        // --- Variáveis Globais para Deslize (Swipe) ---
-        let startX = 0; 
-        let isSwiping = false; 
-        const SWIPE_THRESHOLD = 50; 
+        // --- Variáveis de Animação ---
         const SWIPE_ANIMATION_DURATION = 200; 
-
-        // NOVAS VARIÁVEIS PARA requestAnimationFrame (rAF)
-        let currentDiff = 0; 
-        let rafId = null;
 
         // --- Audio (Mantido) ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -551,18 +567,15 @@
 
         setInterval(updateTimerAndCheckExpiry, 1000); 
 
-        // Adiciona Listeners de Swipe
-        dom.composerWrapper.addEventListener('pointerdown', handleTouchStart, { passive: true });
-        dom.composerWrapper.addEventListener('pointermove', handleTouchMove, { passive: false }); 
-        dom.composerWrapper.addEventListener('pointerup', handleTouchEnd, { passive: true });
-        dom.composerWrapper.addEventListener('pointercancel', handleTouchEnd, { passive: true });
-        
+        // Adiciona Listener de Toque/Clique na área principal (Substitui Swipe)
+        dom.composerWrapper.addEventListener('pointerup', handleNavigationTap); 
+
         // --- Shortcuts e Navegação por Teclado ---
         document.addEventListener('keydown', (e) => {
             // Cmd/Ctrl + Enter: Salva e Cria Nova Nota
             if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { 
                 e.preventDefault(); 
-                if (dom.input.value.trim().length > 0) updateCurrentNote(); 
+                if (activeNoteId && dom.input.value.trim().length > 0) updateCurrentNote(); 
                 createNewNote(); 
             }
             // Cmd/Ctrl + S: Compartilhar
@@ -575,12 +588,12 @@
                 if (document.getElementById('confirm-modal').style.display === 'flex') closeConfirmModal();
                 else if (activeNoteId) deleteCurrentNote(); 
             }
-            // ArrowLeft: Nota Anterior (Deslizar para direita)
+            // ArrowLeft: Nota Anterior (Mais Nova)
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
                 navigateToNote(-1); 
             }
-            // ArrowRight: Próxima Nota (Deslizar para esquerda)
+            // ArrowRight: Próxima Nota (Mais Velha)
             if (e.key === 'ArrowRight') {
                 e.preventDefault();
                 navigateToNote(1); 
@@ -601,7 +614,7 @@
             const removedCount = initialLength - notes.length;
             if (removedCount > 0) {
                 persist();
-                ui.toast(`${removedCount} cartão(ões) expirou(ram) e foi(foram) removido(s).`, 'warning');
+                ui.toast(`${removedCount} nota(s) expirou(ram) e foi(foram) removida(s).`, 'warning');
             }
         }
 
@@ -618,7 +631,7 @@
 
             if (remaining <= 0) {
                 performDelete(activeNoteId);
-                ui.toast('O cartão atual expirou e sumiu!', 'error');
+                ui.toast('A nota atual expirou e sumiu!', 'error');
                 return;
             }
 
@@ -661,7 +674,8 @@
         function showEmptyState() {
             dom.composer.style.display = 'none';
             dom.emptyState.style.display = 'flex';
-            activeNoteId = null; // Garante que nenhum cartão esteja ativo
+            dom.composerWrapper.classList.add('empty-state-mode');
+            activeNoteId = null; // Garante que nenhuma nota esteja ativa
         }
 
         function loadNote(id) {
@@ -675,7 +689,7 @@
                 return;
             }
 
-            // Garante que o estilo do container seja aplicado
+            dom.composerWrapper.classList.remove('empty-state-mode');
             dom.composer.style.backgroundColor = NOTE_COLORS[note.colorIndex];
 
             dom.input.value = note.content;
@@ -704,7 +718,7 @@
 
         function deleteCurrentNote() {
             if (!activeNoteId) return;
-            ui.confirm('Excluir este Cartão?', 'Esta ação não pode ser desfeita. O pensamento será perdido.', 
+            ui.confirm('Excluir esta Nota?', 'Esta ação não pode ser desfeita. O pensamento será perdido.', 
                 () => performDelete(activeNoteId), 'danger', 'Excluir');
         }
 
@@ -722,7 +736,7 @@
                 }
             }
             persist();
-            ui.toast('Cartão removido', 'default');
+            ui.toast('Nota removida', 'default');
         }
 
         function persist() {
@@ -756,21 +770,21 @@
 
         // --- Compartilhamento/Exportação ---
         async function shareCurrentNote() {
-            if (!activeNoteId) return ui.toast('Nenhum cartão ativo para compartilhar.', 'warning');
+            if (!activeNoteId) return ui.toast('Nenhuma nota ativa para compartilhar.', 'warning');
             
             // Força a atualização da nota antes de compartilhar
             updateCurrentNote(); 
 
             const note = notes.find(n => n.id === activeNoteId);
-            if (!note || !note.content.trim()) return ui.toast('O cartão está vazio.', 'warning');
+            if (!note || !note.content.trim()) return ui.toast('A nota está vazia.', 'warning');
 
             const content = note.content;
 
             if (navigator.share) {
                 try {
                     await navigator.share({
-                        title: 'Cartão Efêmero',
-                        text: `[Cartão Efêmero] ✱\n\n${content}`,
+                        title: 'Nota Efêmera',
+                        text: `[Nota Efêmera] ✱\n\n${content}`,
                     });
                     ui.toast('Conteúdo compartilhado!', 'default');
                 } catch (error) {
@@ -787,7 +801,7 @@
         
         function fallbackCopy(text) {
              const tempInput = document.createElement('textarea');
-             tempInput.value = `[Cartão Efêmero] ✱\n\n${text}`;
+             tempInput.value = `[Nota Efêmera] ✱\n\n${text}`;
              document.body.appendChild(tempInput);
              tempInput.select();
              document.execCommand('copy');
@@ -796,47 +810,28 @@
         }
 
 
-        // --- Lógica de Deslize (Swipe) OTIMIZADA COM rAF ---
-
-        // Função para atualizar a transformação no ciclo de repaint do navegador
-        function rafUpdate() {
-            if (!isSwiping) {
-                rafId = null;
-                return;
-            }
-            // Usa o currentDiff atualizado pelo handleTouchMove
-            dom.composerWrapper.style.transform = `translateX(${currentDiff}px)`;
-            rafId = requestAnimationFrame(rafUpdate);
-        }
-
-        function getActiveNoteIndex() {
-            return notes.findIndex(n => n.id === activeNoteId);
-        }
-        
-        // Direction: -1 (Anterior/Esquerda), 1 (Próxima/Direita)
+        // Direction: -1 (Anterior/Esquerda - Mais Nova), 1 (Próxima/Direita - Mais Velha)
         function navigateToNote(direction) {
             const currentIndex = getActiveNoteIndex();
             
-            // Se estiver no estado vazio e tentar navegar para o mais novo
+            // Cria nova nota se estiver no estado vazio e tentar navegar para o mais novo
             if (currentIndex === -1 && direction === -1) {
-                 // Cria uma nova nota se estiver no estado vazio e tentar navegar para o mais novo
                 createNewNote();
                 return;
             }
             
-            if (currentIndex === -1) return; // Nenhuma nota ativa e não é tentativa de criar nova
+            if (currentIndex === -1) return; 
 
             let newIndex = currentIndex + direction; 
 
-            // Se tentar navegar para o mais novo (índice 0), e estiver no índice 0
+            // Se tentar navegar para a nota mais nova, e já estiver na primeira (índice 0)
             if (newIndex < 0) { 
-                // Cria uma nova nota quando desliza para a direita/seta esquerda na primeira nota
-                ui.toast('Criando novo cartão...', 'default');
+                ui.toast('Criando nova nota...', 'default');
                 createNewNote(); 
                 return;
             }
             if (newIndex >= notes.length) { 
-                ui.toast('Fim dos cartões.', 'default');
+                ui.toast('Fim das notas.', 'default');
                 return;
             }
             
@@ -854,74 +849,34 @@
                 dom.composerWrapper.style.transform = 'translateX(0)';
             }, SWIPE_ANIMATION_DURATION);
         }
-
-        function handleTouchStart(e) {
-            // Ignora se o toque começar em um campo de texto ou se o modal estiver aberto
-            if (e.target.tagName === 'TEXTAREA' || e.target.closest('#confirm-modal')) return; 
-            if (e.pointerType === 'mouse' && e.button !== 0) return; 
-
-            // Se for um toque na tela, use touches[0].clientX
-            startX = e.touches ? e.touches[0].clientX : e.clientX;
-            isSwiping = true;
-            dom.composerWrapper.style.transition = 'none';
-
-            // Inicia o loop do rAF se não estiver rodando
-            if (!rafId) {
-                rafUpdate();
-            }
-        }
-
-        function handleTouchMove(e) {
-            if (!isSwiping) return;
+        
+        // --- Lógica de Navegação por Toque (Zona de Clique) ---
+        function handleNavigationTap(e) {
+            // 1. Ignora se o modal estiver aberto
+            if (document.getElementById('confirm-modal').style.display === 'flex') return;
             
-            const currentX = e.touches ? e.touches[0].clientX : e.clientX;
-            currentDiff = currentX - startX; // Apenas atualiza o estado
+            // 2. Ignora se o toque ocorreu em um elemento interativo
+            if (e.target.tagName === 'TEXTAREA' || e.target.closest('.composer-footer')) return; 
+
+            // 3. Obtém as coordenadas relativas ao wrapper
+            const rect = dom.composerWrapper.getBoundingClientRect();
+            // Pega a posição X do toque/clique (compatível com mouse e touch)
+            const x = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : null); 
             
-            // Previne o scroll vertical do body/iframe durante o swipe horizontal
-            if (e.cancelable) e.preventDefault(); 
+            if (x === null) return;
+
+            const relativeX = x - rect.left;
+            const width = rect.width;
             
-            // O transform será aplicado de forma suave pelo rafUpdate
-        }
+            // Define o tamanho das zonas de toque (30% de cada lado)
+            const zoneThreshold = width * 0.3;
 
-        function handleTouchEnd(e) {
-            if (!isSwiping) return;
-
-            // Para o loop do rAF imediatamente no final do toque
-            cancelAnimationFrame(rafId);
-            rafId = null;
-
-            const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX; 
-            const diff = endX - startX;
-            isSwiping = false;
-            
-            // Verifica se está no empty state, e se sim, cria nota apenas se deslizar para a direita
-            if (!activeNoteId) {
-                if (diff > SWIPE_THRESHOLD) {
-                    createNewNote();
-                    // Limpa a translação após a criação
-                    dom.composerWrapper.style.transition = 'transform 0.3s ease-out';
-                    dom.composerWrapper.style.transform = 'translateX(0)';
-                } else {
-                    // Volta à posição original
-                    dom.composerWrapper.style.transition = 'transform 0.3s ease-out';
-                    dom.composerWrapper.style.transform = 'translateX(0)';
-                }
-                return;
-            }
-
-            // Lógica de navegação
-            if (Math.abs(diff) > SWIPE_THRESHOLD) {
-                if (diff > 0) { 
-                    // Deslizar para a direita -> Nota Anterior (direction: -1)
-                    navigateToNote(-1);
-                } else { 
-                    // Deslizar para a esquerda -> Próxima Nota (direction: 1)
-                    navigateToNote(1);
-                }
-            } else {
-                // Volta à posição original se o deslize foi muito curto
-                dom.composerWrapper.style.transition = 'transform 0.3s ease-out';
-                dom.composerWrapper.style.transform = 'translateX(0)';
+            if (relativeX < zoneThreshold) {
+                // Toque no lado esquerdo (Nota Anterior/Mais Nova)
+                navigateToNote(-1);
+            } else if (relativeX > width - zoneThreshold) {
+                // Toque no lado direito (Próxima Nota/Mais Velha)
+                navigateToNote(1);
             }
         }
     </script>
