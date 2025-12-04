@@ -45,21 +45,18 @@
             background-color: var(--bg-main);
             color: var(--text-primary);
             height: 100vh;
-            /* Garante que o body não tenha scroll */
             overflow: hidden; 
             display: flex;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* --- Main Area - Foco Total na Nota --- */
         main {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden; 
-            /* Fixa a altura do main para o espaço restante após as insets */
             height: 100%; 
         }
 
@@ -71,34 +68,27 @@
             justify-content: center;
             position: relative;
             overflow: hidden; 
-            /* Desabilitado o pan-x (horizontal) para garantir o toque por zona funcione */
             touch-action: pan-y; 
         }
         
-        /* Adicionado estilo para indicar zonas de toque */
         #composer-wrapper:not(.empty-state-mode) .composer-container:before,
         #composer-wrapper:not(.empty-state-mode) .composer-container:after {
             content: '';
             position: absolute;
             top: 0;
             bottom: 0;
-            width: 30%; /* Zona de toque */
+            width: 30%;
             z-index: 5;
             cursor: pointer;
-            /* Estilo visual opcional para indicar interatividade (ajustado para ser sutil) */
-            /* transition: background-color 0.2s; */
         }
 
         #composer-wrapper:not(.empty-state-mode) .composer-container:before {
             left: 0;
-            /* background: rgba(0, 0, 0, 0.01); */
         }
         
         #composer-wrapper:not(.empty-state-mode) .composer-container:after {
             right: 0;
-            /* background: rgba(0, 0, 0, 0.01); */
         }
-
 
         .composer-container {
             width: 100%;
@@ -115,7 +105,6 @@
             transition: background-color 0.3s;
             position: relative;
             border: 1px solid rgba(0,0,0,0.05);
-            /* Importante para que o toque não inicie seleção de texto fora do textarea */
             user-select: none; 
             -webkit-user-select: none;
         }
@@ -169,11 +158,9 @@
             overflow-y: auto; 
             letter-spacing: -0.02em;
             touch-action: pan-y; 
-            /* Permite seleção de texto dentro do textarea */
             user-select: text; 
             -webkit-user-select: text;
             min-height: 100px; 
-            /* Z-index baixo para permitir toques nas laterais */
             position: relative; 
             z-index: 1;
         }
@@ -187,7 +174,6 @@
             justify-content: space-between;
             border-top: 1px solid rgba(0,0,0,0.1);
             padding-top: 15px;
-            /* Z-index alto para garantir que botões sejam clicáveis */
             position: relative;
             z-index: 10;
         }
@@ -250,10 +236,6 @@
             align-items: center;
         }
 
-        /* -------------------------------------------------- */
-        /* --- ESTILOS DO MODAL DE CONFIRMAÇÃO --- */
-        /* -------------------------------------------------- */
-
         .modal-overlay {
             display: none; 
             position: fixed;
@@ -264,7 +246,6 @@
             background-color: rgba(0, 0, 0, 0.4); 
             backdrop-filter: blur(2px); 
             z-index: 1000; 
-            display: flex; 
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -325,7 +306,6 @@
             background: #e6362b; 
         }
 
-        /* --- Estilos do Toast (Otimizados) --- */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -359,7 +339,6 @@
         .toast.error { background: var(--danger-color); }
         .toast.warning { background: orange; }
 
-        /* --- Mobile Responsiveness --- */
         @media (max-width: 768px) {
             .composer-container { 
                 height: 85vh; 
@@ -398,8 +377,6 @@
     <div class="toast-container" id="toast-container"></div>
     
     <main>
-        
-        <!-- Contêiner para permitir a navegação por toque e teclado -->
         <div id="composer-wrapper">
         
             <div id="empty-state" class="empty-state" style="display: none;">
@@ -430,12 +407,10 @@
                     </div>
                     
                     <div class="actions">
-                        <!-- Botão de Compartilhar/Salvar -->
                         <button class="btn-action primary" onclick="shareCurrentNote()" title="Compartilhar / Salvar Conteúdo (Cmd/Ctrl + S)">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
                             Compartilhar
                         </button>
-                        <!-- Botão de Excluir -->
                         <button class="btn-action danger" onclick="deleteCurrentNote()" title="Excluir (Esc)">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
                         </button>
@@ -446,7 +421,6 @@
         </div>
     </main>
 
-    <!-- Modal Universal de Confirmação -->
     <div id="confirm-modal" class="modal-overlay" style="display: none;">
         <div class="modal-card">
             <h3 class="confirm-title" id="confirm-title">Título</h3>
@@ -501,12 +475,8 @@
 
         // --- Cores das Notas ---
         const NOTE_COLORS = [
-            '#ffecb3', // Amarelo Pastel
-            '#ffccbc', // Pêssego
-            '#c8e6c9', // Verde Menta
-            '#bbdefb', // Azul Claro
-            '#f8bbd0', // Rosa Suave
-            '#e1bee7', // Lavanda
+            '#ffecb3', '#ffccbc', '#c8e6c9', 
+            '#bbdefb', '#f8bbd0', '#e1bee7'
         ];
         
         // --- Estado & Dados ---
@@ -521,11 +491,9 @@
         const MAX_CHARS = 140;
         const CIRCLE_CIRCUMFERENCE = 56.54;
         const ONE_DAY = 24 * 60 * 60 * 1000;
-        
-        // --- Variáveis de Animação ---
         const SWIPE_ANIMATION_DURATION = 200; 
 
-        // --- Audio (Mantido) ---
+        // --- Audio ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const sfx = {
             click: () => playTone('triangle', 800, 300, 0.05, 0.05),
@@ -566,34 +534,27 @@
         else showEmptyState();
 
         setInterval(updateTimerAndCheckExpiry, 1000); 
-
-        // Adiciona Listener de Toque/Clique na área principal (Substitui Swipe)
         dom.composerWrapper.addEventListener('pointerup', handleNavigationTap); 
 
-        // --- Shortcuts e Navegação por Teclado ---
+        // --- Shortcuts ---
         document.addEventListener('keydown', (e) => {
-            // Cmd/Ctrl + Enter: Salva e Cria Nova Nota
             if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { 
                 e.preventDefault(); 
                 if (activeNoteId && dom.input.value.trim().length > 0) updateCurrentNote(); 
                 createNewNote(); 
             }
-            // Cmd/Ctrl + S: Compartilhar
             if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') { 
                 e.preventDefault(); 
                 shareCurrentNote(); 
             }
-            // Esc: Excluir/Fechar Modal
             if (e.key === 'Escape') {
                 if (document.getElementById('confirm-modal').style.display === 'flex') closeConfirmModal();
                 else if (activeNoteId) deleteCurrentNote(); 
             }
-            // ArrowLeft: Nota Anterior (Mais Nova)
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
                 navigateToNote(-1); 
             }
-            // ArrowRight: Próxima Nota (Mais Velha)
             if (e.key === 'ArrowRight') {
                 e.preventDefault();
                 navigateToNote(1); 
@@ -642,7 +603,8 @@
             dom.expirationTimer.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             
             const FADE_THRESHOLD = 3 * 60 * 60 * 1000;
-            if (remaining < FADE_THRESHOLD) {
+            if (remaining < FADE_THRESHOLD)
+			if (remaining < FADE_THRESHOLD) {
                 dom.composer.classList.add('faded-out');
             } else {
                 dom.composer.classList.remove('faded-out');
@@ -656,26 +618,26 @@
                 updatedAt: new Date().toISOString(),
                 colorIndex: Math.floor(Math.random() * NOTE_COLORS.length)
             };
-            // Adiciona como o primeiro elemento (mais novo)
             notes.unshift(newNote); 
             persist();
             return newNote;
         }
 
         function createNewNote() {
-            // Garante que o conteúdo atual seja salvo antes de criar uma nova
-            if (activeNoteId && dom.input.value.trim().length > 0) updateCurrentNote(); 
+            if (activeNoteId) updateCurrentNote();
             
             const note = createInternalNote("");
             sfx.success();
             loadNote(note.id);
+            ui.toast('Nova nota criada', 'default');
         }
         
         function showEmptyState() {
+            activeNoteId = null;
             dom.composer.style.display = 'none';
             dom.emptyState.style.display = 'flex';
             dom.composerWrapper.classList.add('empty-state-mode');
-            activeNoteId = null; // Garante que nenhuma nota esteja ativa
+            dom.input.value = '';
         }
 
         function loadNote(id) {
@@ -700,7 +662,6 @@
             
             updateTimerAndCheckExpiry();
             
-            // Reajusta a altura da textarea após carregar o conteúdo (crucial para o layout flex)
             dom.input.style.height = 'auto';
             dom.input.style.height = dom.input.scrollHeight + 'px';
         }
@@ -710,7 +671,6 @@
             const note = notes.find(n => n.id === activeNoteId);
             if (note) {
                 note.content = dom.input.value;
-                // Atualiza a hora da última alteração para manter a ordem
                 note.updatedAt = new Date().toISOString(); 
                 persist();
             }
@@ -728,7 +688,6 @@
             
             if(activeNoteId === id) {
                 activeNoteId = null;
-                // Tenta carregar a primeira nota restante
                 if (notes.length > 0) {
                     loadNote(notes[0].id);
                 } else {
@@ -740,7 +699,6 @@
         }
 
         function persist() {
-            // Classifica sempre pelo mais novo primeiro
             notes.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
             localStorage.setItem('ephemeral-notes-base', JSON.stringify(notes));
         }
@@ -756,23 +714,20 @@
             dom.charCount.classList.toggle('warning', isOverLimit);
             dom.input.classList.toggle('over-limit', isOverLimit);
 
-            // Ajuste dinâmico de altura
             dom.input.style.height = 'auto';
             dom.input.style.height = dom.input.scrollHeight + 'px';
         }
 
         dom.input.addEventListener('input', () => { 
-            // Não toca som se estiver vazio e for o primeiro caractere
             if (dom.input.value.length > 0) sfx.click(); 
             updateCharCount(); 
             updateCurrentNote(); 
         });
 
-        // --- Compartilhamento/Exportação ---
+        // --- Compartilhamento ---
         async function shareCurrentNote() {
             if (!activeNoteId) return ui.toast('Nenhuma nota ativa para compartilhar.', 'warning');
             
-            // Força a atualização da nota antes de compartilhar
             updateCurrentNote(); 
 
             const note = notes.find(n => n.id === activeNoteId);
@@ -788,9 +743,7 @@
                     });
                     ui.toast('Conteúdo compartilhado!', 'default');
                 } catch (error) {
-                    if (error.name === 'AbortError') {
-                        // Cancelado pelo usuário
-                    } else {
+                    if (error.name !== 'AbortError') {
                         fallbackCopy(content);
                     }
                 }
@@ -809,37 +762,36 @@
              ui.toast('Conteúdo copiado para a área de transferência!', 'success');
         }
 
+        // --- Navegação ---
+        function getActiveNoteIndex() {
+            if (!activeNoteId) return -1;
+            return notes.findIndex(n => n.id === activeNoteId);
+        }
 
-        // Direction: -1 (Anterior/Esquerda - Mais Nova), 1 (Próxima/Direita - Mais Velha)
         function navigateToNote(direction) {
             const currentIndex = getActiveNoteIndex();
             
-            // Cria nova nota se estiver no estado vazio e tentar navegar para o mais novo
-            if (currentIndex === -1 && direction === -1) {
+            if (currentIndex === -1) {
+                if (direction === -1) createNewNote();
+                return;
+            }
+
+            let newIndex = currentIndex + direction;
+
+            if (newIndex < 0) {
+                updateCurrentNote();
                 createNewNote();
                 return;
             }
             
-            if (currentIndex === -1) return; 
-
-            let newIndex = currentIndex + direction; 
-
-            // Se tentar navegar para a nota mais nova, e já estiver na primeira (índice 0)
-            if (newIndex < 0) { 
-                ui.toast('Criando nova nota...', 'default');
-                createNewNote(); 
-                return;
-            }
-            if (newIndex >= notes.length) { 
-                ui.toast('Fim das notas.', 'default');
+            if (newIndex >= notes.length) {
+                ui.toast('Última nota', 'default');
                 return;
             }
             
-            // Salva o conteúdo atual antes de mudar
             updateCurrentNote();
 
-            // Lógica de Animação
-            const distance = direction === 1 ? '-100vw' : '100vw'; 
+            const distance = direction === 1 ? '-100vw' : '100vw';
             dom.composerWrapper.style.transition = `transform ${SWIPE_ANIMATION_DURATION}ms ease-out`;
             dom.composerWrapper.style.transform = `translateX(${distance})`;
 
@@ -850,36 +802,25 @@
             }, SWIPE_ANIMATION_DURATION);
         }
         
-        // --- Lógica de Navegação por Toque (Zona de Clique) ---
         function handleNavigationTap(e) {
-            // 1. Ignora se o modal estiver aberto
             if (document.getElementById('confirm-modal').style.display === 'flex') return;
-            
-            // 2. Ignora se o toque ocorreu em um elemento interativo
             if (e.target.tagName === 'TEXTAREA' || e.target.closest('.composer-footer')) return; 
 
-            // 3. Obtém as coordenadas relativas ao wrapper
             const rect = dom.composerWrapper.getBoundingClientRect();
-            // Pega a posição X do toque/clique (compatível com mouse e touch)
             const x = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : null); 
             
             if (x === null) return;
 
             const relativeX = x - rect.left;
             const width = rect.width;
-            
-            // Define o tamanho das zonas de toque (30% de cada lado)
             const zoneThreshold = width * 0.3;
 
             if (relativeX < zoneThreshold) {
-                // Toque no lado esquerdo (Nota Anterior/Mais Nova)
                 navigateToNote(-1);
             } else if (relativeX > width - zoneThreshold) {
-                // Toque no lado direito (Próxima Nota/Mais Velha)
                 navigateToNote(1);
             }
         }
     </script>
 </body>
 </html>
-
