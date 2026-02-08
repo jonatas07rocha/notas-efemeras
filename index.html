@@ -41,16 +41,16 @@
                 <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-8 h-8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 </div>
-                <h4 class="text-xl font-black mb-2 italic uppercase tracking-tighter">Tem certeza?</h4>
-                <p class="text-sm text-slate-400 mb-8 italic">Essa ação é definitiva e não pode ser desfeita.</p>
+                <h4 class="text-xl font-black mb-2 italic uppercase tracking-tighter">Confirmar Ação?</h4>
+                <p class="text-sm text-slate-400 mb-8 italic">Essa ação é definitiva e apagará os registros.</p>
                 <div class="flex gap-3">
-                    <button id="modal-cancel" class="flex-1 py-4 bg-slate-50 text-slate-400 rounded-2xl font-black uppercase text-[10px]">Cancelar</button>
-                    <button id="modal-confirm" class="flex-1 py-4 bg-rose-500 text-white rounded-2xl font-black uppercase text-[10px]">Confirmar</button>
+                    <button id="modal-cancel" class="flex-1 py-4 bg-slate-50 text-slate-400 rounded-2xl font-black uppercase text-[10px]">Não</button>
+                    <button id="modal-confirm" class="flex-1 py-4 bg-rose-500 text-white rounded-2xl font-black uppercase text-[10px]">Sim</button>
                 </div>
             </div>
         </div>
 
-        <!-- Conteúdo Principal Scrollável -->
+        <!-- Conteúdo Principal -->
         <main id="main-content" class="flex-1 overflow-y-auto px-6 md:px-12 pt-12 pb-32 no-scrollbar">
             
             <!-- Dashboard -->
@@ -92,17 +92,19 @@
                             </div>
                         </div>
 
-                        <!-- Input Inteligente (Lote Melhorado) -->
+                        <!-- Input Inteligente -->
                         <form id="tx-form" class="relative group">
                             <div class="absolute top-6 left-6 flex items-start pointer-events-none text-indigo-300">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M12 5v14M5 12h14"/></svg>
                             </div>
-                            <textarea id="tx-input" rows="1" placeholder="Ex: 50 Jantar ou cole sua lista aqui..." class="w-full bg-slate-50 border-none rounded-[2rem] py-6 pl-14 pr-16 text-sm font-bold text-slate-900 focus:ring-4 ring-indigo-50 transition-all shadow-inner outline-none no-scrollbar resize-none"></textarea>
+                            <textarea id="tx-input" rows="1" placeholder="Use + para Receita, * para Guardar ou nada para Gasto..." class="w-full bg-slate-50 border-none rounded-[2rem] py-6 pl-14 pr-16 text-sm font-bold text-slate-900 focus:ring-4 ring-indigo-50 transition-all shadow-inner outline-none no-scrollbar resize-none"></textarea>
                             <button type="submit" class="absolute right-3 bottom-3 aspect-square bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg active:scale-95 transition-all w-12 h-12">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </button>
                         </form>
-                        <p class="text-[9px] text-slate-300 uppercase font-black px-6 tracking-widest italic">💡 Agora você pode colar listas inteiras de uma vez.</p>
+                        <p class="text-[9px] text-slate-300 uppercase font-black px-6 tracking-widest italic text-center">
+                            + Receita | Sem símbolo: Despesa | * Investimento
+                        </p>
                     </div>
 
                     <!-- Saúde Financeira -->
@@ -115,10 +117,10 @@
                 </div>
             </section>
 
-            <!-- Histórico -->
+            <!-- Extrato -->
             <section id="tab-history" class="tab-content animate-fade">
                 <header class="flex justify-between items-center mb-10 px-1">
-                    <h3 class="text-xl md:text-2xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">Minha <br/> Linha do Tempo</h3>
+                    <h3 class="text-xl md:text-2xl font-black text-slate-900 uppercase italic tracking-tighter leading-none italic">Meu <br/> Extrato</h3>
                     <div class="bg-slate-100 p-4 rounded-3xl text-slate-400">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5m4-1v5l4 2"/></svg>
                     </div>
@@ -130,23 +132,23 @@
 
             <!-- Busca -->
             <section id="tab-search" class="tab-content animate-fade space-y-8">
-                <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">Pesquisar</h3>
+                <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">Buscar</h3>
                 <input type="text" id="search-input" placeholder="O que você procura?" class="w-full bg-slate-50 border-none rounded-[2rem] py-8 px-8 text-lg font-bold shadow-inner text-indigo-600 italic outline-none" />
                 <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </section>
 
             <!-- Ajustes -->
             <section id="tab-settings" class="tab-content animate-fade space-y-12 max-w-2xl mx-auto">
-                <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">Engrenagens</h3>
+                <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">Configurações</h3>
                 <div class="space-y-6">
                     <button id="export-btn" class="w-full flex items-center justify-between p-8 bg-white border border-slate-50 rounded-[3rem] shadow-xl shadow-slate-100/20 hover:bg-slate-50 transition-all text-left group">
                         <div class="flex items-center gap-6">
                             <div class="w-16 h-16 bg-indigo-50 rounded-[2rem] flex items-center justify-center text-indigo-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
-                            <div><p class="text-xs font-black uppercase text-slate-900 tracking-widest italic">Extrair Planilha</p><p class="text-[9px] font-bold text-slate-300 uppercase italic mt-1">Backup Completo .CSV</p></div>
+                            <div><p class="text-xs font-black uppercase text-slate-900 tracking-widest italic">Exportar Dados</p><p class="text-[9px] font-bold text-slate-300 uppercase italic mt-1">Gerar Planilha .CSV</p></div>
                         </div>
                     </button>
                     <button id="reset-btn" class="w-full py-8 text-rose-300 text-[10px] font-black uppercase tracking-[0.3em] border-2 border-dashed border-rose-50 rounded-[3rem] hover:text-rose-600 transition-all italic underline underline-offset-8">
-                        Limpar Dados Locais
+                        Limpar Todos os Dados
                     </button>
                 </div>
             </section>
@@ -186,7 +188,7 @@
     <div id="edit-modal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[200] flex items-end md:items-center justify-center p-0 md:p-8 hidden">
         <div class="bg-white w-full max-w-2xl rounded-t-[3rem] md:rounded-[4rem] p-8 md:p-12 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center mb-10">
-                <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 italic">Mover Compartimento</h4>
+                <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 italic">Mudar Compartimento</h4>
                 <button id="close-edit" class="p-3 hover:bg-slate-50 rounded-2xl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
             </div>
             <div id="category-selector" class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-12"></div>
@@ -195,7 +197,7 @@
     </div>
 
     <script>
-        // --- Configuração ---
+        // --- Estado e Configuração ---
         const categories = [
             { id: 'c_rec_g', name: 'Geral', type: 'receita', color: '#10b981' },
             { id: 'c_rec_s', name: 'Salário', type: 'receita', color: '#059669' },
@@ -213,7 +215,7 @@
         let transactions = JSON.parse(localStorage.getItem('rico_vanilla_tx')) || [];
         let currentEditingTxId = null;
 
-        // --- Seletores ---
+        // --- Seletores DOM ---
         const tabBtns = document.querySelectorAll('.nav-btn');
         const tabContents = document.querySelectorAll('.tab-content');
         const txForm = document.getElementById('tx-form');
@@ -230,7 +232,7 @@
         const confirmModal = document.getElementById('confirm-modal');
         const categorySelector = document.getElementById('category-selector');
 
-        // --- Navegação ---
+        // --- Lógica de Navegação ---
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const tabId = btn.getAttribute('data-tab');
@@ -241,7 +243,7 @@
             });
         });
 
-        // --- Core ---
+        // --- Core Functions ---
         function save() {
             localStorage.setItem('rico_vanilla_tx', JSON.stringify(transactions));
             updateUI();
@@ -269,14 +271,12 @@
             const invested = currentMonth.filter(t => t.type === 'investimento').reduce((a, b) => a + b.amount, 0);
             const balance = income - expenses - invested;
 
-            // Dash
             balanceDisplay.innerHTML = `<span class="text-xl font-bold opacity-30 mr-1 italic">R$</span>${balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
             balanceDisplay.className = `text-4xl md:text-5xl font-extralight tracking-tighter mb-10 text-center md:text-left ${balance < 0 ? 'text-rose-400' : 'text-white'}`;
             incomeDisplay.innerText = `R$${income.toFixed(0)}`;
             expenseDisplay.innerText = `R$${expenses.toFixed(0)}`;
             investedDisplay.innerText = `R$${invested.toFixed(0)}`;
 
-            // Stats
             statsContainer.innerHTML = '';
             categories.filter(c => c.target).forEach(cat => {
                 const total = currentMonth.filter(t => t.categoryId === cat.id).reduce((a, b) => a + b.amount, 0);
@@ -300,117 +300,124 @@
                 `;
             });
 
-            // Histórico
             historyList.innerHTML = '';
             currentMonth.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
                 const cat = categories.find(c => c.id === t.categoryId);
                 historyList.innerHTML += `
                     <div onclick="openEdit('${t.id}')" class="flex items-center justify-between p-6 bg-white rounded-[2.5rem] border border-slate-50 hover:shadow-2xl transition-all cursor-pointer group">
                         <div class="flex items-center gap-5">
-                            <div class="w-14 h-14 rounded-3xl flex items-center justify-center text-white shadow-xl" style="background-color: ${cat.color}">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5">
+                            <div class="w-14 h-14 rounded-3xl flex items-center justify-center text-white shadow-xl shadow-indigo-100/20" style="background-color: ${cat.color}">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6">
                                     ${t.type === 'receita' ? '<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 7v12a2 2 0 0 0 2 2h16v-5"/>' : 
                                       t.type === 'investimento' ? '<path d="m22 7-8.5 8.5-5-5L2 17M16 7h6v6"/>' : 
                                       '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4ZM3 6h18M16 10a4 4 0 0 1-8 0"/>'}
                                 </svg>
                             </div>
-                            <div>
-                                <p class="text-sm font-bold text-slate-900 leading-tight">${t.description}</p>
+                            <div class="max-w-[150px] md:max-w-[250px]">
+                                <p class="text-sm font-bold text-slate-900 leading-tight truncate">${t.description}</p>
                                 <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1 italic">${cat.name}</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-sm font-black italic ${t.type === 'receita' ? 'text-emerald-500' : t.type === 'investimento' ? 'text-cyan-600' : 'text-slate-900'}">
-                                R$ ${t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                            </p>
-                        </div>
+                        <p class="text-sm font-black italic ${t.type === 'receita' ? 'text-emerald-500' : t.type === 'investimento' ? 'text-cyan-600' : 'text-slate-900'}">
+                            R$ ${t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </p>
                     </div>
                 `;
             });
         }
 
-        // --- Scanner de Lote ---
+        // --- Motor de Entrada Estrito (Prefixos) ---
         function parseValue(str) {
             const match = str.match(/(\d+(?:[.,]\d+)?)/);
             return match ? parseFloat(match[0].replace(',', '.')) : 0;
         }
 
-        function detectType(text) {
-            const lower = text.toLowerCase();
-            if (lower.includes('salário') || lower.includes('renda') || lower.includes('ganhei')) return 'receita';
-            if (lower.includes('investimento') || lower.includes('guardei') || lower.includes('aporte')) return 'investimento';
-            return 'despesa';
+        function createItem(rawLine) {
+            let type = 'despesa'; // Padrão
+            let text = rawLine.trim();
+            if (!text) return null;
+
+            // Lógica Estrita de Prefixos solicitada
+            if (text.startsWith('+')) { 
+                type = 'receita'; 
+                text = text.slice(1); 
+            }
+            else if (text.startsWith('*')) { 
+                type = 'investimento'; 
+                text = text.slice(1); 
+            }
+            // Sem nada -> despesa (valor padrão já é despesa)
+
+            const amount = parseValue(text);
+            const description = text.replace(/(\d+(?:[.,]\d+)?)/, '').replace(/[+*]/g, '').trim() || 'Sem nome';
+            if (amount <= 0) return null;
+
+            const targetCategory = categories.find(c => c.type === type && c.name === 'Geral');
+
+            return {
+                id: (Date.now() + Math.random()).toString(),
+                amount, 
+                description, 
+                type,
+                date: new Date().toISOString(),
+                categoryId: targetCategory ? targetCategory.id : categories[0].id
+            };
         }
 
         txForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const rawText = txInput.value.trim();
-            if (!rawText) return;
+            const fullContent = txInput.value.trim();
+            if (!fullContent) return;
 
-            // Divide em linhas e limpa o excesso de espaços
-            const lines = rawText.split('\n').map(l => l.trim()).filter(l => l !== "");
-            let items = [];
-            
+            const lines = fullContent.split(/\r\n|\r|\n/).map(l => l.trim()).filter(l => l !== "");
+            let itemsFound = [];
+
             for (let i = 0; i < lines.length; i++) {
                 const current = lines[i];
-                const amountMatch = current.match(/\d/); // Contém algum número?
+                const hasNum = /\d/.test(current);
+                const hasTxt = /[a-zA-ZÀ-ÿ]/.test(current);
 
-                // Cenário 1: "Descrição" e "Valor" estão na mesma linha
-                if (amountMatch && current.length > amountMatch.index + 1 && /[a-zA-ZÀ-ÿ]/.test(current)) {
-                    items.push(createItem(current));
+                if (hasNum && hasTxt) {
+                    const it = createItem(current);
+                    if (it) itemsFound.push(it);
                 } 
-                // Cenário 2: Apenas texto, olhar a próxima linha para o valor
-                else if (!amountMatch && i + 1 < lines.length) {
+                else if (hasTxt && !hasNum && i + 1 < lines.length) {
                     const next = lines[i + 1];
-                    const nextAmount = parseValue(next);
-                    if (nextAmount > 0) {
-                        items.push(createItem(`${current} ${next}`));
-                        i++; // Consome a próxima linha
+                    if (/\d/.test(next)) {
+                        const it = createItem(`${current} ${next}`);
+                        if (it) {
+                            itemsFound.push(it);
+                            i++;
+                        }
+                    } else {
+                        const it = createItem(`${current} 0`);
+                        if (it) itemsFound.push(it);
                     }
                 }
-                // Cenário 3: Apenas um número solto
-                else if (amountMatch) {
-                    items.push(createItem(`Item avulso ${current}`));
+                else if (hasNum && !hasTxt) {
+                    const it = createItem(`Item Avulso ${current}`);
+                    if (it) itemsFound.push(it);
                 }
             }
 
-            if (items.length > 0) {
-                transactions = [...transactions, ...items.filter(it => it !== null)];
+            if (itemsFound.length > 0) {
+                transactions = [...transactions, ...itemsFound];
                 txInput.value = '';
                 txInput.style.height = 'auto';
-                showFeedback(`${items.length} itens capturados!`);
+                showFeedback(`${itemsFound.length} lançamentos feitos!`);
                 save();
             } else {
-                showFeedback("Não identifiquei valores", "error");
+                showFeedback("Formato não reconhecido", "error");
             }
         });
 
-        function createItem(raw) {
-            let type = 'despesa';
-            let text = raw;
-            if (raw.startsWith('+')) { type = 'receita'; text = raw.slice(1); }
-            else if (raw.startsWith('*')) { type = 'investimento'; text = raw.slice(1); }
-            else { type = detectType(raw); }
-
-            const amount = parseValue(text);
-            const description = text.replace(/(\d+(?:[.,]\d+)?)/, '').trim() || 'Sem nome';
-            if (amount <= 0) return null;
-
-            return {
-                id: (Date.now() + Math.random()).toString(),
-                amount, description, type,
-                date: new Date().toISOString(),
-                categoryId: categories.find(c => c.type === type && c.name === 'Geral').id
-            };
-        }
-
-        // --- Busca e Outros ---
+        // --- Outros ---
         searchInput.addEventListener('input', () => {
             const q = searchInput.value.toLowerCase();
             searchResults.innerHTML = '';
             if (!q) return;
             transactions.filter(t => t.description.toLowerCase().includes(q)).forEach(t => {
-                searchResults.innerHTML += `<div class="p-6 bg-white border border-slate-50 rounded-[2.5rem] flex justify-between"><span class="font-bold">${t.description}</span><span class="italic">R$ ${t.amount.toFixed(0)}</span></div>`;
+                searchResults.innerHTML += `<div class="p-6 bg-white border border-slate-50 rounded-[2rem] flex justify-between items-center shadow-sm"><span class="font-bold text-slate-900">${t.description}</span><span class="italic font-black">R$ ${t.amount.toFixed(0)}</span></div>`;
             });
         });
 
@@ -419,7 +426,7 @@
             const tx = transactions.find(t => t.id === id);
             categorySelector.innerHTML = '';
             categories.filter(c => c.type === tx.type).forEach(cat => {
-                categorySelector.innerHTML += `<button onclick="changeCat('${cat.id}')" class="p-5 rounded-3xl border-2 flex flex-col items-center gap-3 ${tx.categoryId === cat.id ? 'border-indigo-600 bg-indigo-50 shadow-inner' : 'border-slate-50'}"><div class="w-4 h-4 rounded-full" style="background-color: ${cat.color}"></div><span class="text-[9px] font-black uppercase">${cat.name}</span></button>`;
+                categorySelector.innerHTML += `<button onclick="changeCat('${cat.id}')" class="p-5 rounded-3xl border-2 flex flex-col items-center gap-3 transition-all ${tx.categoryId === cat.id ? 'border-indigo-600 bg-indigo-50 shadow-inner' : 'border-slate-50'}"><div class="w-4 h-4 rounded-full" style="background-color: ${cat.color}"></div><span class="text-[9px] font-black uppercase tracking-widest leading-none">${cat.name}</span></button>`;
             });
             editModal.classList.remove('hidden');
         };
@@ -450,7 +457,7 @@
             const csv = "Data,Descricao,Tipo,Valor\n" + transactions.map(t => `${new Date(t.date).toLocaleDateString()},${t.description},${t.type},${t.amount}`).join("\n");
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = 'rico_dinheirinho.csv'; a.click();
+            const a = document.createElement('a'); a.href = url; a.download = 'rico_backup.csv'; a.click();
         });
 
         txInput.addEventListener('input', () => { txInput.style.height = 'auto'; txInput.style.height = (txInput.scrollHeight) + 'px'; });
