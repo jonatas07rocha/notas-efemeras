@@ -1,8 +1,11 @@
-const CACHE_NAME = 'rico-cache-v3';
+const CACHE_NAME = 'rico-cache-v4';
 const ASSETS = [
   'index.html',
   'manifest.json',
-  'https://cdn.tailwindcss.com'
+  'https://cdn.tailwindcss.com',
+  'icon-192.png',
+  'icon-512.png',
+  'icon-1024.png'
 ];
 
 // Instalação do Service Worker e Cache de recursos estáticos
