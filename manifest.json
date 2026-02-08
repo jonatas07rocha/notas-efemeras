@@ -1,0 +1,22 @@
+{
+"name": "Rico Dinheirinho - Premium",
+"short_name": "Rico",
+"description": "Gestão financeira premium com regras de economia doméstica 50-30-20.",
+"start_url": "index.html",
+"display": "standalone",
+"background_color": "#FDFCFE",
+"theme_color": "#4f46e5",
+"orientation": "portrait",
+"icons": [
+{
+"src": "https://www.google.com/search?q=https://cdn-icons-png.flaticon.com/512/2489/2489756.png",
+"sizes": "192x192",
+"type": "image/png"
+},
+{
+"src": "https://www.google.com/search?q=https://cdn-icons-png.flaticon.com/512/2489/2489756.png",
+"sizes": "512x512",
+"type": "image/png"
+}
+]
+}
