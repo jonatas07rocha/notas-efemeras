@@ -37,15 +37,15 @@
 
         <!-- Modal de Confirmação -->
         <div id="confirm-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[200] flex items-center justify-center p-8 hidden">
-            <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl border border-slate-50 text-center">
+            <div class="bg-white w-full max-sm:rounded-t-[2.5rem] rounded-[2.5rem] p-8 shadow-2xl border border-slate-50 text-center">
                 <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-8 h-8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 </div>
-                <h4 class="text-xl font-black mb-2 italic uppercase">Tem certeza?</h4>
-                <p class="text-sm text-slate-400 mb-8 italic">Essa ação é definitiva.</p>
+                <h4 class="text-xl font-black mb-2 italic uppercase tracking-tighter">Tem certeza?</h4>
+                <p class="text-sm text-slate-400 mb-8 italic">Essa ação é definitiva e não pode ser desfeita.</p>
                 <div class="flex gap-3">
-                    <button id="modal-cancel" class="flex-1 py-4 bg-slate-50 text-slate-400 rounded-2xl font-black uppercase text-[10px]">Não</button>
-                    <button id="modal-confirm" class="flex-1 py-4 bg-rose-500 text-white rounded-2xl font-black uppercase text-[10px]">Sim</button>
+                    <button id="modal-cancel" class="flex-1 py-4 bg-slate-50 text-slate-400 rounded-2xl font-black uppercase text-[10px]">Cancelar</button>
+                    <button id="modal-confirm" class="flex-1 py-4 bg-rose-500 text-white rounded-2xl font-black uppercase text-[10px]">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -92,17 +92,17 @@
                             </div>
                         </div>
 
-                        <!-- Input Inteligente (Suporta Lote) -->
+                        <!-- Input Inteligente (Lote Melhorado) -->
                         <form id="tx-form" class="relative group">
                             <div class="absolute top-6 left-6 flex items-start pointer-events-none text-indigo-300">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M12 5v14M5 12h14"/></svg>
                             </div>
-                            <textarea id="tx-input" rows="1" placeholder="Ex: 50 Jantar ou Cole um bloco de texto..." class="w-full bg-slate-50 border-none rounded-[2rem] py-6 pl-14 pr-16 text-sm font-bold text-slate-900 focus:ring-4 ring-indigo-50 transition-all shadow-inner outline-none no-scrollbar resize-none"></textarea>
+                            <textarea id="tx-input" rows="1" placeholder="Ex: 50 Jantar ou cole sua lista aqui..." class="w-full bg-slate-50 border-none rounded-[2rem] py-6 pl-14 pr-16 text-sm font-bold text-slate-900 focus:ring-4 ring-indigo-50 transition-all shadow-inner outline-none no-scrollbar resize-none"></textarea>
                             <button type="submit" class="absolute right-3 bottom-3 aspect-square bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg active:scale-95 transition-all w-12 h-12">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                             </button>
                         </form>
-                        <p class="text-[9px] text-slate-300 uppercase font-black px-6 tracking-widest italic">Dica: Você pode colar listas do WhatsApp ou Excel.</p>
+                        <p class="text-[9px] text-slate-300 uppercase font-black px-6 tracking-widest italic">💡 Agora você pode colar listas inteiras de uma vez.</p>
                     </div>
 
                     <!-- Saúde Financeira -->
@@ -118,7 +118,7 @@
             <!-- Histórico -->
             <section id="tab-history" class="tab-content animate-fade">
                 <header class="flex justify-between items-center mb-10 px-1">
-                    <h3 class="text-xl md:text-2xl font-black text-slate-900 uppercase italic tracking-tighter leading-none italic">Minha <br/> Linha do Tempo</h3>
+                    <h3 class="text-xl md:text-2xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">Minha <br/> Linha do Tempo</h3>
                     <div class="bg-slate-100 p-4 rounded-3xl text-slate-400">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5m4-1v5l4 2"/></svg>
                     </div>
@@ -142,18 +142,18 @@
                     <button id="export-btn" class="w-full flex items-center justify-between p-8 bg-white border border-slate-50 rounded-[3rem] shadow-xl shadow-slate-100/20 hover:bg-slate-50 transition-all text-left group">
                         <div class="flex items-center gap-6">
                             <div class="w-16 h-16 bg-indigo-50 rounded-[2rem] flex items-center justify-center text-indigo-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
-                            <div><p class="text-xs font-black uppercase text-slate-900 tracking-widest italic">Extrair Backup</p><p class="text-[9px] font-bold text-slate-300 uppercase italic mt-1">Planilha .CSV</p></div>
+                            <div><p class="text-xs font-black uppercase text-slate-900 tracking-widest italic">Extrair Planilha</p><p class="text-[9px] font-bold text-slate-300 uppercase italic mt-1">Backup Completo .CSV</p></div>
                         </div>
                     </button>
                     <button id="reset-btn" class="w-full py-8 text-rose-300 text-[10px] font-black uppercase tracking-[0.3em] border-2 border-dashed border-rose-50 rounded-[3rem] hover:text-rose-600 transition-all italic underline underline-offset-8">
-                        Limpar Banco Local
+                        Limpar Dados Locais
                     </button>
                 </div>
             </section>
 
         </main>
 
-        <!-- Menu Inferior Fixo -->
+        <!-- Menu Inferior -->
         <nav class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] md:w-[450px] h-20 bg-slate-950/95 backdrop-blur-2xl rounded-[2.5rem] flex items-center justify-around px-6 shadow-2xl z-[150] border border-white/10">
             <button data-tab="dashboard" class="nav-btn group flex flex-col items-center gap-1 active">
                 <div class="p-2.5 rounded-2xl transition-all text-slate-500 group-[.active]:bg-indigo-600 group-[.active]:text-white group-[.active]:shadow-xl group-[.active]:-translate-y-1">
@@ -182,7 +182,7 @@
         </nav>
     </div>
 
-    <!-- Modal de Edição (Seletor de Categoria) -->
+    <!-- Modal de Edição -->
     <div id="edit-modal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[200] flex items-end md:items-center justify-center p-0 md:p-8 hidden">
         <div class="bg-white w-full max-w-2xl rounded-t-[3rem] md:rounded-[4rem] p-8 md:p-12 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center mb-10">
@@ -195,7 +195,7 @@
     </div>
 
     <script>
-        // --- Estado Inicial ---
+        // --- Configuração ---
         const categories = [
             { id: 'c_rec_g', name: 'Geral', type: 'receita', color: '#10b981' },
             { id: 'c_rec_s', name: 'Salário', type: 'receita', color: '#059669' },
@@ -213,7 +213,7 @@
         let transactions = JSON.parse(localStorage.getItem('rico_vanilla_tx')) || [];
         let currentEditingTxId = null;
 
-        // --- Seletores DOM ---
+        // --- Seletores ---
         const tabBtns = document.querySelectorAll('.nav-btn');
         const tabContents = document.querySelectorAll('.tab-content');
         const txForm = document.getElementById('tx-form');
@@ -230,13 +230,7 @@
         const confirmModal = document.getElementById('confirm-modal');
         const categorySelector = document.getElementById('category-selector');
 
-        // --- Ajuste Automático do Textarea ---
-        txInput.addEventListener('input', () => {
-            txInput.style.height = 'auto';
-            txInput.style.height = (txInput.scrollHeight) + 'px';
-        });
-
-        // --- Lógica de Navegação ---
+        // --- Navegação ---
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const tabId = btn.getAttribute('data-tab');
@@ -247,7 +241,7 @@
             });
         });
 
-        // --- Funções de Negócio ---
+        // --- Core ---
         function save() {
             localStorage.setItem('rico_vanilla_tx', JSON.stringify(transactions));
             updateUI();
@@ -263,7 +257,7 @@
             setTimeout(() => toast.classList.add('hidden'), 3000);
         }
 
-        function calculateMetrics() {
+        function updateUI() {
             const now = new Date();
             const currentMonth = transactions.filter(t => {
                 const d = new Date(t.date);
@@ -274,12 +268,6 @@
             const expenses = currentMonth.filter(t => t.type === 'despesa').reduce((a, b) => a + b.amount, 0);
             const invested = currentMonth.filter(t => t.type === 'investimento').reduce((a, b) => a + b.amount, 0);
             const balance = income - expenses - invested;
-
-            return { income, expenses, invested, balance, currentMonth };
-        }
-
-        function updateUI() {
-            const { income, expenses, invested, balance, currentMonth } = calculateMetrics();
 
             // Dash
             balanceDisplay.innerHTML = `<span class="text-xl font-bold opacity-30 mr-1 italic">R$</span>${balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
@@ -308,204 +296,165 @@
                         <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
                             <div class="h-full transition-all duration-1000 ${isOver ? 'bg-rose-500' : 'bg-indigo-600'}" style="width: ${progress}%"></div>
                         </div>
-                        <div class="flex justify-between mt-2 px-1">
-                            <span class="text-[7px] font-black uppercase text-slate-300 italic">Ideal: ${cat.target}%</span>
-                            ${isOver ? '<span class="text-[7px] font-black uppercase text-rose-400 animate-pulse font-bold tracking-widest">Excedido</span>' : ''}
-                        </div>
                     </div>
                 `;
             });
 
             // Histórico
             historyList.innerHTML = '';
-            if (currentMonth.length === 0) {
-                historyList.innerHTML = '<div class="col-span-full text-center py-24 text-slate-200 uppercase text-[10px] font-black italic tracking-widest">Mês sem registros</div>';
-            } else {
-                currentMonth.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
-                    const cat = categories.find(c => c.id === t.categoryId);
-                    const isRec = t.type === 'receita';
-                    const isInv = t.type === 'investimento';
-                    
-                    historyList.innerHTML += `
-                        <div onclick="openEdit('${t.id}')" class="flex items-center justify-between p-6 bg-white rounded-[2.5rem] border border-slate-50 hover:shadow-2xl hover:shadow-indigo-100/40 transition-all cursor-pointer group">
-                            <div class="flex items-center gap-5">
-                                <div class="w-14 h-14 rounded-3xl flex items-center justify-center text-white shadow-xl" style="background-color: ${cat.color}">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5">
-                                        ${isRec ? '<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 7v12a2 2 0 0 0 2 2h16v-5"/>' : 
-                                          isInv ? '<path d="m22 7-8.5 8.5-5-5L2 17M16 7h6v6"/>' : 
-                                          '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4ZM3 6h18M16 10a4 4 0 0 1-8 0"/>'}
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="text-base font-bold text-slate-900 leading-tight">${t.description}</p>
-                                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-1 italic">${cat.name}</p>
-                                </div>
+            currentMonth.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+                const cat = categories.find(c => c.id === t.categoryId);
+                historyList.innerHTML += `
+                    <div onclick="openEdit('${t.id}')" class="flex items-center justify-between p-6 bg-white rounded-[2.5rem] border border-slate-50 hover:shadow-2xl transition-all cursor-pointer group">
+                        <div class="flex items-center gap-5">
+                            <div class="w-14 h-14 rounded-3xl flex items-center justify-center text-white shadow-xl" style="background-color: ${cat.color}">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5">
+                                    ${t.type === 'receita' ? '<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 7v12a2 2 0 0 0 2 2h16v-5"/>' : 
+                                      t.type === 'investimento' ? '<path d="m22 7-8.5 8.5-5-5L2 17M16 7h6v6"/>' : 
+                                      '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4ZM3 6h18M16 10a4 4 0 0 1-8 0"/>'}
+                                </svg>
                             </div>
-                            <div class="text-right">
-                                <p class="text-base font-black italic ${isRec ? 'text-emerald-500' : isInv ? 'text-cyan-600' : 'text-slate-900'}">
-                                    ${isRec ? '+' : isInv ? '*' : ''} R$ ${t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                </p>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900 leading-tight">${t.description}</p>
+                                <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1 italic">${cat.name}</p>
                             </div>
                         </div>
-                    `;
-                });
-            }
+                        <div class="text-right">
+                            <p class="text-sm font-black italic ${t.type === 'receita' ? 'text-emerald-500' : t.type === 'investimento' ? 'text-cyan-600' : 'text-slate-900'}">
+                                R$ ${t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
-        // --- Parser de Comando e Lote ---
-        function processLine(line) {
-            let type = 'despesa';
-            let raw = line.trim();
-            if (!raw) return null;
-
-            // Deteção manual por símbolos
-            if (raw.startsWith('+')) { type = 'receita'; raw = raw.slice(1); }
-            else if (raw.startsWith('*')) { type = 'investimento'; raw = raw.slice(1); }
-            
-            // Heurística de palavras-chave para colagem inteligente
-            const lower = raw.toLowerCase();
-            if (lower.includes('salário') || lower.includes('renda') || lower.includes('ganhei')) type = 'receita';
-            if (lower.includes('investimento') || lower.includes('guardei') || lower.includes('aporte')) type = 'investimento';
-
-            const amountMatch = raw.match(/(\d+(?:[.,]\d+)?)/);
-            const amount = amountMatch ? parseFloat(amountMatch[0].replace(',', '.')) : 0;
-            const description = raw.replace(/(\d+(?:[.,]\d+)?)/, '').trim() || 'Sem nome';
-
-            if (amount <= 0) return null;
-
-            const defaultCat = categories.find(c => c.type === type && c.name === 'Geral') || categories[0];
-
-            return {
-                id: (Date.now() + Math.random()).toString(),
-                amount,
-                description,
-                type,
-                date: new Date().toISOString(),
-                categoryId: defaultCat.id
-            };
+        // --- Scanner de Lote ---
+        function parseValue(str) {
+            const match = str.match(/(\d+(?:[.,]\d+)?)/);
+            return match ? parseFloat(match[0].replace(',', '.')) : 0;
         }
 
-        // --- Eventos ---
+        function detectType(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes('salário') || lower.includes('renda') || lower.includes('ganhei')) return 'receita';
+            if (lower.includes('investimento') || lower.includes('guardei') || lower.includes('aporte')) return 'investimento';
+            return 'despesa';
+        }
+
         txForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const fullContent = txInput.value.trim();
-            if (!fullContent) return;
+            const rawText = txInput.value.trim();
+            if (!rawText) return;
 
-            // Split por linhas e limpeza
-            const lines = fullContent.split('\n').map(l => l.trim()).filter(l => l);
-            let processedItems = [];
-
-            // Lógica para lidar com pares: "Nome" \n "Valor"
+            // Divide em linhas e limpa o excesso de espaços
+            const lines = rawText.split('\n').map(l => l.trim()).filter(l => l !== "");
+            let items = [];
+            
             for (let i = 0; i < lines.length; i++) {
                 const current = lines[i];
-                const next = lines[i + 1];
+                const amountMatch = current.match(/\d/); // Contém algum número?
 
-                // Se a linha atual NÃO tem número, mas a próxima TEM
-                if (!/\d/.test(current) && next && /\d/.test(next)) {
-                    const combined = `${current} ${next}`;
-                    const item = processLine(combined);
-                    if (item) {
-                        processedItems.push(item);
-                        i++; // Pula a próxima linha já que foi usada
-                        continue;
+                // Cenário 1: "Descrição" e "Valor" estão na mesma linha
+                if (amountMatch && current.length > amountMatch.index + 1 && /[a-zA-ZÀ-ÿ]/.test(current)) {
+                    items.push(createItem(current));
+                } 
+                // Cenário 2: Apenas texto, olhar a próxima linha para o valor
+                else if (!amountMatch && i + 1 < lines.length) {
+                    const next = lines[i + 1];
+                    const nextAmount = parseValue(next);
+                    if (nextAmount > 0) {
+                        items.push(createItem(`${current} ${next}`));
+                        i++; // Consome a próxima linha
                     }
                 }
-
-                // Caso contrário, processa como linha única
-                const item = processLine(current);
-                if (item) processedItems.push(item);
+                // Cenário 3: Apenas um número solto
+                else if (amountMatch) {
+                    items.push(createItem(`Item avulso ${current}`));
+                }
             }
 
-            if (processedItems.length > 0) {
-                transactions = [...transactions, ...processedItems];
+            if (items.length > 0) {
+                transactions = [...transactions, ...items.filter(it => it !== null)];
                 txInput.value = '';
                 txInput.style.height = 'auto';
-                showFeedback(`${processedItems.length} registros adicionados!`);
+                showFeedback(`${items.length} itens capturados!`);
                 save();
             } else {
-                showFeedback("Nenhum valor válido encontrado", "error");
+                showFeedback("Não identifiquei valores", "error");
             }
         });
 
+        function createItem(raw) {
+            let type = 'despesa';
+            let text = raw;
+            if (raw.startsWith('+')) { type = 'receita'; text = raw.slice(1); }
+            else if (raw.startsWith('*')) { type = 'investimento'; text = raw.slice(1); }
+            else { type = detectType(raw); }
+
+            const amount = parseValue(text);
+            const description = text.replace(/(\d+(?:[.,]\d+)?)/, '').trim() || 'Sem nome';
+            if (amount <= 0) return null;
+
+            return {
+                id: (Date.now() + Math.random()).toString(),
+                amount, description, type,
+                date: new Date().toISOString(),
+                categoryId: categories.find(c => c.type === type && c.name === 'Geral').id
+            };
+        }
+
+        // --- Busca e Outros ---
         searchInput.addEventListener('input', () => {
             const q = searchInput.value.toLowerCase();
             searchResults.innerHTML = '';
             if (!q) return;
-            
             transactions.filter(t => t.description.toLowerCase().includes(q)).forEach(t => {
-                searchResults.innerHTML += `
-                    <div class="flex justify-between items-center p-6 bg-white border border-slate-50 rounded-[2.5rem] shadow-sm animate-fade">
-                        <span class="text-sm font-bold text-slate-900">${t.description}</span>
-                        <span class="text-sm font-black italic">R$ ${t.amount.toFixed(0)}</span>
-                    </div>
-                `;
+                searchResults.innerHTML += `<div class="p-6 bg-white border border-slate-50 rounded-[2.5rem] flex justify-between"><span class="font-bold">${t.description}</span><span class="italic">R$ ${t.amount.toFixed(0)}</span></div>`;
             });
         });
 
-        // --- Modais ---
         window.openEdit = (id) => {
             currentEditingTxId = id;
             const tx = transactions.find(t => t.id === id);
             categorySelector.innerHTML = '';
             categories.filter(c => c.type === tx.type).forEach(cat => {
-                categorySelector.innerHTML += `
-                    <button onclick="changeCat('${cat.id}')" class="p-5 rounded-3xl border-2 flex flex-col items-center gap-3 transition-all ${tx.categoryId === cat.id ? 'border-indigo-600 bg-indigo-50 shadow-inner' : 'border-slate-50'}">
-                        <div class="w-4 h-4 rounded-full" style="background-color: ${cat.color}"></div>
-                        <span class="text-[9px] font-black text-slate-900 uppercase tracking-widest">${cat.name}</span>
-                    </button>
-                `;
+                categorySelector.innerHTML += `<button onclick="changeCat('${cat.id}')" class="p-5 rounded-3xl border-2 flex flex-col items-center gap-3 ${tx.categoryId === cat.id ? 'border-indigo-600 bg-indigo-50 shadow-inner' : 'border-slate-50'}"><div class="w-4 h-4 rounded-full" style="background-color: ${cat.color}"></div><span class="text-[9px] font-black uppercase">${cat.name}</span></button>`;
             });
             editModal.classList.remove('hidden');
         };
 
         window.changeCat = (catId) => {
-            const tx = transactions.find(t => t.id === currentEditingTxId);
-            tx.categoryId = catId;
+            transactions.find(t => t.id === currentEditingTxId).categoryId = catId;
             editModal.classList.add('hidden');
-            showFeedback("Compartimento atualizado!");
             save();
         };
 
         document.getElementById('close-edit').addEventListener('click', () => editModal.classList.add('hidden'));
-
         document.getElementById('delete-btn').addEventListener('click', () => {
             confirmModal.classList.remove('hidden');
             document.getElementById('modal-confirm').onclick = () => {
                 transactions = transactions.filter(t => t.id !== currentEditingTxId);
-                editModal.classList.add('hidden');
-                confirmModal.classList.add('hidden');
-                showFeedback("Removido", "error");
+                editModal.classList.add('hidden'); confirmModal.classList.add('hidden');
                 save();
             };
         });
-
         document.getElementById('modal-cancel').addEventListener('click', () => confirmModal.classList.add('hidden'));
-
         document.getElementById('reset-btn').addEventListener('click', () => {
             confirmModal.classList.remove('hidden');
             document.getElementById('modal-confirm').onclick = () => {
-                transactions = [];
-                confirmModal.classList.add('hidden');
-                showFeedback("Banco zerado!", "error");
-                save();
+                transactions = []; confirmModal.classList.add('hidden'); save();
             };
         });
-
         document.getElementById('export-btn').addEventListener('click', () => {
-            const headers = "Data,Descricao,Tipo,Valor,Categoria\n";
-            const rows = transactions.map(t => 
-                `${new Date(t.date).toLocaleDateString()},${t.description},${t.type},${t.amount},${categories.find(c=>c.id===t.categoryId)?.name}`
-            ).join("\n");
-            const blob = new Blob([headers + rows], { type: 'text/csv' });
+            const csv = "Data,Descricao,Tipo,Valor\n" + transactions.map(t => `${new Date(t.date).toLocaleDateString()},${t.description},${t.type},${t.amount}`).join("\n");
+            const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'rico_dinheirinho.csv';
-            a.click();
-            showFeedback("Backup gerado!");
+            const a = document.createElement('a'); a.href = url; a.download = 'rico_dinheirinho.csv'; a.click();
         });
 
-        // --- Inicialização ---
+        txInput.addEventListener('input', () => { txInput.style.height = 'auto'; txInput.style.height = (txInput.scrollHeight) + 'px'; });
+
         updateUI();
     </script>
 </body>
