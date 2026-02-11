@@ -3,466 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rico Dinheirinho - Premium</title>
-    <!-- Tailwind CSS para Estilização -->
+    <title>Rico Dinheirinho - Rubi Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap');
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #FDFCFE; 
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #FCFAFA; margin: 0; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        textarea::placeholder, input::placeholder { color: #cbd5e1; font-weight: 300; }
-        
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        
+        .bg-rubi { background-color: #9B1B30; }
+        .text-rubi { color: #9B1B30; }
+        .border-rubi { border-color: #9B1B30; }
         .animate-fade { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-[#FDFCFE] flex justify-center p-0 md:p-6 lg:p-12">
-    <!-- Container Principal -->
-    <div class="w-full max-w-6xl bg-white md:rounded-[4rem] shadow-2xl relative overflow-hidden flex flex-col h-screen md:h-[90vh] border border-slate-100">
+<body class="bg-[#FCFAFA] flex justify-center p-0 md:p-6 lg:p-12">
+    <div class="w-full max-w-2xl bg-white md:rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col h-screen md:h-[92vh] border border-slate-100">
         
-        <!-- Toast de Feedback -->
-        <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 px-6 py-4 rounded-full z-[100] shadow-2xl flex items-center gap-3 bg-slate-900 text-white hidden animate-in zoom-in">
-            <div id="toast-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-            <span id="toast-msg" class="text-[10px] font-black uppercase tracking-widest"></span>
-        </div>
-
-        <!-- Modal de Confirmação -->
-        <div id="confirm-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[200] flex items-center justify-center p-8 hidden">
-            <div class="bg-white w-full max-sm:rounded-t-[2.5rem] rounded-[2.5rem] p-8 shadow-2xl border border-slate-50 text-center">
-                <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-8 h-8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <!-- Modal de Gestão de Lançamento -->
+        <div id="manage-modal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[300] flex items-end md:items-center justify-center p-4 hidden" onclick="closeModal()">
+            <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl space-y-6 animate-fade" onclick="event.stopPropagation()">
+                <div class="text-center space-y-2">
+                    <h4 id="modal-desc" class="text-lg font-bold text-slate-900 capitalize">Descrição</h4>
+                    <p id="modal-meta" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Valor • Método</p>
                 </div>
-                <h4 class="text-xl font-black mb-2 italic uppercase tracking-tighter">Confirmar Ação?</h4>
-                <p class="text-sm text-slate-400 mb-8 italic">Essa ação é definitiva e apagará os registros.</p>
-                <div class="flex gap-3">
-                    <button id="modal-cancel" class="flex-1 py-4 bg-slate-50 text-slate-400 rounded-2xl font-black uppercase text-[10px]">Não</button>
-                    <button id="modal-confirm" class="flex-1 py-4 bg-rose-500 text-white rounded-2xl font-black uppercase text-[10px]">Sim</button>
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="editEntry()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-slate-800 transition-all">Editar (Refazer)</button>
+                    <button onclick="deleteEntry()" class="w-full py-4 bg-rose-50 text-rubi border border-rose-100 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-rose-100 transition-all">Apagar Registro</button>
+                    <button onclick="closeModal()" class="w-full py-4 text-slate-400 font-bold uppercase text-[10px]">Cancelar</button>
                 </div>
             </div>
         </div>
 
-        <!-- Conteúdo Principal -->
-        <main id="main-content" class="flex-1 overflow-y-auto px-6 md:px-12 pt-12 pb-32 no-scrollbar">
+        <!-- Alertas -->
+        <div id="alert-zone" class="absolute top-4 left-4 right-4 z-[200] transform -translate-y-24 transition-all duration-500">
+            <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/10">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center bg-rubi shrink-0">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-5 h-5"><path d="M12 8v4M12 16h.01"/><circle cx="12" cy="12" r="10"/></svg>
+                </div>
+                <p id="alert-msg" class="text-[11px] font-medium leading-relaxed"></p>
+                <button onclick="closeAlert()" class="opacity-40 hover:opacity-100 p-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-4 h-4"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            </div>
+        </div>
+
+        <main id="main-content" class="flex-1 overflow-y-auto px-6 md:px-8 pt-10 pb-44 no-scrollbar">
             
-            <!-- Dashboard -->
             <section id="tab-dashboard" class="tab-content active animate-fade space-y-8">
                 <header class="flex justify-between items-center">
                     <div>
-                        <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1 italic">Gestão Financeira</p>
-                        <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-none uppercase italic">Rico <br/><span class="text-indigo-600">Dinheirinho</span></h1>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Engenharia Financeira</p>
+                        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight leading-none uppercase">Rico <br/><span class="text-rubi">Dinheirinho</span></h1>
                     </div>
-                    <div class="bg-indigo-50 p-3 md:p-4 rounded-2xl text-indigo-600 shadow-sm">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-7 h-7"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>
-                    </div>
-                </header>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                    <div class="space-y-8">
-                        <!-- Card de Saldo -->
-                        <div class="relative overflow-hidden bg-slate-950 rounded-[3rem] p-8 text-white shadow-2xl shadow-indigo-100 min-h-[260px] flex flex-col justify-center">
-                            <div class="absolute -top-12 -right-12 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl animate-pulse"></div>
-                            <div class="relative z-10">
-                                <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2 italic">Saldo Disponível</p>
-                                <h2 id="balance-display" class="text-4xl md:text-5xl font-extralight tracking-tighter mb-10">
-                                    <span class="text-xl font-bold opacity-30 mr-1 italic">R$</span>0,00
-                                </h2>
-                                <div class="grid grid-cols-3 gap-2">
-                                    <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-center">
-                                        <p class="text-[7px] font-black uppercase text-emerald-400 mb-1">Ganhei</p>
-                                        <p id="income-display" class="text-sm font-bold truncate">R$0</p>
-                                    </div>
-                                    <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-center">
-                                        <p class="text-[7px] font-black uppercase text-rose-400 mb-1">Gastei</p>
-                                        <p id="expense-display" class="text-sm font-bold truncate">R$0</p>
-                                    </div>
-                                    <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-center">
-                                        <p class="text-[7px] font-black uppercase text-cyan-400 mb-1">Guardei</p>
-                                        <p id="invested-display" class="text-sm font-bold truncate">R$0</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Input Inteligente -->
-                        <form id="tx-form" class="relative group">
-                            <div class="absolute top-6 left-6 flex items-start pointer-events-none text-indigo-300">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M12 5v14M5 12h14"/></svg>
-                            </div>
-                            <textarea id="tx-input" rows="1" placeholder="Use + para Receita, * para Guardar ou nada para Gasto..." class="w-full bg-slate-50 border-none rounded-[2rem] py-6 pl-14 pr-16 text-sm font-bold text-slate-900 focus:ring-4 ring-indigo-50 transition-all shadow-inner outline-none no-scrollbar resize-none"></textarea>
-                            <button type="submit" class="absolute right-3 bottom-3 aspect-square bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg active:scale-95 transition-all w-12 h-12">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            </button>
-                        </form>
-                        <p class="text-[9px] text-slate-300 uppercase font-black px-6 tracking-widest italic text-center">
-                            + Receita | Sem símbolo: Despesa | * Investimento
-                        </p>
-                    </div>
-
-                    <!-- Saúde Financeira -->
-                    <div class="space-y-6">
-                        <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 italic px-2">Saúde 50-30-20</h4>
-                        <div id="stats-container" class="grid gap-4">
-                            <!-- Inserido via JS -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Extrato -->
-            <section id="tab-history" class="tab-content animate-fade">
-                <header class="flex justify-between items-center mb-10 px-1">
-                    <h3 class="text-xl md:text-2xl font-black text-slate-900 uppercase italic tracking-tighter leading-none italic">Meu <br/> Extrato</h3>
-                    <div class="bg-slate-100 p-4 rounded-3xl text-slate-400">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5m4-1v5l4 2"/></svg>
+                    <div class="bg-rose-50 p-3 rounded-2xl text-rubi border border-rose-100">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     </div>
                 </header>
-                <div id="history-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-20">
-                    <!-- Inserido via JS -->
+
+                <!-- Card Saldo -->
+                <div class="relative overflow-hidden bg-slate-950 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-rose-100/30 flex flex-col justify-center">
+                    <div class="absolute -top-20 -right-20 w-64 h-64 bg-rubi/10 rounded-full blur-[80px]"></div>
+                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Saldo do Mês</p>
+                    <h2 id="balance-val" class="text-4xl font-light tracking-tighter mb-8">
+                        <span class="text-xl font-bold opacity-20 mr-1">R$</span>0,00
+                    </h2>
+                    <div class="grid grid-cols-3 gap-2 border-t border-white/5 pt-6">
+                        <div><p class="text-[7px] font-bold uppercase text-emerald-400 mb-1">Ganhei</p><p id="sum-ganhei" class="text-xs font-semibold truncate">R$ 0</p></div>
+                        <div><p class="text-[7px] font-bold uppercase text-rose-400 mb-1">Gastei</p><p id="sum-gastei" class="text-xs font-semibold truncate">R$ 0</p></div>
+                        <div><p class="text-[7px] font-bold uppercase text-cyan-400 mb-1">Guardei</p><p id="sum-guardei" class="text-xs font-semibold truncate">R$ 0</p></div>
+                    </div>
                 </div>
-            </section>
 
-            <!-- Busca -->
-            <section id="tab-search" class="tab-content animate-fade space-y-8">
-                <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">Buscar</h3>
-                <input type="text" id="search-input" placeholder="O que você procura?" class="w-full bg-slate-50 border-none rounded-[2rem] py-8 px-8 text-lg font-bold shadow-inner text-indigo-600 italic outline-none" />
-                <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            </section>
+                <!-- Input Único -->
+                <div class="space-y-4">
+                    <form id="tx-form" class="relative group">
+                        <textarea id="tx-input" rows="1" placeholder="Ex: Gastei 45 almoco pix" class="w-full bg-slate-50 border-none rounded-[2rem] py-7 px-8 text-base font-medium text-slate-900 focus:ring-4 ring-rubi transition-all shadow-inner outline-none no-scrollbar resize-none"></textarea>
+                        <button type="submit" class="absolute right-3 bottom-3 aspect-square bg-rubi text-white rounded-2xl flex items-center justify-center shadow-lg active:scale-95 transition-all w-14 h-14">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-5 h-5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                    </form>
+                </div>
 
-            <!-- Ajustes -->
-            <section id="tab-settings" class="tab-content animate-fade space-y-12 max-w-2xl mx-auto">
-                <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">Configurações</h3>
-                <div class="space-y-6">
-                    <button id="export-btn" class="w-full flex items-center justify-between p-8 bg-white border border-slate-50 rounded-[3rem] shadow-xl shadow-slate-100/20 hover:bg-slate-50 transition-all text-left group">
-                        <div class="flex items-center gap-6">
-                            <div class="w-16 h-16 bg-indigo-50 rounded-[2rem] flex items-center justify-center text-indigo-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
-                            <div><p class="text-xs font-black uppercase text-slate-900 tracking-widest italic">Exportar Dados</p><p class="text-[9px] font-bold text-slate-300 uppercase italic mt-1">Gerar Planilha .CSV</p></div>
+                <!-- Reserva de Emergência -->
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-50 shadow-sm flex items-center justify-between gap-6">
+                    <div class="space-y-2 flex-1">
+                        <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Reserva de Emergência</h4>
+                        <p id="shield-desc" class="text-[9px] text-slate-400 font-medium leading-tight">Média de gastos essenciais.</p>
+                    </div>
+                    <div class="relative w-24 h-24 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="48" cy="48" r="42" stroke="currentColor" stroke-width="6" fill="transparent" class="text-slate-100" />
+                            <circle id="shield-circle" cx="48" cy="48" r="42" stroke="currentColor" stroke-width="6" fill="transparent" stroke-dasharray="263.8" stroke-dashoffset="263.8" class="text-rubi transition-all duration-1000" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="shield-val" class="text-xl font-black text-slate-900">0</span>
+                            <span class="text-[7px] font-bold uppercase text-slate-400">Meses</span>
                         </div>
-                    </button>
-                    <button id="reset-btn" class="w-full py-8 text-rose-300 text-[10px] font-black uppercase tracking-[0.3em] border-2 border-dashed border-rose-50 rounded-[3rem] hover:text-rose-600 transition-all italic underline underline-offset-8">
-                        Limpar Todos os Dados
-                    </button>
+                    </div>
                 </div>
+
+                <!-- Saúde 50-30-20 -->
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-50 shadow-sm space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Saúde Financeira</h4>
+                        <span id="label-status" class="text-[9px] font-black uppercase text-slate-300">Aguardando Receita</span>
+                    </div>
+                    <div class="h-4 w-full bg-slate-100 rounded-full flex overflow-hidden">
+                        <div id="bar-ess" class="h-full bg-slate-900 transition-all duration-1000" style="width: 0%"></div>
+                        <div id="bar-lfs" class="h-full bg-rubi transition-all duration-1000" style="width: 0%"></div>
+                        <div id="bar-fut" class="h-full bg-emerald-400 transition-all duration-1000" style="width: 0%"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-history" class="tab-content animate-fade space-y-8">
+                <h3 class="text-2xl font-extrabold text-slate-900 uppercase tracking-tighter">Memória de Fluxo</h3>
+                <div id="history-list" class="space-y-3 pb-20"></div>
             </section>
 
         </main>
 
-        <!-- Menu Inferior -->
-        <nav class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] md:w-[450px] h-20 bg-slate-950/95 backdrop-blur-2xl rounded-[2.5rem] flex items-center justify-around px-6 shadow-2xl z-[150] border border-white/10">
-            <button data-tab="dashboard" class="nav-btn group flex flex-col items-center gap-1 active">
-                <div class="p-2.5 rounded-2xl transition-all text-slate-500 group-[.active]:bg-indigo-600 group-[.active]:text-white group-[.active]:shadow-xl group-[.active]:-translate-y-1">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                </div>
-                <span class="text-[7px] font-black uppercase tracking-widest text-slate-600 group-[.active]:text-indigo-400 opacity-0 group-[.active]:opacity-100 transition-opacity">Início</span>
+        <nav class="absolute bottom-8 left-1/2 -translate-x-1/2 w-[90%] md:w-[360px] h-20 bg-slate-950/95 backdrop-blur-xl rounded-[2.5rem] flex items-center justify-around px-8 shadow-2xl border border-white/10">
+            <button data-tab="dashboard" class="nav-btn group flex flex-col items-center gap-1 active opacity-40 [&.active]:opacity-100 transition-all">
+                <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+                <span class="text-[8px] font-bold uppercase tracking-widest text-white">Início</span>
             </button>
-            <button data-tab="history" class="nav-btn group flex flex-col items-center gap-1">
-                <div class="p-2.5 rounded-2xl transition-all text-slate-500 group-[.active]:bg-indigo-600 group-[.active]:text-white group-[.active]:shadow-xl group-[.active]:-translate-y-1">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5m4-1v5l4 2"/></svg>
-                </div>
-                <span class="text-[7px] font-black uppercase tracking-widest text-slate-600 group-[.active]:text-indigo-400 opacity-0 group-[.active]:opacity-100 transition-opacity">Extrato</span>
-            </button>
-            <button data-tab="search" class="nav-btn group flex flex-col items-center gap-1">
-                <div class="p-2.5 rounded-2xl transition-all text-slate-500 group-[.active]:bg-indigo-600 group-[.active]:text-white group-[.active]:shadow-xl group-[.active]:-translate-y-1">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                </div>
-                <span class="text-[7px] font-black uppercase tracking-widest text-slate-600 group-[.active]:text-indigo-400 opacity-0 group-[.active]:opacity-100 transition-opacity">Busca</span>
-            </button>
-            <button data-tab="settings" class="nav-btn group flex flex-col items-center gap-1">
-                <div class="p-2.5 rounded-2xl transition-all text-slate-500 group-[.active]:bg-indigo-600 group-[.active]:text-white group-[.active]:shadow-xl group-[.active]:-translate-y-1">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                </div>
-                <span class="text-[7px] font-black uppercase tracking-widest text-slate-600 group-[.active]:text-indigo-400 opacity-0 group-[.active]:opacity-100 transition-opacity">Ajustes</span>
+            <button data-tab="history" class="nav-btn group flex flex-col items-center gap-1 opacity-40 [&.active]:opacity-100 transition-all">
+                <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg></div>
+                <span class="text-[8px] font-bold uppercase tracking-widest text-white">Extrato</span>
             </button>
         </nav>
     </div>
 
-    <!-- Modal de Edição -->
-    <div id="edit-modal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[200] flex items-end md:items-center justify-center p-0 md:p-8 hidden">
-        <div class="bg-white w-full max-w-2xl rounded-t-[3rem] md:rounded-[4rem] p-8 md:p-12 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <div class="flex justify-between items-center mb-10">
-                <h4 class="text-xs font-black uppercase tracking-widest text-slate-300 italic">Mudar Compartimento</h4>
-                <button id="close-edit" class="p-3 hover:bg-slate-50 rounded-2xl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-            </div>
-            <div id="category-selector" class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-12"></div>
-            <button id="delete-btn" class="w-full py-6 text-rose-500 text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 border-2 border-rose-50 rounded-[2.5rem] hover:bg-rose-50"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> Apagar Registro</button>
-        </div>
-    </div>
-
     <script>
-        // --- Estado e Configuração ---
-        const categories = [
-            { id: 'c_rec_g', name: 'Geral', type: 'receita', color: '#10b981' },
-            { id: 'c_rec_s', name: 'Salário', type: 'receita', color: '#059669' },
-            { id: 'c_rec_e', name: 'Extra / Freela', type: 'receita', color: '#34d399' },
-            { id: 'c_des_g', name: 'Geral', type: 'despesa', color: '#94a3b8' },
-            { id: 'c_des_e', name: 'Essencial', type: 'despesa', color: '#6366f1', target: 50 },
-            { id: 'c_des_l', name: 'Lazer', type: 'despesa', color: '#f59e0b', target: 30 },
-            { id: 'c_des_edu', name: 'Educação', type: 'despesa', color: '#8b5cf6' },
-            { id: 'c_des_sau', name: 'Saúde', type: 'despesa', color: '#ef4444' },
-            { id: 'c_inv_g', name: 'Geral', type: 'investimento', color: '#06b6d4' },
-            { id: 'c_inv_r', name: 'Reserva', type: 'investimento', color: '#0891b2', target: 20 },
-            { id: 'c_inv_a', name: 'Aporte / Ativos', type: 'investimento', color: '#22d3ee' },
-        ];
+        const DICT = {
+            intents: {
+                ganhei: ['ganhei', 'recebi', 'entrou', 'caiu', 'salario'],
+                guardei: ['guardei', 'investi', 'apliquei', 'poupei'],
+                gastei: ['gastei', 'paguei', 'comprei', 'saiu']
+            },
+            essentials: ['aluguel','luz','agua','internet','mercado','feira','saude','remedio','farmacia','escola','faculdade','bus','onibus','combustivel','gas','condominio','iptu','seguro','imposto','mei'],
+            methods: { PIX: ['pix'], CARTAO: ['cartao'], CREDITO: ['credito'], DEBITO: ['debito'], DINHEIRO: ['dinheiro'], BOLETO: ['boleto'], TED: ['ted'] },
+            stop: ['de','do','da','para','com','no','na','o','a','um','pelo']
+        };
 
-        let transactions = JSON.parse(localStorage.getItem('rico_vanilla_tx')) || [];
-        let currentEditingTxId = null;
+        let db = JSON.parse(localStorage.getItem('rico_ruby_v6')) || [];
+        let selectedId = null;
 
-        // --- Seletores DOM ---
-        const tabBtns = document.querySelectorAll('.nav-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const txForm = document.getElementById('tx-form');
-        const txInput = document.getElementById('tx-input');
-        const balanceDisplay = document.getElementById('balance-display');
-        const incomeDisplay = document.getElementById('income-display');
-        const expenseDisplay = document.getElementById('expense-display');
-        const investedDisplay = document.getElementById('invested-display');
-        const statsContainer = document.getElementById('stats-container');
-        const historyList = document.getElementById('history-list');
-        const searchInput = document.getElementById('search-input');
-        const searchResults = document.getElementById('search-results');
-        const editModal = document.getElementById('edit-modal');
-        const confirmModal = document.getElementById('confirm-modal');
-        const categorySelector = document.getElementById('category-selector');
-
-        // --- Lógica de Navegação ---
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabId = btn.getAttribute('data-tab');
-                tabBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                tabContents.forEach(c => c.classList.remove('active'));
-                document.getElementById(`tab-${tabId}`).classList.add('active');
-            });
-        });
-
-        // --- Core Functions ---
-        function save() {
-            localStorage.setItem('rico_vanilla_tx', JSON.stringify(transactions));
-            updateUI();
+        function parse(raw) {
+            const clean = raw.toLowerCase().trim().replace(/[.,!?;]/g, '');
+            if (!clean) return null;
+            const words = clean.split(/\s+/);
+            const first = words[0];
+            let intent = 'gastei'; 
+            for (const [k, v] of Object.entries(DICT.intents)) if (v.includes(first)) { intent = k; break; }
+            const amount = parseFloat(raw.match(/(\d+(?:[.,]\d+)?)/)?.[0].replace(',', '.') || 0);
+            let method = 'PADRAO';
+            let finalWords = words.filter((w, i) => i !== 0 && !w.match(/\d/) && !DICT.stop.includes(w));
+            for (const [m, keywords] of Object.entries(DICT.methods)) {
+                const fIdx = finalWords.findIndex(w => keywords.includes(w));
+                if (fIdx !== -1) { method = m; finalWords.splice(fIdx, 1); break; }
+            }
+            let subType = intent === 'gastei' ? (finalWords.some(w => DICT.essentials.includes(w)) ? 'essential' : 'lifestyle') : null;
+            if (amount <= 0) return null;
+            return { id: crypto.randomUUID(), ts: Date.now(), amount, intent, subType, method, desc: finalWords.join(' ') || 'Diverso' };
         }
 
-        function showFeedback(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            const dot = document.getElementById('toast-dot');
-            const msgEl = document.getElementById('toast-msg');
-            msgEl.innerText = msg;
-            dot.className = `w-2 h-2 rounded-full animate-pulse ${type === 'success' ? 'bg-emerald-400' : 'bg-rose-400'}`;
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3000);
-        }
-
-        function updateUI() {
+        function update() {
             const now = new Date();
-            const currentMonth = transactions.filter(t => {
-                const d = new Date(t.date);
+            const monthly = db.filter(t => {
+                const d = new Date(t.ts);
                 return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
             });
 
-            const income = currentMonth.filter(t => t.type === 'receita').reduce((a, b) => a + b.amount, 0);
-            const expenses = currentMonth.filter(t => t.type === 'despesa').reduce((a, b) => a + b.amount, 0);
-            const invested = currentMonth.filter(t => t.type === 'investimento').reduce((a, b) => a + b.amount, 0);
-            const balance = income - expenses - invested;
+            const ganhei = monthly.filter(t => t.intent === 'ganhei').reduce((a, b) => a + b.amount, 0);
+            const gasteiEss = monthly.filter(t => t.subType === 'essential').reduce((a, b) => a + b.amount, 0);
+            const gasteiLfs = monthly.filter(t => t.subType === 'lifestyle').reduce((a, b) => a + b.amount, 0);
+            const guardei = monthly.filter(t => t.intent === 'guardei').reduce((a, b) => a + b.amount, 0);
+            const gasteiTotal = gasteiEss + gasteiLfs;
 
-            balanceDisplay.innerHTML = `<span class="text-xl font-bold opacity-30 mr-1 italic">R$</span>${balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-            balanceDisplay.className = `text-4xl md:text-5xl font-extralight tracking-tighter mb-10 text-center md:text-left ${balance < 0 ? 'text-rose-400' : 'text-white'}`;
-            incomeDisplay.innerText = `R$${income.toFixed(0)}`;
-            expenseDisplay.innerText = `R$${expenses.toFixed(0)}`;
-            investedDisplay.innerText = `R$${invested.toFixed(0)}`;
+            document.getElementById('balance-val').innerHTML = `<span class="text-xl font-bold opacity-20 mr-1">R$</span>${(ganhei - gasteiTotal - guardei).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+            document.getElementById('sum-ganhei').innerText = `R$ ${ganhei.toLocaleString('pt-BR')}`;
+            document.getElementById('sum-gastei').innerText = `R$ ${gasteiTotal.toLocaleString('pt-BR')}`;
+            document.getElementById('sum-guardei').innerText = `R$ ${guardei.toLocaleString('pt-BR')}`;
 
-            statsContainer.innerHTML = '';
-            categories.filter(c => c.target).forEach(cat => {
-                const total = currentMonth.filter(t => t.categoryId === cat.id).reduce((a, b) => a + b.amount, 0);
-                const perc = income > 0 ? (total / income) * 100 : 0;
-                const progress = Math.min(perc / cat.target * 100, 100);
-                const isOver = perc > cat.target;
+            const bars = { ess: 0, lfs: 0, fut: 0 };
+            if (ganhei > 0) {
+                bars.ess = (gasteiEss / ganhei) * 100;
+                bars.lfs = (gasteiLfs / ganhei) * 100;
+                bars.fut = (guardei / ganhei) * 100;
+                document.getElementById('label-status').innerText = bars.ess > 60 ? "ALERTA: ENGEL" : "SOBRANDO";
+            } else { document.getElementById('label-status').innerText = "AGUARDANDO RECEITA"; }
 
-                statsContainer.innerHTML += `
-                    <div class="p-5 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-slate-50">
-                        <div class="flex justify-between items-center mb-3">
-                            <div class="flex items-center gap-2">
-                                <div class="w-2 h-2 rounded-full" style="background-color: ${cat.color}"></div>
-                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-600 italic">${cat.name}</span>
-                            </div>
-                            <span class="text-[10px] font-bold text-slate-900 italic">R$ ${total.toFixed(0)} (${perc.toFixed(0)}%)</span>
-                        </div>
-                        <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                            <div class="h-full transition-all duration-1000 ${isOver ? 'bg-rose-500' : 'bg-indigo-600'}" style="width: ${progress}%"></div>
-                        </div>
-                    </div>
-                `;
-            });
+            document.getElementById('bar-ess').style.width = `${Math.min(bars.ess, 100)}%`;
+            document.getElementById('bar-lfs').style.width = `${Math.min(bars.lfs, 100)}%`;
+            document.getElementById('bar-fut').style.width = `${Math.min(bars.fut, 100)}%`;
 
-            historyList.innerHTML = '';
-            currentMonth.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
-                const cat = categories.find(c => c.id === t.categoryId);
-                historyList.innerHTML += `
-                    <div onclick="openEdit('${t.id}')" class="flex items-center justify-between p-6 bg-white rounded-[2.5rem] border border-slate-50 hover:shadow-2xl transition-all cursor-pointer group">
-                        <div class="flex items-center gap-5">
-                            <div class="w-14 h-14 rounded-3xl flex items-center justify-center text-white shadow-xl shadow-indigo-100/20" style="background-color: ${cat.color}">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6">
-                                    ${t.type === 'receita' ? '<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 7v12a2 2 0 0 0 2 2h16v-5"/>' : 
-                                      t.type === 'investimento' ? '<path d="m22 7-8.5 8.5-5-5L2 17M16 7h6v6"/>' : 
-                                      '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4ZM3 6h18M16 10a4 4 0 0 1-8 0"/>'}
-                                </svg>
-                            </div>
-                            <div class="max-w-[150px] md:max-w-[250px]">
-                                <p class="text-sm font-bold text-slate-900 leading-tight truncate">${t.description}</p>
-                                <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1 italic">${cat.name}</p>
-                            </div>
-                        </div>
-                        <p class="text-sm font-black italic ${t.type === 'receita' ? 'text-emerald-500' : t.type === 'investimento' ? 'text-cyan-600' : 'text-slate-900'}">
-                            R$ ${t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                        </p>
-                    </div>
-                `;
-            });
+            updateEmergencyShield(gasteiEss);
+            renderHistory();
         }
 
-        // --- Motor de Entrada Estrito (Prefixos) ---
-        function parseValue(str) {
-            const match = str.match(/(\d+(?:[.,]\d+)?)/);
-            return match ? parseFloat(match[0].replace(',', '.')) : 0;
-        }
-
-        function createItem(rawLine) {
-            let type = 'despesa'; // Padrão
-            let text = rawLine.trim();
-            if (!text) return null;
-
-            // Lógica Estrita de Prefixos solicitada
-            if (text.startsWith('+')) { 
-                type = 'receita'; 
-                text = text.slice(1); 
+        function updateEmergencyShield(currentEss) {
+            const now = new Date();
+            const historyEss = [];
+            for (let i = 1; i <= 3; i++) {
+                const targetM = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const mData = db.filter(t => {
+                    const d = new Date(t.ts);
+                    return d.getMonth() === targetM.getMonth() && d.getFullYear() === targetM.getFullYear() && t.subType === 'essential';
+                });
+                if (mData.length > 0) historyEss.push(mData.reduce((a, b) => a + b.amount, 0));
             }
-            else if (text.startsWith('*')) { 
-                type = 'investimento'; 
-                text = text.slice(1); 
-            }
-            // Sem nada -> despesa (valor padrão já é despesa)
-
-            const amount = parseValue(text);
-            const description = text.replace(/(\d+(?:[.,]\d+)?)/, '').replace(/[+*]/g, '').trim() || 'Sem nome';
-            if (amount <= 0) return null;
-
-            const targetCategory = categories.find(c => c.type === type && c.name === 'Geral');
-
-            return {
-                id: (Date.now() + Math.random()).toString(),
-                amount, 
-                description, 
-                type,
-                date: new Date().toISOString(),
-                categoryId: targetCategory ? targetCategory.id : categories[0].id
-            };
+            const totalStored = db.filter(t => t.intent === 'guardei').reduce((a, b) => a + b.amount, 0);
+            let avgEss = historyEss.length > 0 ? historyEss.reduce((a, b) => a + b, 0) / historyEss.length : currentEss;
+            if (avgEss <= 0) avgEss = 1;
+            const months = (totalStored / avgEss).toFixed(1);
+            document.getElementById('shield-val').innerText = months;
+            document.getElementById('shield-circle').style.strokeDashoffset = 263.8 - (Math.min(months / 6, 1) * 263.8);
         }
 
-        txForm.addEventListener('submit', (e) => {
+        function renderHistory() {
+            const hist = document.getElementById('history-list');
+            hist.innerHTML = '';
+            [...db].sort((a,b) => b.ts - a.ts).slice(0, 20).forEach(t => {
+                hist.innerHTML += `
+                    <div onclick="openModal('${t.id}')" class="flex items-center justify-between p-5 bg-white rounded-3xl border border-slate-50 shadow-sm active:scale-95 transition-all cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white ${t.intent === 'ganhei' ? 'bg-emerald-400' : t.intent === 'guardei' ? 'bg-cyan-500' : t.subType === 'essential' ? 'bg-slate-900' : 'bg-rubi'}">
+                                <span class="text-[7px] font-black">${t.method.substring(0,4)}</span>
+                            </div>
+                            <div><p class="text-sm font-semibold text-slate-800 capitalize">${t.desc}</p><p class="text-[9px] font-bold text-slate-300 uppercase">${new Date(t.ts).toLocaleDateString()}</p></div>
+                        </div>
+                        <p class="text-sm font-bold">R$ ${t.amount.toLocaleString('pt-BR')}</p>
+                    </div>`;
+            });
+        }
+
+        window.openModal = (id) => {
+            selectedId = id;
+            const item = db.find(t => t.id === id);
+            document.getElementById('modal-desc').innerText = item.desc;
+            document.getElementById('modal-meta').innerText = `R$ ${item.amount.toLocaleString('pt-BR')} • ${item.method}`;
+            document.getElementById('manage-modal').classList.remove('hidden');
+        };
+
+        window.closeModal = () => {
+            document.getElementById('manage-modal').classList.add('hidden');
+            selectedId = null;
+        };
+
+        window.deleteEntry = () => {
+            if (!selectedId) return;
+            db = db.filter(t => t.id !== selectedId);
+            localStorage.setItem('rico_ruby_v6', JSON.stringify(db));
+            closeModal();
+            update();
+        };
+
+        window.editEntry = () => {
+            if (!selectedId) return;
+            const item = db.find(t => t.id === selectedId);
+            const input = document.getElementById('tx-input');
+            input.value = `${item.intent} ${item.amount} ${item.desc} ${item.method.toLowerCase()}`;
+            deleteEntry();
+            input.focus();
+        };
+
+        document.getElementById('tx-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const fullContent = txInput.value.trim();
-            if (!fullContent) return;
-
-            const lines = fullContent.split(/\r\n|\r|\n/).map(l => l.trim()).filter(l => l !== "");
-            let itemsFound = [];
-
-            for (let i = 0; i < lines.length; i++) {
-                const current = lines[i];
-                const hasNum = /\d/.test(current);
-                const hasTxt = /[a-zA-ZÀ-ÿ]/.test(current);
-
-                if (hasNum && hasTxt) {
-                    const it = createItem(current);
-                    if (it) itemsFound.push(it);
-                } 
-                else if (hasTxt && !hasNum && i + 1 < lines.length) {
-                    const next = lines[i + 1];
-                    if (/\d/.test(next)) {
-                        const it = createItem(`${current} ${next}`);
-                        if (it) {
-                            itemsFound.push(it);
-                            i++;
-                        }
-                    } else {
-                        const it = createItem(`${current} 0`);
-                        if (it) itemsFound.push(it);
-                    }
-                }
-                else if (hasNum && !hasTxt) {
-                    const it = createItem(`Item Avulso ${current}`);
-                    if (it) itemsFound.push(it);
-                }
-            }
-
-            if (itemsFound.length > 0) {
-                transactions = [...transactions, ...itemsFound];
-                txInput.value = '';
-                txInput.style.height = 'auto';
-                showFeedback(`${itemsFound.length} lançamentos feitos!`);
-                save();
-            } else {
-                showFeedback("Formato não reconhecido", "error");
-            }
+            const i = document.getElementById('tx-input');
+            const item = parse(i.value);
+            if (item) { db.push(item); localStorage.setItem('rico_ruby_v6', JSON.stringify(db)); i.value = ''; update(); }
         });
 
-        // --- Outros ---
-        searchInput.addEventListener('input', () => {
-            const q = searchInput.value.toLowerCase();
-            searchResults.innerHTML = '';
-            if (!q) return;
-            transactions.filter(t => t.description.toLowerCase().includes(q)).forEach(t => {
-                searchResults.innerHTML += `<div class="p-6 bg-white border border-slate-50 rounded-[2rem] flex justify-between items-center shadow-sm"><span class="font-bold text-slate-900">${t.description}</span><span class="italic font-black">R$ ${t.amount.toFixed(0)}</span></div>`;
+        document.querySelectorAll('.nav-btn').forEach(b => {
+            b.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+                b.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById(`tab-${b.dataset.tab}`).classList.add('active');
             });
         });
 
-        window.openEdit = (id) => {
-            currentEditingTxId = id;
-            const tx = transactions.find(t => t.id === id);
-            categorySelector.innerHTML = '';
-            categories.filter(c => c.type === tx.type).forEach(cat => {
-                categorySelector.innerHTML += `<button onclick="changeCat('${cat.id}')" class="p-5 rounded-3xl border-2 flex flex-col items-center gap-3 transition-all ${tx.categoryId === cat.id ? 'border-indigo-600 bg-indigo-50 shadow-inner' : 'border-slate-50'}"><div class="w-4 h-4 rounded-full" style="background-color: ${cat.color}"></div><span class="text-[9px] font-black uppercase tracking-widest leading-none">${cat.name}</span></button>`;
-            });
-            editModal.classList.remove('hidden');
-        };
-
-        window.changeCat = (catId) => {
-            transactions.find(t => t.id === currentEditingTxId).categoryId = catId;
-            editModal.classList.add('hidden');
-            save();
-        };
-
-        document.getElementById('close-edit').addEventListener('click', () => editModal.classList.add('hidden'));
-        document.getElementById('delete-btn').addEventListener('click', () => {
-            confirmModal.classList.remove('hidden');
-            document.getElementById('modal-confirm').onclick = () => {
-                transactions = transactions.filter(t => t.id !== currentEditingTxId);
-                editModal.classList.add('hidden'); confirmModal.classList.add('hidden');
-                save();
-            };
-        });
-        document.getElementById('modal-cancel').addEventListener('click', () => confirmModal.classList.add('hidden'));
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            confirmModal.classList.remove('hidden');
-            document.getElementById('modal-confirm').onclick = () => {
-                transactions = []; confirmModal.classList.add('hidden'); save();
-            };
-        });
-        document.getElementById('export-btn').addEventListener('click', () => {
-            const csv = "Data,Descricao,Tipo,Valor\n" + transactions.map(t => `${new Date(t.date).toLocaleDateString()},${t.description},${t.type},${t.amount}`).join("\n");
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = 'rico_backup.csv'; a.click();
-        });
-
-        txInput.addEventListener('input', () => { txInput.style.height = 'auto'; txInput.style.height = (txInput.scrollHeight) + 'px'; });
-
-        updateUI();
+        update();
     </script>
 </body>
 </html>
