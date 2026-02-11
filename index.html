@@ -251,7 +251,7 @@
 
         const normalize = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-        // --- Parser Corrigido (Remove verbos de intenção da descrição) ---
+        // --- Parser Corrigido (Identifica método antes de limpar descrição) ---
         function parseInput(raw) {
             if (!raw.trim()) return null;
             const normalized = normalize(raw);
@@ -264,22 +264,33 @@
 
             if (amount <= 0 || isNaN(amount)) { showToast("Valor não identificado"); return null; }
 
+            // 1. Identifica Intenção
             let intent = 'gastei';
-            let verbIdx = -1;
-            
-            wordsNormalized.forEach((w, i) => {
-                if (DICT.intents.ganhei.includes(w) || DICT.intents.guardei.includes(w) || DICT.intents.gastei.includes(w)) {
-                    intent = DICT.intents.ganhei.includes(w) ? 'ganhei' : (DICT.intents.guardei.includes(w) ? 'guardei' : 'gastei');
-                    verbIdx = i;
-                }
+            wordsNormalized.forEach((w) => {
+                if (DICT.intents.ganhei.includes(w)) intent = 'ganhei';
+                else if (DICT.intents.guardei.includes(w)) intent = 'guardei';
+                else if (DICT.intents.gastei.includes(w)) intent = 'gastei';
             });
 
-            const methodKeys = Object.values(DICT.methods).flat();
-            
+            // 2. Identifica Método de Pagamento (Varre antes de filtrar)
+            let method = 'DINHEIRO';
+            for (const [key, aliases] of Object.entries(DICT.methods)) {
+                if (wordsNormalized.some(w => aliases.includes(w))) {
+                    method = key;
+                    break;
+                }
+            }
+
+            // 3. Limpa a descrição removendo verbos, métodos, stopwords e números
+            const methodAliases = Object.values(DICT.methods).flat();
+            const intentVerbs = Object.values(DICT.intents).flat();
+
             let filteredWords = wordsOriginal.filter((w, i) => {
                 const wn = wordsNormalized[i];
-                const isIntentVerb = DICT.intents.ganhei.includes(wn) || DICT.intents.guardei.includes(wn) || DICT.intents.gastei.includes(wn);
-                return !isIntentVerb && !wn.match(/\d/) && !DICT.stop.includes(wn) && !methodKeys.includes(wn);
+                return !intentVerbs.includes(wn) && 
+                       !methodAliases.includes(wn) && 
+                       !wn.match(/\d/) && 
+                       !DICT.stop.includes(wn);
             });
 
             let descFinal = filteredWords.join(' ').trim();
@@ -292,7 +303,7 @@
                 amount, 
                 intent, 
                 subType, 
-                method: 'PIX', 
+                method, 
                 categoryId, 
                 desc: descFinal || 'DIVERSO', 
                 rawText: raw 
@@ -368,7 +379,7 @@
                 html += `
                     <div onclick="openEditModal('${t.id}')" class="flex items-center justify-between p-8 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm hover:border-rubi/20 transition-all cursor-pointer">
                         <div class="flex items-center gap-6">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-[8px] font-black" style="background-color: ${cat.color}">FLUXO</div>
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-[8px] font-black" style="background-color: ${cat.color}">${t.method}</div>
                             <div>
                                 <p class="text-[12px] font-black text-slate-900 leading-tight">${t.desc.toUpperCase()}</p>
                                 <p class="text-[9px] font-bold text-slate-300 uppercase mt-1">${cat.name.toUpperCase()} • ${new Date(t.ts).toLocaleDateString()}</p>
