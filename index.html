@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rico Dinheirinho - Rubi Deterministic</title>
+    <title>Rico Dinheirinho - Rubi Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -14,6 +14,7 @@
         .tab-content.active { display: block; }
         .bg-rubi { background-color: var(--rubi); }
         .text-rubi { color: var(--rubi); }
+        .border-rubi { border-color: var(--rubi); }
         .animate-fade { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .main-container { height: 100dvh; min-height: -webkit-fill-available; }
@@ -22,7 +23,7 @@
 <body class="bg-[#FCFAFA] flex justify-center md:p-6">
     <div class="w-full max-w-2xl bg-white md:rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col main-container border border-slate-100">
         
-        <!-- Feedback Visual -->
+        <!-- Feedback Visual (Toast) -->
         <div id="toast" class="fixed top-6 left-4 right-4 z-[300] transform -translate-y-32 transition-all duration-500 pointer-events-none">
             <div id="toast-bg" class="bg-slate-900 text-white p-5 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/10 max-w-sm mx-auto">
                 <div id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center bg-rubi shrink-0">
@@ -32,12 +33,55 @@
             </div>
         </div>
 
+        <!-- Modal de Confirmação -->
+        <div id="confirm-modal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[400] flex items-center justify-center p-6 hidden">
+            <div class="bg-white w-full max-w-xs rounded-[2.5rem] p-8 shadow-2xl text-center space-y-6">
+                <div class="w-16 h-16 bg-rose-50 text-rubi rounded-full flex items-center justify-center mx-auto">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-8 h-8"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 17c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="text-sm font-black uppercase">Confirmar Ação?</h4>
+                    <p class="text-[10px] text-slate-400 font-medium">Esta operação não pode ser desfeita.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button id="modal-cancel" class="flex-1 py-4 bg-slate-50 text-slate-400 rounded-2xl font-bold uppercase text-[10px]">Não</button>
+                    <button id="modal-confirm" class="flex-1 py-4 bg-rubi text-white rounded-2xl font-bold uppercase text-[10px]">Sim</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Edição/Gestão -->
+        <div id="edit-modal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[350] flex items-end md:items-center justify-center p-0 md:p-6 hidden">
+            <div class="bg-white w-full max-w-lg rounded-t-[3rem] md:rounded-[3rem] p-8 shadow-2xl space-y-8 animate-fade overflow-y-auto max-h-[90vh]">
+                <div class="flex justify-between items-center">
+                    <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Ajustar Registro</h4>
+                    <button onclick="closeEditModal()" class="text-slate-300 hover:text-slate-900 transition-colors">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-6 h-6"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div id="category-selector" class="grid grid-cols-2 gap-3">
+                    <!-- Gerado via JS -->
+                </div>
+                <div class="pt-4 border-t border-slate-50 space-y-3">
+                    <button id="btn-rewind" class="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-bold uppercase text-[10px] tracking-widest flex items-center justify-center gap-3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-4 h-4"><path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                        Refazer (Rewind)
+                    </button>
+                    <button id="btn-delete" class="w-full py-5 bg-rose-50 text-rubi rounded-[2rem] font-bold uppercase text-[10px] tracking-widest flex items-center justify-center gap-3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-4 h-4"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        Apagar Permanente
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <main id="main-content" class="flex-1 overflow-y-auto px-6 md:px-10 pt-10 pb-44 no-scrollbar">
             
+            <!-- ABA: DASHBOARD -->
             <section id="tab-dashboard" class="tab-content active animate-fade space-y-8">
                 <header class="flex justify-between items-center">
                     <div>
-                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Algoritmo Determinístico</p>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Engenharia Financeira</p>
                         <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight leading-none uppercase">Rico <br/><span class="text-rubi">Dinheirinho</span></h1>
                     </div>
                     <div class="bg-rose-50 p-3 rounded-2xl text-rubi border border-rose-100">
@@ -45,10 +89,9 @@
                     </div>
                 </header>
 
-                <!-- Resumo Mensal GGG -->
-                <div class="relative overflow-hidden bg-slate-950 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-rose-900/10">
+                <div class="relative overflow-hidden bg-slate-950 rounded-[2.5rem] p-8 text-white shadow-2xl">
                     <div class="absolute -top-10 -right-10 w-48 h-48 bg-rubi/10 rounded-full blur-[60px]"></div>
-                    <p class="text-slate-500 text-[9px] font-bold uppercase tracking-[0.3em] mb-2">Resumo do Mês</p>
+                    <p class="text-slate-500 text-[9px] font-bold uppercase tracking-[0.3em] mb-2">Saldo do Mês</p>
                     <h2 id="balance-val" class="text-4xl font-light tracking-tighter mb-8">
                         <span class="text-xl font-bold opacity-20 mr-1">R$</span>0,00
                     </h2>
@@ -59,10 +102,9 @@
                     </div>
                 </div>
 
-                <!-- Input Principal -->
                 <div class="space-y-4">
                     <form id="tx-form" class="relative">
-                        <textarea id="tx-input" rows="1" placeholder="Escreva como você fala..." class="w-full bg-slate-50 border-none rounded-[2rem] py-7 px-8 text-base font-medium text-slate-900 focus:ring-4 ring-rubi/10 transition-all shadow-inner outline-none no-scrollbar resize-none"></textarea>
+                        <textarea id="tx-input" rows="1" placeholder="Ex: Gastei 45 almoço pix" class="w-full bg-slate-50 border-none rounded-[2rem] py-7 px-8 text-base font-medium text-slate-900 focus:ring-4 ring-rubi/10 transition-all shadow-inner outline-none no-scrollbar resize-none"></textarea>
                         <button type="submit" class="absolute right-3 bottom-3 aspect-square bg-rubi text-white rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-all w-14 h-14">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-6 h-6"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </button>
@@ -73,7 +115,7 @@
                 <div class="bg-white p-7 rounded-[2.5rem] border border-slate-50 shadow-sm flex items-center justify-between gap-6">
                     <div class="space-y-1.5 flex-1">
                         <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Reserva de Emergência</h4>
-                        <p id="shield-desc" class="text-[9px] text-slate-400 font-medium leading-tight">Média baseada nos últimos 3 meses.</p>
+                        <p id="shield-desc" class="text-[9px] text-slate-400 font-medium leading-tight">Média baseada no histórico.</p>
                     </div>
                     <div class="relative w-20 h-20 flex items-center justify-center flex-shrink-0">
                         <svg class="w-full h-full transform -rotate-90">
@@ -87,10 +129,10 @@
                     </div>
                 </div>
 
-                <!-- Saúde 50-30-20 -->
+                <!-- Saúde Financeira -->
                 <div class="bg-white p-7 rounded-[2.5rem] border border-slate-50 shadow-sm space-y-5">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Saúde Financeira</h4>
+                        <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Saúde 50-30-20</h4>
                         <span id="label-status" class="text-[9px] font-black uppercase text-slate-300">Estável</span>
                     </div>
                     <div id="bar-container" class="h-4 w-full bg-slate-100 rounded-full flex overflow-hidden">
@@ -101,229 +143,415 @@
                 </div>
             </section>
 
+            <!-- ABA: EXTRATO -->
             <section id="tab-history" class="tab-content animate-fade space-y-6">
                 <h3 class="text-xl font-extrabold text-slate-900 uppercase tracking-tight">Memória de Fluxo</h3>
                 <div id="history-list" class="space-y-3 pb-20"></div>
             </section>
 
+            <!-- ABA: BUSCA -->
+            <section id="tab-search" class="tab-content animate-fade space-y-8">
+                <h3 class="text-xl font-extrabold text-slate-900 uppercase tracking-tight">Buscar Registros</h3>
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder="O que você procura?" class="w-full bg-slate-50 border-none rounded-[2rem] py-6 px-8 text-sm font-semibold text-slate-900 shadow-inner outline-none">
+                </div>
+                <div id="search-results" class="space-y-3 pb-20"></div>
+            </section>
+
+            <!-- ABA: AJUSTES -->
+            <section id="tab-settings" class="tab-content animate-fade space-y-12 max-w-lg mx-auto">
+                <h3 class="text-xl font-extrabold text-slate-900 uppercase tracking-tight text-center">Configurações</h3>
+                <div class="space-y-4">
+                    <button id="export-btn" class="w-full flex items-center justify-between p-8 bg-white border border-slate-50 rounded-[3rem] shadow-sm hover:bg-slate-50 transition-all group">
+                        <div class="flex items-center gap-6 text-left">
+                            <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-black uppercase text-slate-900 tracking-widest">Exportar Dados</p>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase mt-1">Gerar Planilha .CSV</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button id="reset-btn" class="w-full py-8 text-rubi text-[10px] font-black uppercase tracking-[0.3em] border-2 border-dashed border-rose-50 rounded-[3.5rem] hover:bg-rose-50 transition-all">
+                        Limpar Toda Memória
+                    </button>
+                </div>
+            </section>
+
         </main>
 
-        <nav class="absolute bottom-8 left-1/2 -translate-x-1/2 w-[90%] md:w-[320px] h-20 bg-slate-950/95 backdrop-blur-xl rounded-[2.5rem] flex items-center justify-around px-6 shadow-2xl border border-white/5">
+        <nav class="absolute bottom-8 left-1/2 -translate-x-1/2 w-[95%] md:w-[400px] h-20 bg-slate-950/95 backdrop-blur-xl rounded-[2.5rem] flex items-center justify-around px-4 shadow-2xl border border-white/5">
             <button data-tab="dashboard" class="nav-btn group flex flex-col items-center gap-1 active opacity-40 [&.active]:opacity-100 transition-all">
                 <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white transition-colors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-                <span class="text-[8px] font-bold uppercase tracking-widest text-white">Início</span>
+                <span class="text-[7px] font-black uppercase tracking-widest text-white">Início</span>
             </button>
             <button data-tab="history" class="nav-btn group flex flex-col items-center gap-1 opacity-40 [&.active]:opacity-100 transition-all">
                 <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white transition-colors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg></div>
-                <span class="text-[8px] font-bold uppercase tracking-widest text-white">Extrato</span>
+                <span class="text-[7px] font-black uppercase tracking-widest text-white">Extrato</span>
+            </button>
+            <button data-tab="search" class="nav-btn group flex flex-col items-center gap-1 opacity-40 [&.active]:opacity-100 transition-all">
+                <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white transition-colors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+                <span class="text-[7px] font-black uppercase tracking-widest text-white">Busca</span>
+            </button>
+            <button data-tab="settings" class="nav-btn group flex flex-col items-center gap-1 opacity-40 [&.active]:opacity-100 transition-all">
+                <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white transition-colors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+                <span class="text-[7px] font-black uppercase tracking-widest text-white">Ajustes</span>
             </button>
         </nav>
     </div>
 
     <script>
-        // --- Dicionários Determinísticos ---
-        const TERMS = {
-            GANHEI: ['ganhei', 'ganho', 'recebi', 'receber', 'recebido', 'recebendo', 'entrou', 'entrada', 'caiu', 'cair', 'depositaram', 'depositado', 'deposito', 'salario', 'salário', 'freela', 'venda', 'vendi', 'vendido', 'faturei', 'faturado', 'rendeu', 'rendimentos', 'lucro', 'lucrei', 'comissao', 'comissão', 'cashback', 'bonus', 'bônus', 'dividendo', 'dividendos', 'juros'],
-            GASTEI: ['gastei', 'gasto', 'paguei', 'pago', 'pagar', 'pagamento', 'despesa', 'despesas', 'comprei', 'compra', 'comprado', 'debito', 'débito', 'boleto', 'conta', 'fatura', 'assinatura', 'mensalidade', 'aluguel', 'mercado', 'supermercado', 'farmacia', 'farmácia', 'luz', 'agua', 'água', 'internet', 'telefone', 'cartao', 'cartão', 'taxa', 'tarifa', 'imposto', 'impostos', 'financiamento', 'parcela', 'parcelado', 'doacao', 'doação', 'manutencao', 'manutenção', 'conserto', 'transporte', 'uber', 'combustivel', 'combustível'],
-            GUARDEI: ['guardei', 'guardar', 'guardado', 'poupei', 'poupado', 'poupar', 'reservei', 'reserva', 'reservado', 'apliquei', 'aplicacao', 'aplicação', 'aplicado', 'aporte', 'aportado', 'tesouro', 'cdb', 'rdb', 'lci', 'lca', 'fundo', 'fundos', 'previdencia', 'previdência', 'emergencia', 'emergência', 'meta', 'caixinha', 'cofrinho', 'separei', 'separado']
+        // --- Dicionários e Configurações ---
+        const DICT = {
+            intents: {
+                ganhei: ['ganhei', 'ganho', 'recebi', 'receber', 'recebido', 'recebendo', 'entrou', 'entrada', 'caiu', 'cair', 'depositaram', 'depositado', 'deposito', 'salario', 'salário', 'freela', 'venda', 'vendi', 'vendido', 'faturei', 'faturado', 'rendeu', 'rendimentos', 'lucro', 'lucrei', 'comissao', 'comissão', 'cashback', 'bonus', 'bônus', 'dividendo', 'dividendos', 'juros'],
+                guardei: ['guardei', 'guardar', 'guardado', 'poupei', 'poupado', 'poupar', 'reservei', 'reserva', 'reservado', 'apliquei', 'aplicacao', 'aplicação', 'aplicado', 'aporte', 'aportado', 'tesouro', 'cdb', 'rdb', 'lci', 'lca', 'fundo', 'fundos', 'previdencia', 'previdência', 'emergencia', 'emergência', 'meta', 'caixinha', 'cofrinho', 'separei', 'separado'],
+                gastei: ['gastei', 'gasto', 'paguei', 'pago', 'pagar', 'pagamento', 'despesa', 'despesas', 'comprei', 'compra', 'comprado', 'debito', 'débito', 'boleto', 'conta', 'fatura', 'assinatura', 'mensalidade', 'aluguel', 'mercado', 'supermercado', 'farmacia', 'farmácia', 'luz', 'agua', 'água', 'internet', 'telefone', 'cartao', 'cartão', 'taxa', 'tarifa', 'imposto', 'impostos', 'financiamento', 'parcela', 'parcelado', 'doacao', 'doação', 'manutencao', 'manutenção', 'conserto', 'transporte', 'uber', 'combustivel', 'combustível']
+            },
+            essentials: ['aluguel','luz','agua','água','internet','mercado','farmacia','farmácia','transporte','combustivel','combustível','escola','saude','saúde','condominio','condomínio','iptu','mei','imposto'],
+            methods: { PIX: ['pix'], CARTAO: ['cartao', 'cartão', 'credito', 'crédito', 'debito', 'débito'], BOLETO: ['boleto'], DINHEIRO: ['dinheiro', 'especie'], TRANSFERENCIA: ['transferencia', 'ted', 'doc'] },
+            stop: ['de','do','da','para','pra','no','na','em','com','por','pelo','pela','o','a','os','as','um','uma','seu','sua']
         };
 
-        const AMBIGUOUS = ['investi', 'investimento'];
-        
-        const METHODS = {
-            PIX: ['pix'],
-            CARTAO: ['cartao', 'cartão', 'credito', 'crédito', 'debito', 'débito'],
-            BOLETO: ['boleto'],
-            DINHEIRO: ['dinheiro', 'especie', 'espécie'],
-            TRANSFERENCIA: ['transferencia', 'transferência', 'ted', 'doc']
-        };
+        const CATEGORIES = [
+            { id: 'cat_sal', name: 'Salário', intent: 'ganhei', color: '#059669' },
+            { id: 'cat_ext', name: 'Extra / Freela', intent: 'ganhei', color: '#10b981' },
+            { id: 'cat_ess', name: 'Essencial', intent: 'gastei', color: '#1e293b' },
+            { id: 'cat_laz', name: 'Lazer', intent: 'gastei', color: '#9B1B30' },
+            { id: 'cat_edu', name: 'Educação', intent: 'gastei', color: '#6366f1' },
+            { id: 'cat_sau', name: 'Saúde', intent: 'gastei', color: '#ef4444' },
+            { id: 'cat_inv', name: 'Investimento', intent: 'guardei', color: '#0891b2' },
+            { id: 'cat_res', name: 'Reserva', intent: 'guardei', color: '#06b6d4' }
+        ];
 
-        const STOPWORDS = ['de', 'do', 'da', 'para', 'pra', 'no', 'na', 'em', 'com', 'por', 'pelo', 'pela', 'o', 'a', 'os', 'as', 'um', 'uma', 'seu', 'sua'];
+        let transactions = [];
+        let currentEditingId = null;
 
-        const ESSENTIALS = ['aluguel','luz','agua','água','internet','mercado','farmacia','farmácia','transporte','combustivel','combustível','escola','saude','saúde','condominio','condomínio','iptu','mei','imposto'];
-
-        let db = JSON.parse(localStorage.getItem('rico_deterministic_v1')) || [];
+        // --- Persistência Robusta ---
+        try {
+            transactions = JSON.parse(localStorage.getItem('rico_ruby_master')) || [];
+        } catch(e) {
+            localStorage.removeItem('rico_ruby_master');
+            transactions = [];
+            showToast("Memória Corrompida Reiniciada", "error");
+        }
 
         const normalize = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-        // --- Algoritmo de Classificação ---
-        function parse(raw) {
+        // --- Parser Determinístico Rubi Evoluído ---
+        function parseInput(raw) {
             if (!raw.trim()) return null;
             const normalized = normalize(raw);
             const words = normalized.split(/\s+/);
             
-            // 1. Extração de Valor (Primeiro número)
-            let valor = 0;
-            const moneyMatch = raw.match(/-?\d+(\.\d{3})*(,\d+)?/);
-            if (moneyMatch) {
-                valor = parseFloat(moneyMatch[0].replace(/\./g, '').replace(',', '.'));
+            // Extração monetária BR Resiliente (suporta 100, 100,00, 1.200, 1.200,50)
+            let amount = 0;
+            const moneyRegex = /\d+([.,]\d+)*[.,]\d+|\d+/g;
+            const matches = raw.match(moneyRegex);
+            if (matches) {
+                // Pega o maior ou primeiro grupo que pareça dinheiro
+                let val = matches[0].replace(/\./g, '').replace(',', '.');
+                amount = parseFloat(val);
             }
-            if (valor <= 0 || isNaN(valor)) {
-                showToast("Diga o valor do lançamento.", "error");
+
+            if (amount <= 0 || isNaN(amount)) {
+                showToast("Valor não identificado", "error");
                 return null;
             }
 
-            // 2. Classificação de Intenção (GGG)
-            let tipo = 'GASTEI'; // Fallback
+            let intent = null;
             let detectedVerb = "";
-
-            // Ordem de prioridade: Verbo explícito primeiro
+            
+            // Procura verbos em qualquer posição
             for (const word of words) {
-                if (AMBIGUOUS.includes(word)) {
-                    // Lógica especial para INVESTI
-                    const hasReserveTerms = words.some(w => TERMS.GUARDEI.includes(w));
-                    tipo = hasReserveTerms ? "GUARDEI" : "GASTEI";
-                    detectedVerb = word;
-                    break;
-                }
-                if (TERMS.GANHEI.includes(word)) { tipo = "GANHEI"; detectedVerb = word; break; }
-                if (TERMS.GUARDEI.includes(word)) { tipo = "GUARDEI"; detectedVerb = word; break; }
-                if (TERMS.GASTEI.includes(word)) { tipo = "GASTEI"; detectedVerb = word; break; }
+                if (DICT.intents.ganhei.includes(word)) { intent = "ganhei"; detectedVerb = word; break; }
+                if (DICT.intents.guardei.includes(word)) { intent = "guardei"; detectedVerb = word; break; }
+                if (DICT.intents.gastei.includes(word)) { intent = "gastei"; detectedVerb = word; break; }
+            }
+            
+            // Se não houver verbo, assume gastei
+            if (!intent) {
+                intent = "gastei";
             }
 
-            // 3. Meio de Pagamento
-            let meio_pagamento = null;
-            for (const [key, keywords] of Object.entries(METHODS)) {
-                if (words.some(w => keywords.includes(w))) {
-                    meio_pagamento = key;
-                    break;
-                }
+            let method = 'PADRAO';
+            for (const [m, keywords] of Object.entries(DICT.methods)) {
+                if (words.some(w => keywords.includes(w))) { method = m; break; }
             }
 
-            // 4. Limpeza da Descrição
-            let filteredWords = words.filter(w => 
-                w !== detectedVerb && 
-                !w.match(/\d/) && 
-                !STOPWORDS.includes(w) &&
-                !Object.values(METHODS).flat().includes(w)
-            );
-
-            // Subcategoria interna para saúde financeira
-            let subType = tipo === 'GASTEI' ? (filteredWords.some(w => ESSENTIALS.includes(w)) ? 'ESSENTIAL' : 'LIFESTYLE') : null;
+            let filteredWords = words.filter(w => w !== detectedVerb && !w.match(/\d/) && !DICT.stop.includes(w) && !Object.values(DICT.methods).flat().includes(w));
+            let subType = intent === 'gastei' ? (filteredWords.some(w => DICT.essentials.includes(w)) ? 'essential' : 'lifestyle') : null;
+            
+            let categoryId = intent === 'ganhei' ? 'cat_sal' : (intent === 'guardei' ? 'cat_res' : (subType === 'essential' ? 'cat_ess' : 'cat_laz'));
 
             return {
                 id: `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-                timestamp: new Date().toISOString(),
-                valor,
-                tipo,
+                ts: Date.now(),
+                amount,
+                intent,
                 subType,
-                meio_pagamento,
-                descricao: filteredWords.join(' ') || 'Diverso',
-                origem: "manual"
+                method,
+                categoryId,
+                desc: filteredWords.join(' ') || 'Diverso',
+                rawText: raw
             };
         }
 
-        // --- Motor de UI e Estatística ---
-        function update() {
+        // --- Camada de Análise Financeira (Função Nova) ---
+        function analyzeFinancialHealth(monthly) {
+            const sum = (intent, sub = null) => monthly.filter(t => t.intent === intent && (!sub || t.subType === sub)).reduce((a, b) => a + b.amount, 0);
+
+            const ganhei = sum('ganhei');
+            const gasteiEss = sum('gastei', 'essential');
+            const gasteiLfs = sum('gastei', 'lifestyle');
+            const guardei = sum('guardei');
+            const gasteiTotal = gasteiEss + gasteiLfs;
+
+            const metrics = {
+                savingsRate: ganhei > 0 ? (guardei / ganhei) : 0,
+                essentialRatio: ganhei > 0 ? (gasteiEss / ganhei) : (gasteiTotal > 0 ? 1 : 0),
+                lifestyleRatio: ganhei > 0 ? (gasteiLfs / ganhei) : 0,
+                futureRatio: ganhei > 0 ? (guardei / ganhei) : 0,
+                alerts: []
+            };
+
+            // Alertas Estratégicos
+            if (gasteiTotal > ganhei && ganhei > 0) metrics.alerts.push("Mês com gasto maior que receita!");
+            
+            // Crescimento de essenciais (últimos 3 meses)
             const now = new Date();
-            const monthly = db.filter(t => {
-                const d = new Date(t.timestamp);
+            const historyEss = [];
+            for (let i = 1; i <= 3; i++) {
+                const target = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const val = transactions.filter(t => {
+                    const d = new Date(t.ts);
+                    return d.getMonth() === target.getMonth() && d.getFullYear() === target.getFullYear() && t.subType === 'essential';
+                }).reduce((a, b) => a + b.amount, 0);
+                if (val > 0) historyEss.push(val);
+            }
+            if (historyEss.length > 0) {
+                const avgHistory = historyEss.reduce((a,b) => a+b, 0) / historyEss.length;
+                if (gasteiEss > avgHistory * 1.1) metrics.alerts.push("Despesas essenciais acima da média!");
+            }
+
+            // Taxa de poupança caindo
+            if (historyEss.length >= 1) {
+                const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                const lastGanhei = transactions.filter(t => {
+                    const d = new Date(t.ts);
+                    return d.getMonth() === lastMonth.getMonth() && d.getFullYear() === lastMonth.getFullYear() && t.intent === 'ganhei';
+                }).reduce((a, b) => a + b.amount, 0);
+                const lastGuardei = transactions.filter(t => {
+                    const d = new Date(t.ts);
+                    return d.getMonth() === lastMonth.getMonth() && d.getFullYear() === lastMonth.getFullYear() && t.intent === 'guardei';
+                }).reduce((a, b) => a + b.amount, 0);
+                const lastSavingsRate = lastGanhei > 0 ? (lastGuardei / lastGanhei) : 0;
+                if (metrics.savingsRate < lastSavingsRate && lastSavingsRate > 0) metrics.alerts.push("Queda na taxa de poupança detectada.");
+            }
+
+            return metrics;
+        }
+
+        // --- Motor de UI e Atualização ---
+        function updateUI() {
+            const now = new Date();
+            const monthly = transactions.filter(t => {
+                const d = new Date(t.ts);
                 return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
             });
 
-            const sum = (type, sub = null) => monthly.filter(t => t.tipo === type && (!sub || t.subType === sub)).reduce((a, b) => a + b.valor, 0);
-
-            const ganhei = sum('GANHEI');
-            const gasteiEss = sum('GASTEI', 'ESSENTIAL');
-            const gasteiLfs = sum('GASTEI', 'LIFESTYLE');
-            const guardei = sum('GUARDEI');
-            const gasteiTotal = gasteiEss + gasteiLfs;
+            // Delegar cálculos para a camada de análise
+            const health = analyzeFinancialHealth(monthly);
+            
+            const sum = (intent, sub = null) => monthly.filter(t => t.intent === intent && (!sub || t.subType === sub)).reduce((a, b) => a + b.amount, 0);
+            const ganhei = sum('ganhei');
+            const gasteiTotal = sum('gastei');
+            const guardei = sum('guardei');
+            const gasteiEss = sum('gastei', 'essential');
 
             document.getElementById('balance-val').innerHTML = `<span class="text-xl font-bold opacity-20 mr-1">R$</span>${(ganhei - gasteiTotal - guardei).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
             document.getElementById('sum-ganhei').innerText = `R$ ${ganhei.toLocaleString('pt-BR')}`;
             document.getElementById('sum-gastei').innerText = `R$ ${gasteiTotal.toLocaleString('pt-BR')}`;
             document.getElementById('sum-guardei').innerText = `R$ ${guardei.toLocaleString('pt-BR')}`;
 
-            // Saúde 50-30-20
+            // Saúde 50-30-20 Real
             const statusLabel = document.getElementById('label-status');
-            if (ganhei > 0) {
-                const pEss = (gasteiEss / ganhei) * 100;
-                const pLfs = (gasteiLfs / ganhei) * 100;
-                const pFut = (guardei / ganhei) * 100;
+            const bars = { 
+                ess: health.essentialRatio * 100, 
+                lfs: health.lifestyleRatio * 100, 
+                fut: health.futureRatio * 100 
+            };
 
-                document.getElementById('bar-ess').style.width = `${pEss}%`;
-                document.getElementById('bar-lfs').style.width = `${pLfs}%`;
-                document.getElementById('bar-fut').style.width = `${pFut}%`;
-                
-                statusLabel.innerText = pEss > 60 ? "ALERTA: CUSTO FIXO ALTO" : "SAÚDE ESTÁVEL";
-            } else {
-                statusLabel.innerText = "AGUARDANDO RECEITA";
-                document.getElementById('bar-ess').style.width = '0%';
-                document.getElementById('bar-lfs').style.width = '0%';
-                document.getElementById('bar-fut').style.width = '0%';
+            // Classificação dinâmica baseada na proporção real
+            let healthScore = "Crítico";
+            if (health.essentialRatio <= 0.5 && health.futureRatio >= 0.2) healthScore = "Excelente";
+            else if (health.essentialRatio <= 0.6 && health.futureRatio >= 0.1) healthScore = "Equilibrado";
+            else if (health.essentialRatio <= 0.7) healthScore = "Atenção";
+            
+            // Taxa de Poupança Real (Internal logic 3)
+            let savingsText = "POUPANÇA: < 10% (ALERTA)";
+            if (health.savingsRate > 0.2) savingsText = "POUPANÇA: > 20% (EXCELENTE)";
+            else if (health.savingsRate >= 0.1) savingsText = "POUPANÇA: OK";
+
+            statusLabel.innerText = ganhei > 0 ? `${healthScore} • ${savingsText}` : "AGUARDANDO RECEITA";
+
+            document.getElementById('bar-ess').style.width = `${Math.min(bars.ess, 100)}%`;
+            document.getElementById('bar-lfs').style.width = `${Math.min(bars.lfs, 100)}%`;
+            document.getElementById('bar-fut').style.width = `${Math.min(bars.fut, 100)}%`;
+
+            // Alertas estratégicos (Internal logic 2)
+            if (health.alerts.length > 0) {
+                // Exibe apenas um alerta por vez para não sobrecarregar
+                setTimeout(() => showToast(health.alerts[0], "error"), 1000);
             }
 
             updateShield(gasteiEss);
-            renderHistory();
+            renderList(monthly, 'history-list');
+            saveData();
         }
 
         function updateShield(currentEss) {
-            const now = new Date();
-            const history = [];
-            for (let i = 1; i <= 3; i++) {
-                const target = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                const val = db.filter(t => {
-                    const d = new Date(t.timestamp);
-                    return d.getMonth() === target.getMonth() && d.getFullYear() === target.getFullYear() && t.subType === 'ESSENTIAL';
-                }).reduce((a, b) => a + b.valor, 0);
-                if (val > 0) history.push(val);
-            }
+            // Reserva mais inteligente (Internal logic 4)
+            const totalStored = transactions.filter(t => t.intent === 'guardei').reduce((a, b) => a + b.amount, 0);
+            
+            // Agrupar gastos essenciais por mês real
+            const monthlyEssMap = {};
+            transactions.forEach(t => {
+                if (t.categoryId === 'cat_ess' && t.amount > 0) {
+                    const d = new Date(t.ts);
+                    const key = `${d.getFullYear()}-${d.getMonth()}`;
+                    monthlyEssMap[key] = (monthlyEssMap[key] || 0) + t.amount;
+                }
+            });
+            
+            const validMonthsValues = Object.values(monthlyEssMap);
+            const avg = validMonthsValues.length > 0 ? (validMonthsValues.reduce((a,b) => a+b, 0) / validMonthsValues.length) : currentEss;
+            
+            const months = avg > 0 ? (totalStored / avg).toFixed(1) : "0";
+            const monthsNum = parseFloat(months);
 
-            const totalStored = db.filter(t => t.tipo === 'GUARDEI').reduce((a, b) => a + b.valor, 0);
-            const shieldVal = document.getElementById('shield-val');
-            const shieldDesc = document.getElementById('shield-desc');
+            document.getElementById('shield-val').innerText = months;
+            document.getElementById('shield-circle').style.strokeDashoffset = 226.2 - (Math.min(monthsNum / 6, 1) * 226.2);
+            
+            let desc = "Baseado no custo atual.";
+            if (validMonthsValues.length > 0) desc = `Média real de ${validMonthsValues.length} meses essenciais.`;
+            
+            if (monthsNum < 3 && totalStored > 0) desc += " ⚠️ Reserva Baixa!";
+            else if (monthsNum >= 6) desc += " ✅ Zona de Segurança.";
 
-            if (history.length < 1 && currentEss === 0) {
-                shieldVal.innerText = "0";
-                shieldDesc.innerText = "REGISTRE SEUS CUSTOS FIXOS.";
-                document.getElementById('shield-circle').style.strokeDashoffset = 226.2;
-            } else {
-                const avg = history.length > 0 ? history.reduce((a, b) => a + b, 0) / history.length : currentEss;
-                const months = (totalStored / avg).toFixed(1);
-                shieldVal.innerText = months;
-                document.getElementById('shield-circle').style.strokeDashoffset = 226.2 - (Math.min(months / 6, 1) * 226.2);
-                shieldDesc.innerText = history.length >= 3 ? "MÉDIA REAL DOS ÚLTIMOS 3 MESES." : "ESTIMATIVA BASEADA NO MÊS ATUAL.";
+            document.getElementById('shield-desc').innerText = desc;
+
+            // Alerta Estratégico de Reserva
+            if (monthsNum < 3 && totalStored > 0 && currentEss > 0) {
+                // Detectado internamente via motor
             }
         }
 
-        function renderHistory() {
-            const hist = document.getElementById('history-list');
+        function renderList(list, containerId) {
+            const container = document.getElementById(containerId);
             let html = "";
-            [...db].sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 15).forEach(t => {
-                const colors = { GANHEI: 'bg-emerald-400', GUARDEI: 'bg-cyan-500', ESSENTIAL: 'bg-slate-900', LIFESTYLE: 'bg-rubi' };
-                const bgColor = t.tipo === 'GASTEI' ? colors[t.subType] : colors[t.tipo];
+            [...list].sort((a,b) => b.ts - a.ts).forEach(t => {
+                const cat = CATEGORIES.find(c => c.id === t.categoryId) || CATEGORIES[0];
                 html += `
-                    <div class="flex items-center justify-between p-5 bg-white rounded-3xl border border-slate-50 shadow-sm">
+                    <div onclick="openEditModal('${t.id}')" class="flex items-center justify-between p-5 bg-white rounded-3xl border border-slate-50 shadow-sm active:scale-95 transition-all cursor-pointer">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-[7px] font-black ${bgColor}">
-                                ${t.meio_pagamento || 'PAD'}
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-[7px] font-black" style="background-color: ${cat.color}">
+                                ${t.method.substring(0,4)}
                             </div>
                             <div>
-                                <p class="text-sm font-semibold text-slate-800 capitalize">${t.descricao}</p>
-                                <p class="text-[9px] font-bold text-slate-300 uppercase">${new Date(t.timestamp).toLocaleDateString()}</p>
+                                <p class="text-sm font-semibold text-slate-800 capitalize">${t.desc}</p>
+                                <p class="text-[9px] font-bold text-slate-300 uppercase">${cat.name} • ${new Date(t.ts).toLocaleDateString()}</p>
                             </div>
                         </div>
-                        <p class="text-sm font-bold text-slate-900">R$ ${t.valor.toLocaleString('pt-BR')}</p>
+                        <p class="text-sm font-bold text-slate-900">R$ ${t.amount.toLocaleString('pt-BR')}</p>
                     </div>`;
             });
-            hist.innerHTML = html;
+            container.innerHTML = html || `<p class="text-[10px] text-slate-300 text-center py-10 uppercase font-bold tracking-widest">Sem registros</p>`;
+        }
+
+        // --- Gestão de Lançamentos (Edit/Delete) ---
+        window.openEditModal = (id) => {
+            currentEditingId = id;
+            const t = transactions.find(item => item.id === id);
+            const selector = document.getElementById('category-selector');
+            selector.innerHTML = "";
+            
+            CATEGORIES.filter(c => c.intent === t.intent).forEach(cat => {
+                selector.innerHTML += `
+                    <button onclick="setCategory('${cat.id}')" class="p-4 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${t.categoryId === cat.id ? 'border-rubi bg-rose-50' : 'border-slate-50'}">
+                        <div class="w-3 h-3 rounded-full" style="background-color: ${cat.color}"></div>
+                        <span class="text-[9px] font-black uppercase tracking-tight">${cat.name}</span>
+                    </button>`;
+            });
+            document.getElementById('edit-modal').classList.remove('hidden');
+        };
+
+        window.closeEditModal = () => document.getElementById('edit-modal').classList.add('hidden');
+
+        window.setCategory = (catId) => {
+            const t = transactions.find(item => item.id === currentEditingId);
+            t.categoryId = catId;
+            if (t.intent === 'gastei') t.subType = (catId === 'cat_ess' ? 'essential' : 'lifestyle');
+            closeEditModal();
+            updateUI();
+            showToast("Categoria Atualizada");
+        };
+
+        document.getElementById('btn-rewind').onclick = () => {
+            const t = transactions.find(item => item.id === currentEditingId);
+            const input = document.getElementById('tx-input');
+            input.value = t.rawText || `${t.intent} ${t.amount} ${t.desc} ${t.method}`;
+            transactions = transactions.filter(item => item.id !== currentEditingId);
+            closeEditModal();
+            input.focus();
+            updateUI();
+        };
+
+        document.getElementById('btn-delete').onclick = () => {
+            showConfirm(() => {
+                transactions = transactions.filter(item => item.id !== currentEditingId);
+                closeEditModal();
+                updateUI();
+                showToast("Registro Apagado", "error");
+            });
+        };
+
+        // --- Modais e Utilitários ---
+        function showConfirm(onConfirm) {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.remove('hidden');
+            document.getElementById('modal-confirm').onclick = () => {
+                onConfirm();
+                modal.classList.add('hidden');
+            };
+            document.getElementById('modal-cancel').onclick = () => modal.classList.add('hidden');
         }
 
         function showToast(msg, type = "success") {
             const t = document.getElementById('toast');
+            const bg = document.getElementById('toast-bg');
             document.getElementById('toast-msg').innerText = msg;
+            
+            if (type === "error") {
+                bg.classList.add('border-rose-500/50');
+            } else {
+                bg.classList.remove('border-rose-500/50');
+            }
+
             t.style.transform = "translateY(0)";
             setTimeout(() => t.style.transform = "translateY(-150%)", 3000);
         }
 
-        // Auto-grow Textarea
+        function saveData() { localStorage.setItem('rico_ruby_master', JSON.stringify(transactions)); }
+
+        // --- Listeners Principais ---
         const input = document.getElementById('tx-input');
         input.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
         });
 
-        // Enter Save
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -331,19 +559,45 @@
             }
         });
 
-        document.getElementById('tx-form').addEventListener('submit', (e) => {
+        document.getElementById('tx-form').onsubmit = (e) => {
             e.preventDefault();
-            const item = parse(input.value);
+            const item = parseInput(input.value);
             if (item) {
-                db.push(item);
-                localStorage.setItem('rico_deterministic_v1', JSON.stringify(db));
+                transactions.push(item);
                 input.value = '';
                 input.style.height = 'auto';
-                showToast("REGISTRO SALVO");
-                update();
+                showToast("Registro Salvo");
+                updateUI();
             }
-        });
+        };
 
+        // Busca
+        document.getElementById('search-input').oninput = (e) => {
+            const query = normalize(e.target.value);
+            const results = transactions.filter(t => normalize(t.desc).includes(query) || normalize(t.rawText || "").includes(query));
+            renderList(query ? results : [], 'search-results');
+        };
+
+        // Ajustes: Export e Reset
+        document.getElementById('export-btn').onclick = () => {
+            if (transactions.length === 0) return showToast("Sem dados para exportar", "error");
+            const csv = "Data,Intent,Valor,Descricao,Metodo,Categoria\n" + 
+                transactions.map(t => `${new Date(t.ts).toLocaleDateString()},${t.intent},${t.amount},${t.desc},${t.method},${(CATEGORIES.find(c => c.id === t.categoryId)?.name || 'Geral')}`).join("\n");
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'rico_financeiro.csv'; a.click();
+            showToast("Arquivo CSV Gerado");
+        };
+
+        document.getElementById('reset-btn').onclick = () => {
+            showConfirm(() => {
+                transactions = [];
+                updateUI();
+                showToast("Toda Memória Limpa", "error");
+            });
+        };
+
+        // Navegação
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.addEventListener('click', () => {
                 document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
@@ -353,7 +607,7 @@
             });
         });
 
-        update();
+        updateUI();
     </script>
 </body>
 </html>
