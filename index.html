@@ -27,7 +27,6 @@
 
     <div class="app-viewport">
         
-        <!-- HEADER SUPERIOR (Desktop) -->
         <header class="hidden md:flex h-20 bg-slate-950 text-white shrink-0 items-center justify-between px-10 z-[100] border-b border-white/5">
             <div class="flex items-center gap-8">
                 <div class="flex flex-col">
@@ -60,11 +59,9 @@
             </div>
         </header>
 
-        <!-- CONTEÚDO PRINCIPAL -->
         <main class="flex-1 overflow-y-auto relative no-scrollbar">
             
-            <!-- Feedbacks Visuais -->
-            <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[300] transform -translate-y-32 transition-all duration-500 pointer-events-none w-full max-w-sm px-4">
+            <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[300] transform -translate-y-32 opacity-0 transition-all duration-500 pointer-events-none w-full max-w-sm px-4">
                 <div id="toast-bg" class="bg-slate-900 text-white p-5 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/10 mx-auto">
                     <div id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center bg-rubi shrink-0">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-4 h-4"><path d="M12 8v4M12 16h.01"/><circle cx="12" cy="12" r="10"/></svg>
@@ -73,7 +70,6 @@
                 </div>
             </div>
 
-            <!-- Modal Confirmação -->
             <div id="confirm-modal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[400] flex items-center justify-center p-6 hidden">
                 <div class="bg-white w-full max-w-xs rounded-[2.5rem] p-8 shadow-2xl text-center space-y-6">
                     <div class="w-16 h-16 bg-rose-50 text-rubi rounded-full flex items-center justify-center mx-auto">
@@ -90,7 +86,6 @@
                 </div>
             </div>
 
-            <!-- Modal Edição -->
             <div id="edit-modal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[350] flex items-end md:items-center justify-center p-0 md:p-6 hidden">
                 <div class="bg-white w-full max-w-lg rounded-t-[3rem] md:rounded-[3rem] p-8 shadow-2xl space-y-8 animate-fade overflow-y-auto max-h-[90vh]">
                     <div class="flex justify-between items-center">
@@ -109,7 +104,6 @@
 
             <div class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-10 md:py-16 pb-32">
                 
-                <!-- ABA: DASHBOARD -->
                 <section id="tab-dashboard" class="tab-content active animate-fade space-y-8">
                     <header class="flex justify-between items-end md:hidden">
                         <div>
@@ -119,7 +113,6 @@
                     </header>
 
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Saldo Principal -->
                         <div class="relative overflow-hidden bg-slate-950 rounded-[3rem] p-10 text-white shadow-2xl lg:col-span-2">
                             <div class="absolute -top-10 -right-10 w-64 h-64 bg-rubi/20 rounded-full blur-[80px]"></div>
                             <p class="text-slate-500 text-[9px] font-bold uppercase tracking-[0.3em] mb-2">Disponibilidade de Fluxo</p>
@@ -133,7 +126,6 @@
                             </div>
                         </div>
 
-                        <!-- Lançamento Rápido -->
                         <div class="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm flex flex-col justify-between">
                             <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Novo Registro</h4>
                             <form id="tx-form" class="space-y-4">
@@ -146,7 +138,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Reserva Inteligente -->
                         <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm flex items-center justify-between gap-6">
                             <div class="space-y-3 flex-1">
                                 <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Reserva de Emergência</h4>
@@ -164,7 +155,6 @@
                             </div>
                         </div>
 
-                        <!-- Saúde 50-30-20 -->
                         <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-6 flex flex-col justify-center">
                             <div class="flex justify-between items-center">
                                 <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Equilíbrio 50-30-20</h4>
@@ -184,7 +174,6 @@
                     </div>
                 </section>
 
-                <!-- ABA: EXTRATO -->
                 <section id="tab-history" class="tab-content animate-fade space-y-8">
                     <div class="flex justify-between items-center">
                         <h3 class="text-2xl font-black text-slate-900 uppercase tracking-tight">Memória de Fluxo</h3>
@@ -193,7 +182,6 @@
                     <div id="history-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                 </section>
 
-                <!-- ABA: BUSCA -->
                 <section id="tab-search" class="tab-content animate-fade space-y-8">
                     <div class="max-w-2xl mx-auto space-y-8">
                         <div class="text-center space-y-2">
@@ -205,7 +193,6 @@
                     </div>
                 </section>
 
-                <!-- ABA: AJUSTES -->
                 <section id="tab-settings" class="tab-content animate-fade space-y-12 max-w-4xl mx-auto">
                     <h3 class="text-2xl font-black text-slate-900 uppercase tracking-tight text-center">Configurações Gerais</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -229,7 +216,6 @@
             </div>
         </main>
 
-        <!-- NAV INFERIOR (Mobile) -->
         <nav class="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] h-20 bg-slate-950/95 backdrop-blur-xl rounded-[2.5rem] flex items-center justify-around px-4 shadow-2xl border border-white/5 z-[200]">
             <button data-tab="dashboard" class="nav-btn group flex flex-col items-center gap-1 active opacity-40 [&.active]:opacity-100">
                 <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white transition-colors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
@@ -248,7 +234,7 @@
     </div>
 
     <script>
-        // --- Dicionários e Configurações (Preservados) ---
+        // --- Dicionários e Configurações ---
         const DICT = {
             intents: {
                 ganhei: ['ganhei', 'ganho', 'recebi', 'receber', 'recebido', 'recebendo', 'entrou', 'entrada', 'caiu', 'cair', 'depositaram', 'depositado', 'deposito', 'salario', 'salário', 'freela', 'venda', 'vendi', 'vendido', 'faturei', 'faturado', 'rendeu', 'rendimentos', 'lucro', 'lucrei', 'comissao', 'comissão', 'cashback', 'bonus', 'bônus', 'dividendo', 'dividendos', 'juros'],
@@ -278,7 +264,7 @@
 
         const normalize = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-        // --- Parser (Evoluído para preservar PT-BR no Extrato) ---
+        // --- Parser ---
         function parseInput(raw) {
             if (!raw.trim()) return null;
             const normalized = normalize(raw);
@@ -289,7 +275,7 @@
             const moneyMatch = raw.match(/\d+([.,]\d+)*[.,]\d+|\d+/);
             if (moneyMatch) amount = parseFloat(moneyMatch[0].replace(/\./g, '').replace(',', '.'));
 
-            if (amount <= 0 || isNaN(amount)) { showToast("Valor não identificado", "error"); return null; }
+            if (amount <= 0 || isNaN(amount)) { showToast("Valor não identificado"); return null; }
 
             let intent = 'gastei';
             let verbIdx = -1;
@@ -315,7 +301,7 @@
                 amount, 
                 intent, 
                 subType, 
-                method: 'PIX', // Simplificado para exemplo, mas motor detecta via DICT
+                method: 'PIX', 
                 categoryId, 
                 desc: filteredWords.join(' ') || 'DIVERSO', 
                 rawText: raw 
@@ -432,7 +418,23 @@
         document.getElementById('btn-delete').onclick = () => { showConfirm(() => { transactions = transactions.filter(i => i.id !== currentEditingId); closeEditModal(); updateUI(); }); };
 
         function showConfirm(onConfirm) { const m = document.getElementById('confirm-modal'); m.classList.remove('hidden'); document.getElementById('modal-confirm').onclick = () => { onConfirm(); m.classList.add('hidden'); }; document.getElementById('modal-cancel').onclick = () => m.classList.add('hidden'); }
-        function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toast-msg').innerText = msg; t.style.transform = "translate(-50%, 0)"; setTimeout(() => t.style.transform = "translate(-50%, -200%)", 3000); }
+        
+        // --- Função showToast Corrigida ---
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            
+            // Remove estados de saída e ativa entrada
+            t.classList.remove('opacity-0', '-translate-y-32');
+            t.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                // Reativa estados de saída
+                t.classList.remove('opacity-100', 'translate-y-0');
+                t.classList.add('opacity-0', '-translate-y-32');
+            }, 3000);
+        }
+
         function saveData() { localStorage.setItem('rico_ruby_master', JSON.stringify(transactions)); }
 
         document.querySelectorAll('.nav-btn').forEach(btn => {
