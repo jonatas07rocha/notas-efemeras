@@ -229,7 +229,14 @@
                 gastei: ['gastei', 'gasto', 'paguei', 'pago', 'pagar', 'pagamento', 'despesa', 'despesas', 'comprei', 'compra', 'comprado', 'debito', 'débito', 'boleto', 'conta', 'fatura', 'assinatura', 'mensalidade', 'aluguel', 'mercado', 'supermercado', 'farmacia', 'farmácia', 'luz', 'agua', 'água', 'internet', 'telefone', 'cartao', 'cartão', 'taxa', 'tarifa', 'imposto', 'impostos', 'financiamento', 'parcela', 'parcelado', 'doacao', 'doação', 'manutencao', 'manutenção', 'conserto', 'transporte', 'uber', 'combustivel', 'combustível']
             },
             essentials: ['aluguel','luz','agua','água','internet','mercado','farmacia','farmácia','transporte','combustivel','combustível','escola','saude','saúde','condominio','condomínio','iptu','mei','imposto'],
-            methods: { PIX: ['pix'], CARTAO: ['cartao', 'cartão', 'credito', 'crédito', 'debito', 'débito'], BOLETO: ['boleto'], DINHEIRO: ['dinheiro', 'especie'], TRANSFERENCIA: ['transferencia', 'ted', 'doc'] },
+            methods: { 
+                PIX: ['pix'], 
+                CARTAO: ['cartao', 'cartão', 'credito', 'crédito', 'debito', 'débito'], 
+                BOLETO: ['boleto'], 
+                DINHEIRO: ['dinheiro', 'especie'], 
+                TRANSFER: ['transferencia', 'ted', 'doc'],
+                APLICA: ['cdb', 'poupança', 'poupanca', 'tesouro', 'bolsa', 'ações', 'acoes', 'fundo', 'cripto', 'bitcoin', 'rdb', 'lci', 'lca']
+            },
             stop: ['de','do','da','para','pra','no','na','em','com','por','pelo','pela','o','a','os','as','um','uma','seu','sua']
         };
 
@@ -251,7 +258,6 @@
 
         const normalize = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-        // --- Parser Corrigido (Identifica método antes de limpar descrição) ---
         function parseInput(raw) {
             if (!raw.trim()) return null;
             const normalized = normalize(raw);
@@ -264,7 +270,6 @@
 
             if (amount <= 0 || isNaN(amount)) { showToast("Valor não identificado"); return null; }
 
-            // 1. Identifica Intenção
             let intent = 'gastei';
             wordsNormalized.forEach((w) => {
                 if (DICT.intents.ganhei.includes(w)) intent = 'ganhei';
@@ -272,7 +277,6 @@
                 else if (DICT.intents.gastei.includes(w)) intent = 'gastei';
             });
 
-            // 2. Identifica Método de Pagamento (Varre antes de filtrar)
             let method = 'DINHEIRO';
             for (const [key, aliases] of Object.entries(DICT.methods)) {
                 if (wordsNormalized.some(w => aliases.includes(w))) {
@@ -281,7 +285,6 @@
                 }
             }
 
-            // 3. Limpa a descrição removendo verbos, métodos, stopwords e números
             const methodAliases = Object.values(DICT.methods).flat();
             const intentVerbs = Object.values(DICT.intents).flat();
 
