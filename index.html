@@ -1,229 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rico Dinheirinho</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="config.js"></script>
+
+<style>
+body { background:#FCFAFA; font-family:system-ui,-apple-system,BlinkMacSystemFont; }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+.nav-btn.active { color:#9B1B30; font-weight:800; }
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+<!-- HEADER DESKTOP -->
+<header class="hidden md:flex bg-slate-950 text-white h-20 items-center justify-between px-10">
+<h1 class="text-xl font-black uppercase">
+Rico <span class="text-[#9B1B30]">Dinheirinho</span>
+</h1>
+<nav class="flex gap-8 text-xs uppercase font-black">
+<button data-tab="dashboard" class="nav-btn active">Início</button>
+<button data-tab="history" class="nav-btn">Extrato</button>
+<button data-tab="settings" class="nav-btn">Ajustes</button>
+</nav>
+</header>
+
+<main class="flex-1 p-6 max-w-6xl mx-auto w-full">
+
+<!-- DASHBOARD -->
+<section id="tab-dashboard" class="tab-content active space-y-8">
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+<div class="bg-slate-950 text-white p-10 rounded-3xl lg:col-span-2">
+<p class="text-xs uppercase text-slate-400 mb-2">Saldo Atual</p>
+<h2 id="balance-val" class="text-5xl font-light mb-8">R$ 0,00</h2>
+
+<div class="grid grid-cols-3 gap-6 text-sm font-black">
+<div><p class="text-emerald-400">Ganhei</p><p id="sum-ganhei">R$ 0</p></div>
+<div><p class="text-rose-400">Gastei</p><p id="sum-gastei">R$ 0</p></div>
+<div><p class="text-cyan-400">Guardei</p><p id="sum-guardei">R$ 0</p></div>
+</div>
+</div>
+
+<div class="bg-white p-8 rounded-3xl border">
+<form id="tx-form" class="space-y-4">
+<textarea id="tx-input" rows="2"
+placeholder="Ex: Gastei 45 mercado pix"
+class="w-full bg-slate-50 rounded-2xl p-4 outline-none resize-none"></textarea>
+<button class="w-full bg-[#9B1B30] text-white py-4 rounded-2xl font-bold uppercase text-xs tracking-widest">
+Registrar
+</button>
+</form>
+</div>
+
+</div>
+
+</section>
+
+<!-- HISTORY -->
+<section id="tab-history" class="tab-content">
+<div id="history-list" class="space-y-4"></div>
+</section>
+
+<!-- SETTINGS -->
+<section id="tab-settings" class="tab-content">
+<button id="reset-btn" class="mt-10 text-[#9B1B30] font-black uppercase tracking-widest">
+Resetar Dados
+</button>
+</section>
+
+</main>
+
+<!-- MOBILE NAV -->
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] h-16 bg-slate-950 rounded-3xl flex justify-around items-center text-white text-xs font-black uppercase">
+<button data-tab="dashboard" class="nav-btn active">Início</button>
+<button data-tab="history" class="nav-btn">Extrato</button>
+<button data-tab="settings" class="nav-btn">Ajustes</button>
+</nav>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    // ===== CONFIG SAFE FALLBACK =====
-    const SAFE_CONFIG = {
-        DICT: {
-            intents: {
-                ganhei: ["ganhei","recebi","entrou","entrada"],
-                gastei: ["gastei","paguei","comprei","saida","saída"],
-                guardei: ["guardei","reservei","investi","poupei"]
-            },
-            methods: {
-                PIX: ["pix"],
-                CARD: ["credito","crédito","debito","débito","cartao","cartão"],
-                BOL: ["boleto"]
-            },
-            essentials: ["aluguel","luz","agua","água","mercado","supermercado","farmacia","farmácia"],
-            stop: ["de","do","da","no","na","com","para","pra","o","a"]
-        },
-        CATEGORIES: [
-            { id:"cat_sal", name:"Receita", color:"#16a34a" },
-            { id:"cat_res", name:"Reserva", color:"#06b6d4" },
-            { id:"cat_ess", name:"Essencial", color:"#0f172a" },
-            { id:"cat_laz", name:"Lifestyle", color:"#9B1B30" }
-        ]
-    };
+if (typeof CONFIG === "undefined") {
+    console.error("CONFIG não carregado.");
+    return;
+}
 
-    const CONFIG_SAFE = (typeof CONFIG !== "undefined") ? CONFIG : SAFE_CONFIG;
+let transactions=[];
+try{
+transactions=JSON.parse(localStorage.getItem("rico_data"))||[];
+}catch{transactions=[];}
 
-    // ===== STATE =====
-    let transactions = [];
-    try {
-        transactions = JSON.parse(localStorage.getItem('rico_ruby_master')) || [];
-    } catch {
-        transactions = [];
-    }
+const normalize=t=>t.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 
-    const normalize = (t) =>
-        t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const getMonthKey=ts=>{
+const d=new Date(ts);
+return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+};
 
-    // ===== PARSER =====
-    function parseInput(raw) {
-        if (!raw.trim()) return null;
+function detectIntent(words){
+for(const [intent,list] of Object.entries(CONFIG.DICT.intents)){
+if(words.some(w=>list.includes(w)))return intent;
+}
+return "gastei";
+}
 
-        const normalized = normalize(raw);
-        const wordsNormalized = normalized.split(/\s+/);
-        const wordsOriginal = raw.split(/\s+/);
+function detectMethod(words){
+for(const [method,list] of Object.entries(CONFIG.DICT.methods)){
+if(words.some(w=>list.includes(w)))return method;
+}
+return "CASH";
+}
 
-        const moneyMatch = raw.match(/\d+([.,]\d+)*[.,]\d+|\d+/);
-        if (!moneyMatch) return toast("Valor não identificado");
+function detectCategory(intent,words){
 
-        const amount = parseFloat(
-            moneyMatch[0].replace(/\./g, '').replace(',', '.')
-        );
+if(intent==="ganhei"){
+if(words.includes("salario")||words.includes("salário"))return "cat_sal";
+return "cat_ext";
+}
 
-        if (!amount || amount <= 0) return toast("Valor inválido");
+if(intent==="guardei"){
+if(words.some(w=>CONFIG.DICT.methods.INV.includes(w)))return "cat_inv";
+return "cat_res";
+}
 
-        let intent = "gastei";
-        wordsNormalized.forEach(w => {
-            if (CONFIG_SAFE.DICT.intents.ganhei.includes(w)) intent = "ganhei";
-            if (CONFIG_SAFE.DICT.intents.guardei.includes(w)) intent = "guardei";
-        });
+if(intent==="gastei"){
+if(words.some(w=>CONFIG.DICT.essentials.includes(w)))return "cat_ess";
+if(words.includes("curso")||words.includes("faculdade"))return "cat_edu";
+if(words.includes("saude")||words.includes("saúde")||words.includes("farmacia"))return "cat_sau";
+return "cat_laz";
+}
 
-        let method = "CASH";
-        for (const [key, aliases] of Object.entries(CONFIG_SAFE.DICT.methods)) {
-            if (wordsNormalized.some(w => aliases.includes(w))) {
-                method = key;
-                break;
-            }
-        }
+return CONFIG.CATEGORIES[0].id;
+}
 
-        const intentVerbs = Object.values(CONFIG_SAFE.DICT.intents).flat();
+function parseInput(raw){
+if(!raw.trim())return null;
 
-        const filtered = wordsOriginal.filter((w, i) => {
-            const wn = wordsNormalized[i];
-            if (intentVerbs.includes(wn)) return false;
-            if (wn.match(/\d/)) return false;
-            if (CONFIG_SAFE.DICT.stop.includes(wn)) return false;
-            return true;
-        });
+const money=raw.match(/\d+([.,]\d+)*[.,]\d+|\d+/);
+if(!money)return null;
 
-        const desc = filtered.join(" ").trim() || "DIVERSO";
+const amount=parseFloat(money[0].replace(/\./g,"").replace(",","."));
+if(!amount||amount<=0)return null;
 
-        const subType =
-            intent === "gastei" &&
-            filtered.some(w =>
-                CONFIG_SAFE.DICT.essentials.includes(normalize(w))
-            )
-                ? "essential"
-                : "lifestyle";
+const words=normalize(raw).split(/\s+/);
 
-        const categoryId =
-            intent === "ganhei"
-                ? "cat_sal"
-                : intent === "guardei"
-                ? "cat_res"
-                : subType === "essential"
-                ? "cat_ess"
-                : "cat_laz";
+const intent=detectIntent(words);
+const method=detectMethod(words);
+const categoryId=detectCategory(intent,words);
 
-        return {
-            id: `id-${Date.now()}`,
-            ts: Date.now(),
-            amount,
-            intent,
-            subType,
-            method,
-            categoryId,
-            desc,
-            rawText: raw
-        };
-    }
+const desc=words.filter(w=>
+!CONFIG.DICT.stop.includes(w)&&
+!Object.values(CONFIG.DICT.intents).flat().includes(w)&&
+!w.match(/\d/)
+).join(" ").toUpperCase()||"DIVERSO";
 
-    // ===== UI =====
-    function updateUI() {
-        const now = new Date();
-        const monthly = transactions.filter(t => {
-            const d = new Date(t.ts);
-            return (
-                d.getMonth() === now.getMonth() &&
-                d.getFullYear() === now.getFullYear()
-            );
-        });
+return{
+id:"id-"+Date.now(),
+ts:Date.now(),
+month:getMonthKey(Date.now()),
+amount,
+intent,
+method,
+categoryId,
+desc,
+rawText:raw
+};
+}
 
-        const sum = (intent, sub = null) =>
-            monthly
-                .filter(t => t.intent === intent && (!sub || t.subType === sub))
-                .reduce((a, b) => a + b.amount, 0);
+function updateUI(){
+const nowKey=getMonthKey(Date.now());
+const monthly=transactions.filter(t=>t.month===nowKey);
 
-        const g = sum("ganhei");
-        const s = sum("gastei");
-        const r = sum("guardei");
+const sum=i=>monthly.filter(t=>t.intent===i).reduce((a,b)=>a+b.amount,0);
 
-        setText("balance-val", `R$ ${(g - s - r).toLocaleString("pt-BR",{minimumFractionDigits:2})}`);
-        setText("sum-ganhei", `R$ ${g.toLocaleString("pt-BR")}`);
-        setText("sum-gastei", `R$ ${s.toLocaleString("pt-BR")}`);
-        setText("sum-guardei", `R$ ${r.toLocaleString("pt-BR")}`);
+const ganhei=sum("ganhei");
+const gastei=sum("gastei");
+const guardei=sum("guardei");
 
-        renderList(monthly);
-        localStorage.setItem("rico_ruby_master", JSON.stringify(transactions));
-    }
+set("balance-val",`R$ ${(ganhei-gastei-guardei).toLocaleString("pt-BR",{minimumFractionDigits:2})}`);
+set("sum-ganhei",`R$ ${ganhei.toLocaleString("pt-BR")}`);
+set("sum-gastei",`R$ ${gastei.toLocaleString("pt-BR")}`);
+set("sum-guardei",`R$ ${guardei.toLocaleString("pt-BR")}`);
 
-    function renderList(list) {
-        const container = document.getElementById("history-list");
-        if (!container) return;
+renderList(monthly);
 
-        container.innerHTML =
-            list
-                .map(t => {
-                    const cat =
-                        CONFIG_SAFE.CATEGORIES.find(c => c.id === t.categoryId) ||
-                        CONFIG_SAFE.CATEGORIES[0];
+localStorage.setItem("rico_data",JSON.stringify(transactions));
+}
 
-                    return `
-                    <div class="p-6 bg-white rounded-3xl border border-slate-100 flex justify-between">
-                        <div>
-                            <p class="text-xs font-black uppercase">${t.desc}</p>
-                            <p class="text-[9px] text-slate-400 font-bold uppercase">${cat.name}</p>
-                        </div>
-                        <p class="text-sm font-black">R$ ${t.amount.toLocaleString("pt-BR")}</p>
-                    </div>`;
-                })
-                .join("") ||
-            `<p class="text-center py-16 text-slate-300 font-black uppercase">Vazio</p>`;
-    }
+function renderList(list){
+const container=document.getElementById("history-list");
+if(!container)return;
 
-    function setText(id, value) {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value;
-    }
+container.innerHTML=list.map(t=>{
+const cat=CONFIG.CATEGORIES.find(c=>c.id===t.categoryId);
+return `
+<div class="p-4 bg-white rounded-2xl border flex justify-between">
+<div>
+<p class="text-xs font-black uppercase">${t.desc}</p>
+<p class="text-[10px] text-slate-400 uppercase font-bold">${cat?cat.name:""}</p>
+</div>
+<p class="font-black">R$ ${t.amount.toLocaleString("pt-BR")}</p>
+</div>
+`;
+}).join("")||"<p class='text-center py-12 text-slate-300 font-black uppercase'>Vazio</p>";
+}
 
-    function toast(msg) {
-        const t = document.getElementById("toast");
-        const m = document.getElementById("toast-msg");
-        if (!t || !m) return null;
-        m.innerText = msg;
-        t.classList.remove("opacity-0","-translate-y-32");
-        t.classList.add("opacity-100","translate-y-0");
-        setTimeout(() => {
-            t.classList.remove("opacity-100","translate-y-0");
-            t.classList.add("opacity-0","-translate-y-32");
-        }, 3000);
-        return null;
-    }
+function set(id,val){
+const el=document.getElementById(id);
+if(el)el.innerText=val;
+}
 
-    // ===== EVENTS =====
-    const form = document.getElementById("tx-form");
-    if (form) {
-        form.addEventListener("submit", e => {
-            e.preventDefault();
-            const input = document.getElementById("tx-input");
-            const item = parseInput(input.value);
-            if (item) {
-                transactions.push(item);
-                input.value = "";
-                toast("CONCLUÍDO");
-                updateUI();
-            }
-        });
-    }
+document.getElementById("tx-form").addEventListener("submit",e=>{
+e.preventDefault();
+const input=document.getElementById("tx-input");
+const item=parseInput(input.value);
+if(item){
+transactions.push(item);
+input.value="";
+updateUI();
+}
+});
 
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".nav-btn")
-                .forEach(b => b.classList.remove("active"));
+document.querySelectorAll(".nav-btn").forEach(btn=>{
+btn.addEventListener("click",()=>{
+document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
+btn.classList.add("active");
+document.getElementById("tab-"+btn.dataset.tab)?.classList.add("active");
+});
+});
 
-            document.querySelectorAll(".tab-content")
-                .forEach(c => c.classList.remove("active"));
+document.getElementById("reset-btn").onclick=()=>{
+if(confirm("Resetar dados?")){
+transactions=[];
+updateUI();
+}
+};
 
-            btn.classList.add("active");
+updateUI();
 
-            const tab = document.getElementById(`tab-${btn.dataset.tab}`);
-            if (tab) tab.classList.add("active");
-        });
-    });
-
-    const resetBtn = document.getElementById("reset-btn");
-    if (resetBtn) {
-        resetBtn.onclick = () => {
-            if (confirm("Resetar dados?")) {
-                transactions = [];
-                updateUI();
-            }
-        };
-    }
-
-    updateUI();
 });
 </script>
+
+</body>
+</html>
