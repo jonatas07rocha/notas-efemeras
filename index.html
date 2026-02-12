@@ -1,275 +1,229 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rico Dinheirinho</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239B1B30' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><line x1='12' y1='1' x2='12' y2='23'></line><path d='M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'></path></svg>">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        :root { --rubi: #9B1B30; }
-        body { font-family: 'Inter', sans-serif; background-color: #FCFAFA; margin: 0; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .bg-rubi { background-color: var(--rubi); }
-        .text-rubi { color: var(--rubi); }
-        .border-rubi { border-color: var(--rubi); }
-        .animate-fade { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .app-viewport { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
-        .nav-item.active { color: var(--rubi); border-bottom: 3px solid var(--rubi); }
-    </style>
-</head>
-<body class="bg-[#FCFAFA]">
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
-    <div class="app-viewport">
-        
-        <header class="hidden md:flex h-20 bg-slate-950 text-white shrink-0 items-center justify-between px-10 z-[100] border-b border-white/5">
-            <div class="flex items-center gap-8">
-                <div class="flex flex-col">
-                    <h1 class="text-xl font-black uppercase tracking-tighter leading-none">Rico <span class="text-rubi">Dinheirinho</span></h1>
-                    <span class="text-[8px] font-bold text-slate-500 uppercase tracking-[0.3em]">Engenharia Financeira</span>
-                </div>
-                <nav class="flex items-center gap-2 h-20 ml-4">
-                    <button data-tab="dashboard" class="nav-btn nav-item h-full px-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-60 hover:opacity-100 transition-all active">Início</button>
-                    <button data-tab="history" class="nav-btn nav-item h-full px-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-60 hover:opacity-100 transition-all">Extrato</button>
-                    <button data-tab="search" class="nav-btn nav-item h-full px-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-60 hover:opacity-100 transition-all">Busca</button>
-                    <button data-tab="settings" class="nav-btn nav-item h-full px-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-60 hover:opacity-100 transition-all">Ajustes</button>
-                </nav>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="text-right">
-                    <p class="text-[10px] font-black uppercase leading-none">Rubi Master</p>
-                    <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">Sincronizado</p>
-                </div>
-                <div class="w-10 h-10 rounded-2xl bg-rubi flex items-center justify-center text-xs font-black shadow-lg shadow-rubi/20">R</div>
-            </div>
-        </header>
+    // ===== CONFIG SAFE FALLBACK =====
+    const SAFE_CONFIG = {
+        DICT: {
+            intents: {
+                ganhei: ["ganhei","recebi","entrou","entrada"],
+                gastei: ["gastei","paguei","comprei","saida","saída"],
+                guardei: ["guardei","reservei","investi","poupei"]
+            },
+            methods: {
+                PIX: ["pix"],
+                CARD: ["credito","crédito","debito","débito","cartao","cartão"],
+                BOL: ["boleto"]
+            },
+            essentials: ["aluguel","luz","agua","água","mercado","supermercado","farmacia","farmácia"],
+            stop: ["de","do","da","no","na","com","para","pra","o","a"]
+        },
+        CATEGORIES: [
+            { id:"cat_sal", name:"Receita", color:"#16a34a" },
+            { id:"cat_res", name:"Reserva", color:"#06b6d4" },
+            { id:"cat_ess", name:"Essencial", color:"#0f172a" },
+            { id:"cat_laz", name:"Lifestyle", color:"#9B1B30" }
+        ]
+    };
 
-        <main class="flex-1 overflow-y-auto relative no-scrollbar">
-            
-            <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[300] transform -translate-y-32 opacity-0 transition-all duration-500 pointer-events-none w-full max-w-sm px-4">
-                <div id="toast-bg" class="bg-slate-900 text-white p-5 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/10 mx-auto">
-                    <div id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center bg-rubi shrink-0">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-4 h-4"><path d="M12 8v4M12 16h.01"/><circle cx="12" cy="12" r="10"/></svg>
-                    </div>
-                    <p id="toast-msg" class="text-[10px] font-bold uppercase tracking-tight"></p>
-                </div>
-            </div>
+    const CONFIG_SAFE = (typeof CONFIG !== "undefined") ? CONFIG : SAFE_CONFIG;
 
-            <div class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-10 md:py-16 pb-32">
-                
-                <section id="tab-dashboard" class="tab-content active animate-fade space-y-8">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div class="relative overflow-hidden bg-slate-950 rounded-[3rem] p-10 text-white shadow-2xl lg:col-span-2">
-                            <div class="absolute -top-10 -right-10 w-64 h-64 bg-rubi/20 rounded-full blur-[80px]"></div>
-                            <p class="text-slate-500 text-[9px] font-bold uppercase tracking-[0.3em] mb-2">Disponibilidade de Fluxo</p>
-                            <h2 id="balance-val" class="text-6xl font-light tracking-tighter mb-12">R$ 0,00</h2>
-                            <div class="grid grid-cols-3 gap-4 border-t border-white/5 pt-10">
-                                <div><p class="text-[8px] font-bold uppercase text-emerald-400 mb-2">Entradas</p><p id="sum-ganhei" class="text-lg font-black truncate">R$ 0</p></div>
-                                <div><p class="text-[8px] font-bold uppercase text-rose-400 mb-2">Saídas</p><p id="sum-gastei" class="text-lg font-black truncate">R$ 0</p></div>
-                                <div><p class="text-[8px] font-bold uppercase text-cyan-400 mb-2">Reservas</p><p id="sum-guardei" class="text-lg font-black truncate">R$ 0</p></div>
-                            </div>
-                        </div>
+    // ===== STATE =====
+    let transactions = [];
+    try {
+        transactions = JSON.parse(localStorage.getItem('rico_ruby_master')) || [];
+    } catch {
+        transactions = [];
+    }
 
-                        <div class="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm flex flex-col justify-between">
-                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Novo Registro</h4>
-                            <form id="tx-form" class="space-y-4">
-                                <textarea id="tx-input" rows="2" placeholder="Ex: Gastei 45 almoço pix" class="w-full bg-slate-50 border-none rounded-3xl py-6 px-6 text-sm font-medium text-slate-900 focus:ring-4 ring-rubi/10 transition-all outline-none resize-none no-scrollbar"></textarea>
-                                <button type="submit" class="w-full py-5 bg-rubi text-white rounded-2xl font-bold uppercase text-[10px] tracking-widest shadow-lg shadow-rubi/20 active:scale-95 transition-all">Registrar Fluxo</button>
-                            </form>
-                        </div>
-                    </div>
+    const normalize = (t) =>
+        t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm flex items-center justify-between gap-6">
-                            <div class="space-y-3 flex-1">
-                                <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Reserva de Emergência</h4>
-                                <p id="shield-desc" class="text-[11px] text-slate-400 font-medium leading-tight">Calculando base histórica...</p>
-                            </div>
-                            <div class="relative w-28 h-28 flex items-center justify-center flex-shrink-0">
-                                <svg class="w-full h-full transform -rotate-90">
-                                    <circle cx="56" cy="56" r="50" stroke="currentColor" stroke-width="10" fill="transparent" class="text-slate-50" />
-                                    <circle id="shield-circle" cx="56" cy="56" r="50" stroke="currentColor" stroke-width="10" fill="transparent" stroke-dasharray="314.16" stroke-dashoffset="314.16" class="text-rubi transition-all duration-700" />
-                                </svg>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span id="shield-val" class="text-2xl font-black text-slate-900">0</span>
-                                    <span class="text-[8px] font-bold uppercase text-slate-400">Meses</span>
-                                </div>
-                            </div>
-                        </div>
+    // ===== PARSER =====
+    function parseInput(raw) {
+        if (!raw.trim()) return null;
 
-                        <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-6 flex flex-col justify-center">
-                            <div class="flex justify-between items-center">
-                                <h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Equilíbrio 50-30-20</h4>
-                                <span id="label-status" class="text-[9px] font-black uppercase text-slate-300">Analisando...</span>
-                            </div>
-                            <div id="bar-container" class="h-6 w-full bg-slate-50 rounded-full flex overflow-hidden border border-slate-100">
-                                <div id="bar-ess" class="h-full bg-slate-900 transition-all duration-500" style="width: 0%"></div>
-                                <div id="bar-lfs" class="h-full bg-rubi transition-all duration-500" style="width: 0%"></div>
-                                <div id="bar-fut" class="h-full bg-emerald-400 transition-all duration-500" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        const normalized = normalize(raw);
+        const wordsNormalized = normalized.split(/\s+/);
+        const wordsOriginal = raw.split(/\s+/);
 
-                <section id="tab-history" class="tab-content animate-fade space-y-8">
-                    <div id="history-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-                </section>
+        const moneyMatch = raw.match(/\d+([.,]\d+)*[.,]\d+|\d+/);
+        if (!moneyMatch) return toast("Valor não identificado");
 
-                <section id="tab-search" class="tab-content animate-fade space-y-8">
-                    <input type="text" id="search-input" placeholder="O QUE VOCÊ BUSCA?" class="w-full bg-white border border-slate-100 rounded-3xl py-8 px-10 text-base font-bold text-slate-900 shadow-sm outline-none focus:ring-4 ring-rubi/5 transition-all">
-                    <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                </section>
+        const amount = parseFloat(
+            moneyMatch[0].replace(/\./g, '').replace(',', '.')
+        );
 
-                <section id="tab-settings" class="tab-content animate-fade space-y-12 max-w-4xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <button id="export-btn" class="flex items-center justify-between p-10 bg-white border border-slate-100 rounded-[3rem] shadow-sm hover:shadow-xl transition-all group">
-                            <div class="flex items-center gap-8 text-left">
-                                <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-[2rem] flex items-center justify-center">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-8 h-8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                                </div>
-                                <div><p class="text-sm font-black uppercase text-slate-900 tracking-widest">Backup CSV</p></div>
-                            </div>
-                        </button>
-                        <button id="reset-btn" class="p-10 text-rubi text-[12px] font-black uppercase tracking-[0.4em] border-2 border-dashed border-rose-100 rounded-[3rem] hover:bg-rose-50 transition-all flex items-center justify-center">Resetar Dados</button>
-                    </div>
-                </section>
-            </div>
-        </main>
+        if (!amount || amount <= 0) return toast("Valor inválido");
 
-        <nav class="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] h-20 bg-slate-950/95 backdrop-blur-xl rounded-[2.5rem] flex items-center justify-around px-4 shadow-2xl border border-white/5 z-[200]">
-            <button data-tab="dashboard" class="nav-btn group active opacity-40 [&.active]:opacity-100">
-                <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-            </button>
-            <button data-tab="history" class="nav-btn group opacity-40 [&.active]:opacity-100">
-                <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg></div>
-            </button>
-            <button data-tab="search" class="nav-btn group opacity-40 [&.active]:opacity-100">
-                <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
-            </button>
-            <button data-tab="settings" class="nav-btn group opacity-40 [&.active]:opacity-100">
-                <div class="p-2.5 rounded-2xl group-[.active]:bg-rubi text-white"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
-            </button>
-        </nav>
-    </div>
-
-    <script src="config.js"></script>
-
-    <script>
-        let transactions = [];
-        try { transactions = JSON.parse(localStorage.getItem('rico_ruby_master')) || []; } catch(e) { transactions = []; }
-
-        const normalize = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-
-        // MOTOR DO PARSER REFINADO
-        function parseInput(raw) {
-            if (!raw.trim()) return null;
-            const normalized = normalize(raw);
-            const wordsNormalized = normalized.split(/\s+/);
-            const wordsOriginal = raw.split(/\s+/);
-
-            let amount = 0;
-            const moneyMatch = raw.match(/\d+([.,]\d+)*[.,]\d+|\d+/);
-            if (moneyMatch) amount = parseFloat(moneyMatch[0].replace(/\./g, '').replace(',', '.'));
-            if (amount <= 0 || isNaN(amount)) { showToast("Valor não identificado"); return null; }
-
-            let intent = 'gastei';
-            wordsNormalized.forEach(w => {
-                if (CONFIG.DICT.intents.ganhei.includes(w)) intent = 'ganhei';
-                else if (CONFIG.DICT.intents.guardei.includes(w)) intent = 'guardei';
-                else if (CONFIG.DICT.intents.gastei.includes(w)) intent = 'gastei';
-            });
-
-            let method = 'CASH';
-            for (const [key, aliases] of Object.entries(CONFIG.DICT.methods)) {
-                if (wordsNormalized.some(w => aliases.includes(w))) { method = key; break; }
-            }
-
-            const intentVerbs = Object.values(CONFIG.DICT.intents).flat();
-            const transacionalMethods = [...CONFIG.DICT.methods.PIX, ...CONFIG.DICT.methods.CARD, ...CONFIG.DICT.methods.BOL];
-
-            let filteredWords = wordsOriginal.filter((w, i) => {
-                const wn = wordsNormalized[i];
-                if (intentVerbs.includes(wn) || wn.match(/\d/) || CONFIG.DICT.stop.includes(wn)) return false;
-                if (transacionalMethods.includes(wn)) return false; 
-                return true;
-            });
-
-            let descFinal = filteredWords.join(' ').trim();
-            let subType = intent === 'gastei' ? (filteredWords.some(w => CONFIG.DICT.essentials.includes(normalize(w))) ? 'essential' : 'lifestyle') : null;
-            let categoryId = intent === 'ganhei' ? 'cat_sal' : (intent === 'guardei' ? 'cat_res' : (subType === 'essential' ? 'cat_ess' : 'cat_laz'));
-
-            return { id: `id-${Date.now()}`, ts: Date.now(), amount, intent, subType, method, categoryId, desc: descFinal || 'DIVERSO', rawText: raw };
-        }
-
-        function updateUI() {
-            const now = new Date();
-            const monthly = transactions.filter(t => {
-                const d = new Date(t.ts);
-                return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-            });
-
-            const sum = (intent, sub = null) => monthly.filter(t => t.intent === intent && (!sub || t.subType === sub)).reduce((a, b) => a + b.amount, 0);
-            const g = sum('ganhei'), s = sum('gastei'), r = sum('guardei'), se = sum('gastei', 'essential'), sl = sum('gastei', 'lifestyle');
-
-            document.getElementById('balance-val').innerText = `R$ ${(g - s - r).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
-            document.getElementById('sum-ganhei').innerText = `R$ ${g.toLocaleString('pt-BR')}`;
-            document.getElementById('sum-gastei').innerText = `R$ ${s.toLocaleString('pt-BR')}`;
-            document.getElementById('sum-guardei').innerText = `R$ ${r.toLocaleString('pt-BR')}`;
-
-            if (g > 0) {
-                document.getElementById('bar-ess').style.width = `${(se/g)*100}%`;
-                document.getElementById('bar-lfs').style.width = `${(sl/g)*100}%`;
-                document.getElementById('bar-fut').style.width = `${(r/g)*100}%`;
-            }
-
-            renderList(monthly, 'history-list');
-            localStorage.setItem('rico_ruby_master', JSON.stringify(transactions));
-        }
-
-        function renderList(list, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = list.map(t => {
-                const cat = CONFIG.CATEGORIES.find(c => c.id === t.categoryId) || CONFIG.CATEGORIES[0];
-                return `<div class="p-8 bg-white rounded-[2.5rem] border border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-6">
-                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-[8px] font-black" style="background-color:${cat.color}">${t.method}</div>
-                        <div><p class="text-[12px] font-black uppercase">${t.desc}</p><p class="text-[8px] text-slate-300 font-bold uppercase">${cat.name}</p></div>
-                    </div>
-                    <p class="text-sm font-black">R$ ${t.amount.toLocaleString('pt-BR')}</p>
-                </div>`;
-            }).join('') || '<p class="text-center py-20 uppercase font-black text-slate-300">Vazio</p>';
-        }
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = msg;
-            t.classList.remove('opacity-0', '-translate-y-32');
-            t.classList.add('opacity-100', 'translate-y-0');
-            setTimeout(() => { t.classList.remove('opacity-100', 'translate-y-0'); t.classList.add('opacity-0', '-translate-y-32'); }, 3000);
-        }
-
-        document.getElementById('tx-form').onsubmit = (e) => {
-            e.preventDefault();
-            const input = document.getElementById('tx-input');
-            const item = parseInput(input.value);
-            if (item) { transactions.push(item); input.value = ''; showToast("CONCLUÍDO"); updateUI(); }
-        };
-
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
-            };
+        let intent = "gastei";
+        wordsNormalized.forEach(w => {
+            if (CONFIG_SAFE.DICT.intents.ganhei.includes(w)) intent = "ganhei";
+            if (CONFIG_SAFE.DICT.intents.guardei.includes(w)) intent = "guardei";
         });
 
-        document.getElementById('reset-btn').onclick = () => { if(confirm("Resetar?")) { transactions = []; updateUI(); } };
-        updateUI();
-    </script>
-</body>
-</html>
+        let method = "CASH";
+        for (const [key, aliases] of Object.entries(CONFIG_SAFE.DICT.methods)) {
+            if (wordsNormalized.some(w => aliases.includes(w))) {
+                method = key;
+                break;
+            }
+        }
+
+        const intentVerbs = Object.values(CONFIG_SAFE.DICT.intents).flat();
+
+        const filtered = wordsOriginal.filter((w, i) => {
+            const wn = wordsNormalized[i];
+            if (intentVerbs.includes(wn)) return false;
+            if (wn.match(/\d/)) return false;
+            if (CONFIG_SAFE.DICT.stop.includes(wn)) return false;
+            return true;
+        });
+
+        const desc = filtered.join(" ").trim() || "DIVERSO";
+
+        const subType =
+            intent === "gastei" &&
+            filtered.some(w =>
+                CONFIG_SAFE.DICT.essentials.includes(normalize(w))
+            )
+                ? "essential"
+                : "lifestyle";
+
+        const categoryId =
+            intent === "ganhei"
+                ? "cat_sal"
+                : intent === "guardei"
+                ? "cat_res"
+                : subType === "essential"
+                ? "cat_ess"
+                : "cat_laz";
+
+        return {
+            id: `id-${Date.now()}`,
+            ts: Date.now(),
+            amount,
+            intent,
+            subType,
+            method,
+            categoryId,
+            desc,
+            rawText: raw
+        };
+    }
+
+    // ===== UI =====
+    function updateUI() {
+        const now = new Date();
+        const monthly = transactions.filter(t => {
+            const d = new Date(t.ts);
+            return (
+                d.getMonth() === now.getMonth() &&
+                d.getFullYear() === now.getFullYear()
+            );
+        });
+
+        const sum = (intent, sub = null) =>
+            monthly
+                .filter(t => t.intent === intent && (!sub || t.subType === sub))
+                .reduce((a, b) => a + b.amount, 0);
+
+        const g = sum("ganhei");
+        const s = sum("gastei");
+        const r = sum("guardei");
+
+        setText("balance-val", `R$ ${(g - s - r).toLocaleString("pt-BR",{minimumFractionDigits:2})}`);
+        setText("sum-ganhei", `R$ ${g.toLocaleString("pt-BR")}`);
+        setText("sum-gastei", `R$ ${s.toLocaleString("pt-BR")}`);
+        setText("sum-guardei", `R$ ${r.toLocaleString("pt-BR")}`);
+
+        renderList(monthly);
+        localStorage.setItem("rico_ruby_master", JSON.stringify(transactions));
+    }
+
+    function renderList(list) {
+        const container = document.getElementById("history-list");
+        if (!container) return;
+
+        container.innerHTML =
+            list
+                .map(t => {
+                    const cat =
+                        CONFIG_SAFE.CATEGORIES.find(c => c.id === t.categoryId) ||
+                        CONFIG_SAFE.CATEGORIES[0];
+
+                    return `
+                    <div class="p-6 bg-white rounded-3xl border border-slate-100 flex justify-between">
+                        <div>
+                            <p class="text-xs font-black uppercase">${t.desc}</p>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase">${cat.name}</p>
+                        </div>
+                        <p class="text-sm font-black">R$ ${t.amount.toLocaleString("pt-BR")}</p>
+                    </div>`;
+                })
+                .join("") ||
+            `<p class="text-center py-16 text-slate-300 font-black uppercase">Vazio</p>`;
+    }
+
+    function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.innerText = value;
+    }
+
+    function toast(msg) {
+        const t = document.getElementById("toast");
+        const m = document.getElementById("toast-msg");
+        if (!t || !m) return null;
+        m.innerText = msg;
+        t.classList.remove("opacity-0","-translate-y-32");
+        t.classList.add("opacity-100","translate-y-0");
+        setTimeout(() => {
+            t.classList.remove("opacity-100","translate-y-0");
+            t.classList.add("opacity-0","-translate-y-32");
+        }, 3000);
+        return null;
+    }
+
+    // ===== EVENTS =====
+    const form = document.getElementById("tx-form");
+    if (form) {
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            const input = document.getElementById("tx-input");
+            const item = parseInput(input.value);
+            if (item) {
+                transactions.push(item);
+                input.value = "";
+                toast("CONCLUÍDO");
+                updateUI();
+            }
+        });
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".nav-btn")
+                .forEach(b => b.classList.remove("active"));
+
+            document.querySelectorAll(".tab-content")
+                .forEach(c => c.classList.remove("active"));
+
+            btn.classList.add("active");
+
+            const tab = document.getElementById(`tab-${btn.dataset.tab}`);
+            if (tab) tab.classList.add("active");
+        });
+    });
+
+    const resetBtn = document.getElementById("reset-btn");
+    if (resetBtn) {
+        resetBtn.onclick = () => {
+            if (confirm("Resetar dados?")) {
+                transactions = [];
+                updateUI();
+            }
+        };
+    }
+
+    updateUI();
+});
+</script>
