@@ -1,28 +1,24 @@
 {
-"name": "Rico Dinheirinho - Premium",
-"short_name": "Rico",
-"description": "Gestão financeira premium baseada na regra 50-30-20.",
-"start_url": "index.html",
-"display": "standalone",
-"background_color": "#FDFCFE",
-"theme_color": "#4f46e5",
-"orientation": "portrait",
-"icons": [
-{
-"src": "icon-192.png",
-"sizes": "192x192",
-"type": "image/png"
-},
-{
-"src": "icon-512.png",
-"sizes": "512x512",
-"type": "image/png"
-},
-{
-"src": "icon-1024.png",
-"sizes": "1024x1024",
-"type": "image/png",
-"purpose": "any"
-}
-]
+  "name": "Rico Dinheirinho | Gestão Inteligente",
+  "short_name": "Rico",
+  "description": "Gestão financeira de alto impacto com telemetria padrão NASA.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#10b981",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
