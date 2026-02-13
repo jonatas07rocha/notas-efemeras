@@ -2,7 +2,7 @@
   "name": "Rico Dinheirinho | Gestão Inteligente",
   "short_name": "Rico",
   "description": "Gestão financeira de alto impacto com telemetria padrão NASA.",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#10b981",
