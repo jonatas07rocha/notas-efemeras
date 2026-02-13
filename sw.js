@@ -1,39 +1,49 @@
-const CACHE_NAME = 'rico-cache-v4';
-const ASSETS = [
-  'index.html',
-  'manifest.json',
-  'https://cdn.tailwindcss.com',
-  'icon-192.png',
-  'icon-512.png',
-  'icon-1024.png'
+/**
+ * RICO DINHEIRINHO - SERVICE WORKER
+ * Responsável pelo cache de arquivos e funcionamento offline.
+ */
+
+const CACHE_NAME = 'rico-dinheirinho-v1';
+const ASSETS_TO_CACHE = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192x192.png',
+  './icon-512x512.png',
+  'https://unpkg.com/lucide@latest',
+  'https://cdn.jsdelivr.net/npm/chart.js',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
 ];
 
-// Instalação do Service Worker e Cache de recursos estáticos
+// Instalação: Cacheia os arquivos essenciais
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
+      return cache.addAll(ASSETS_TO_CACHE);
     })
   );
 });
 
-// Ativação e limpeza de caches antigas
+// Ativação: Limpa caches antigos
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            return caches.delete(cache);
+          }
+        })
       );
     })
   );
 });
 
-// Interceptação de requisições: Cache First, Network Fallback
+// Estratégia: Cache First (Tenta o cache, se não tiver, vai na rede)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
     })
   );
 });
-
