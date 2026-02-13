@@ -38,7 +38,6 @@
             --shadow-strong: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        /* FORÇAR INTER EM TUDO */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent; 
@@ -65,13 +64,7 @@
         }
 
         /* --- HEADER --- */
-        .header {
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
+        .header { height: 120px; display: flex; align-items: center; justify-content: space-between; }
         .header-actions { display: flex; align-items: center; gap: 12px; }
 
         .btn-header {
@@ -84,59 +77,29 @@
         }
         .btn-header:hover { background: #f1f5f9; transform: translateY(-2px); }
         .btn-header.btn-primary-action { background: var(--black); color: var(--white); box-shadow: var(--shadow-strong); }
-        .btn-header.btn-primary-action:hover { background: var(--primary); }
 
         /* --- CONTENT --- */
         .scroll-view { flex: 1; overflow-y: auto; padding-bottom: 4rem; scrollbar-width: none; }
         .scroll-view::-webkit-scrollbar { display: none; }
         .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
 
-        .card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 2.5rem;
-            box-shadow: var(--shadow-soft);
-            transition: var(--transition);
-            border: none;
-        }
-
-        /* IMPACT CARDS (BLACK) */
-        .card-impact {
-            background: var(--black) !important;
-            color: var(--white) !important;
-            box-shadow: var(--shadow-strong);
-            cursor: pointer;
-            position: relative;
-        }
-        .card-impact:hover { transform: scale(1.01); }
-
+        .card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-soft); transition: var(--transition); border: none; }
+        .card-impact { background: var(--black) !important; color: var(--white) !important; box-shadow: var(--shadow-strong); cursor: pointer; }
         .card-hero { grid-column: span 8; }
         .card-calendar { grid-column: span 4; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 
-        /* TYPOGRAPHY */
-        .stat-label-impact { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--white) !important; display: flex; align-items: center; gap: 8px; }
-        .stat-label-standard { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
-        
-        /* CALENDAR */
-        .cal-month { font-weight: 900; text-transform: uppercase; font-size: 0.85rem; color: var(--primary); margin-bottom: 4px; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; justify-content: center;}
-        .cal-day { font-size: 4rem; font-weight: 900; line-height: 1; letter-spacing: -0.05em; color: var(--text-main); }
-        .cal-weekday { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); margin-top: 6px; }
-
-        /* STATS GRID */
-        .stats-grid { grid-column: span 12; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-        .stat-card { padding: 1.8rem; border-radius: var(--radius-md); background: var(--bg-card); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; gap: 10px; border: none; }
-        .stat-card-impact { background: var(--black) !important; color: var(--white) !important; box-shadow: var(--shadow-strong); }
-
-        /* INSIGHTS PANEL */
+        /* PAINEL DE INSIGHTS */
         .details-panel {
             grid-column: span 12; display: none;
             background: var(--white); border-radius: var(--radius-lg);
-            padding: 2.5rem; animation: slideDown 0.4s var(--ease);
+            padding: 2.5rem; 
             box-shadow: var(--shadow-soft);
             margin-top: 0.5rem;
+            height: auto; 
+            overflow: visible;
         }
-        .details-panel.active { display: block; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .details-panel.active { display: block; animation: slideDown 0.4s var(--ease); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
 
         .nerd-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
         .nerd-item { display: flex; flex-direction: column; gap: 6px; }
@@ -152,90 +115,61 @@
             border-top: 1px solid #f1f5f9;
         }
 
-        .chart-box { position: relative; height: 280px; width: 100%; }
-        .chart-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; }
+        .chart-box { position: relative; min-height: 280px; width: 100%; }
 
-        .profile-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: 100px;
-            background: var(--black);
-            color: var(--white);
-            font-weight: 900;
-            font-size: 0.85rem;
-        }
+        /* STATS GRID */
+        .stats-grid { grid-column: span 12; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .stat-card { padding: 1.8rem; border-radius: var(--radius-md); background: var(--bg-card); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; gap: 10px; border: none; }
+        .stat-card-impact { background: var(--black) !important; color: var(--white) !important; box-shadow: var(--shadow-strong); }
 
-        /* --- TRANSACTIONS --- */
+        /* LIST SECTION */
         .list-section { grid-column: span 12; padding: 2.5rem; }
-        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
         .transaction-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 1.6rem 0; border-bottom: 1px solid #f1f5f9;
-            cursor: pointer; transition: var(--transition);
+            padding: 1.6rem 0; border-bottom: 1px solid #f1f5f9; cursor: pointer;
+            transition: 0.2s;
         }
         .transaction-row:hover { background: #fafafa; padding-left: 1rem; padding-right: 1rem; border-radius: 12px; }
 
-        /* --- DRAWER --- */
-        .drawer { position: fixed; bottom: -100%; left: 0; width: 100%; background: var(--bg-card); border-radius: 32px 32px 0 0; box-shadow: 0 -20px 40px rgba(0,0,0,0.1); z-index: 100; transition: bottom 0.4s var(--ease); padding: 2.5rem; max-height: 90vh; overflow-y: auto; }
-        .drawer.active { bottom: 0; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 90; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        .overlay.active { opacity: 1; pointer-events: auto; }
-
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
-        input, select { width: 100%; padding: 1.2rem; border-radius: 12px; border: none; background: var(--bg-body); font-size: 1.1rem; font-weight: 700; outline: none; }
-        .btn-submit { width: 100%; padding: 1.2rem; background: var(--black); color: var(--white); border: none; border-radius: 14px; font-weight: 900; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-submit:hover { background: var(--primary); }
-        .btn-delete { background: var(--error-red); margin-top: 12px; }
-
-        @media (max-width: 1024px) { .charts-container { grid-template-columns: 1fr; height: auto; } .chart-box { height: 300px; } .nerd-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 1024px) { 
+            .charts-container { grid-template-columns: 1fr; } 
+            .nerd-grid { grid-template-columns: 1fr 1fr; }
+            .details-panel { padding: 1.5rem; }
+        }
         @media (max-width: 900px) { .card-hero, .card-calendar { grid-column: span 12; } .stats-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <!-- HEADER -->
         <header class="header">
             <div class="greeting-section">
-                <div class="date-badge" id="date-label">Carregando...</div>
+                <div class="date-badge" id="date-label" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary); font-weight: 800;">Carregando...</div>
                 <h2 style="font-weight: 900; font-size: 1.8rem; letter-spacing: -0.04em;">Rico Dinheirinho</h2>
             </div>
             <div class="header-actions">
-                <button class="btn-header" onclick="App.exportCSV()" title="Exportar Extrato">
-                    <i data-lucide="file-spreadsheet" size="24"></i>
-                </button>
-                <button class="btn-header btn-primary-action" onclick="App.openDrawer('menu')">
-                    <i data-lucide="plus" size="28"></i>
-                </button>
+                <button class="btn-header" onclick="App.exportCSV()"><i data-lucide="file-spreadsheet" size="24"></i></button>
+                <button class="btn-header btn-primary-action" onclick="App.openDrawer('menu')"><i data-lucide="plus" size="28"></i></button>
             </div>
         </header>
 
         <div class="scroll-view">
             <div class="grid-layout">
-                
-                <!-- SALDO (PATRIMÔNIO) -->
                 <section class="card card-hero card-impact" onclick="App.toggleInsights()">
-                    <span class="stat-label-impact"><i data-lucide="wallet" size="18"></i> Meu Patrimônio</span>
+                    <span style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px;"><i data-lucide="wallet" size="18"></i> Meu Patrimônio</span>
                     <h1 id="main-balance" style="font-size: 4.8rem; font-weight: 900; letter-spacing: -0.06em; margin: 0.5rem 0; color: var(--primary);">R$ 0,00</h1>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; align-items: center; gap: 8px; color: var(--primary); font-weight: 800; font-size: 0.95rem;">
-                            <i data-lucide="bar-chart-3" size="20"></i> Análise de Profundidade
-                        </div>
-                        <div id="user-profile-tag" class="profile-badge" style="margin:0; background: rgba(255,255,255,0.1);">---</div>
+                        <div style="display: flex; align-items: center; gap: 8px; color: var(--primary); font-weight: 800; font-size: 0.95rem;"><i data-lucide="bar-chart-3" size="20"></i> Análise de Profundidade</div>
+                        <div id="user-profile-tag" style="padding: 6px 12px; background: rgba(255,255,255,0.1); border-radius: 100px; font-weight: 900; font-size: 0.75rem;">---</div>
                     </div>
                 </section>
 
-                <!-- CALENDÁRIO -->
                 <section class="card card-calendar">
-                    <div class="cal-month" id="cal-month"><i data-lucide="calendar" size="16"></i> ---</div>
-                    <div class="cal-day" id="cal-day">--</div>
-                    <div class="cal-weekday" id="cal-weekday">---</div>
+                    <div style="font-weight: 900; text-transform: uppercase; color: var(--primary); font-size: 0.85rem; display: flex; align-items: center; gap: 6px; justify-content: center;"><i data-lucide="calendar" size="16"></i> <span id="cal-month">---</span></div>
+                    <div id="cal-day" style="font-size: 4rem; font-weight: 900;">--</div>
+                    <div id="cal-weekday" style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">---</div>
                 </section>
 
-                <!-- PAINEL NERD NASA -->
                 <section class="details-panel" id="insights-panel">
                     <div class="nerd-grid">
                         <div class="nerd-item"><span class="nerd-label"><i data-lucide="trending-down" size="14"></i> Gasto Diário</span><p id="nerd-daily-avg" class="nerd-value">R$ 0,00</p></div>
@@ -243,192 +177,109 @@
                         <div class="nerd-item"><span class="nerd-label"><i data-lucide="droplets" size="14"></i> Liquidez</span><p id="nerd-liquidity" class="nerd-value">0%</p></div>
                         <div class="nerd-item"><span class="nerd-label"><i data-lucide="user-check" size="14"></i> Perfil</span><p id="nerd-profile-name" class="nerd-value">---</p></div>
                     </div>
-
                     <div class="charts-container">
-                        <div class="chart-box">
-                            <span class="chart-title"><i data-lucide="radar" size="14"></i> Comportamento</span>
-                            <canvas id="radarChart"></canvas>
-                        </div>
-                        <div class="chart-box">
-                            <span class="chart-title"><i data-lucide="pie-chart" size="14"></i> Alocação</span>
-                            <canvas id="categoryChart"></canvas>
-                        </div>
-                        <div class="chart-box">
-                            <span class="chart-title"><i data-lucide="git-branch" size="14"></i> Vetor de Fluxo</span>
-                            <canvas id="flowChart"></canvas>
-                        </div>
+                        <div class="chart-box"><canvas id="radarChart"></canvas></div>
+                        <div class="chart-box"><canvas id="categoryChart"></canvas></div>
+                        <div class="chart-box"><canvas id="flowChart"></canvas></div>
                     </div>
                 </section>
 
-                <!-- STATS GRID (GANHEI, GASTEI, GUARDEI) -->
                 <div class="stats-grid">
                     <div class="stat-card stat-card-impact">
-                        <span class="stat-label-impact"><i data-lucide="arrow-up-circle" size="18"></i> Ganhei</span>
-                        <span id="stat-income" class="stat-value" style="color: var(--primary); font-weight: 900;">R$ 0,00</span>
+                        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 8px;"><i data-lucide="arrow-up-circle" size="16"></i> Ganhei</span>
+                        <span id="stat-income" style="font-size: 1.6rem; font-weight: 900; color: var(--primary);">R$ 0,00</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label-standard"><i data-lucide="arrow-down-circle" size="18"></i> Gastei</span>
-                        <span id="stat-expense" class="stat-value" style="color: var(--error-red); font-weight: 900;">R$ 0,00</span>
+                        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: flex; align-items: center; gap: 8px;"><i data-lucide="arrow-down-circle" size="16"></i> Gastei</span>
+                        <span id="stat-expense" style="font-size: 1.6rem; font-weight: 900; color: var(--error-red);">R$ 0,00</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label-standard"><i data-lucide="piggy-bank" size="18"></i> Guardei</span>
-                        <span id="stat-savings" class="stat-value" style="color: var(--black); font-weight: 900;">R$ 0,00</span>
+                        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: flex; align-items: center; gap: 8px;"><i data-lucide="piggy-bank" size="16"></i> Guardei</span>
+                        <span id="stat-savings" style="font-size: 1.6rem; font-weight: 900; color: var(--black);">R$ 0,00</span>
                     </div>
                 </div>
 
-                <!-- LINHA DO TEMPO -->
                 <section class="card list-section">
-                    <div class="list-header">
-                        <h3 style="font-weight: 900; font-size: 1.4rem;"><i data-lucide="activity" size="24" style="vertical-align: middle; margin-right: 8px;"></i> Linha do Tempo</h3>
-                        <i data-lucide="history" size="20" style="color: var(--text-muted)"></i>
-                    </div>
+                    <h3 style="font-weight: 900; font-size: 1.4rem; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 10px;"><i data-lucide="history" size="24"></i> Linha do Tempo</h3>
                     <div id="transactions-list"></div>
                 </section>
             </div>
         </div>
     </div>
 
-    <div class="overlay" id="overlay" onclick="App.closeDrawer()"></div>
-    <div class="drawer" id="drawer"></div>
+    <div class="overlay" id="overlay" onclick="App.closeDrawer()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; z-index: 90; backdrop-filter: blur(4px);"></div>
+    <div class="drawer" id="drawer" style="position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-radius: 32px 32px 0 0; padding: 2.5rem; transition: 0.4s var(--ease); z-index: 100; max-height: 90vh; overflow-y: auto;"></div>
 
     <script>
+        // DICIONÁRIO COMPLETO DE CATEGORIAS (INTEGRADO DO CATEGORIES.JS)
         const FinanceCategories = {
             income: [
-                // RENDA PRINCIPAL
-                { id: 'salario_clt', label: 'Salário CLT', icon: 'briefcase' },
-                { id: 'salario_pj', label: 'Pró-Labore / PJ', icon: 'building' },
-                { id: 'adiantamento_salarial', label: 'Adiantamento Salarial', icon: 'calendar' },
-                { id: 'ferias', label: 'Férias', icon: 'sun' },
-                { id: 'decimo_terceiro', label: '13º Salário', icon: 'gift' },
-                { id: 'rescisao', label: 'Rescisão', icon: 'file-text' },
-                { id: 'bonus', label: 'Bônus / PLR', icon: 'award' },
-                { id: 'comissao', label: 'Comissões', icon: 'percent' },
-                
-                // TRABALHOS EXTRAS
-                { id: 'freelance', label: 'Freelance', icon: 'laptop' },
-                { id: 'consultoria', label: 'Consultoria', icon: 'clipboard' },
-                { id: 'hora_extra', label: 'Hora Extra', icon: 'clock' },
-                { id: 'bico', label: 'Trabalho Informal', icon: 'tool' },
-
-                // EMPREENDEDORISMO
-                { id: 'venda_produto', label: 'Venda de Produto', icon: 'shopping-bag' },
-                { id: 'venda_servico', label: 'Venda de Serviço', icon: 'settings' },
-                { id: 'ecommerce', label: 'E-commerce', icon: 'shopping-cart' },
-                { id: 'afiliados', label: 'Marketing de Afiliados', icon: 'link' },
-
-                // INVESTIMENTOS
-                { id: 'rendimentos_cdi', label: 'Rendimento CDI', icon: 'trending-up' },
-                { id: 'dividendos', label: 'Dividendos', icon: 'bar-chart' },
-                { id: 'juros_titulos', label: 'Juros de Títulos', icon: 'activity' },
-                { id: 'renda_fixa', label: 'Renda Fixa', icon: 'shield' },
-                { id: 'renda_variavel', label: 'Renda Variável', icon: 'trending-up' },
-                { id: 'fundos_imobiliarios', label: 'FIIs', icon: 'home' },
-                { id: 'cripto', label: 'Criptomoedas', icon: 'cpu' },
-                { id: 'poupanca', label: 'Poupança', icon: 'archive' },
-
-                // BENEFÍCIOS E AUXÍLIOS
-                { id: 'vale_refeicao', label: 'Vale Refeição', icon: 'credit-card' },
-                { id: 'vale_transporte', label: 'Vale Transporte', icon: 'bus' },
-                { id: 'auxilio_governo', label: 'Auxílio Governamental', icon: 'flag' },
-                { id: 'seguro_desemprego', label: 'Seguro-Desemprego', icon: 'umbrella' },
-                { id: 'pensao_recebida', label: 'Pensão Recebida', icon: 'users' },
-
-                // EVENTUAIS
-                { id: 'presente_recebido', label: 'Presente Recebido', icon: 'gift' },
-                { id: 'reembolso', label: 'Reembolso', icon: 'rotate-ccw' },
-                { id: 'devolucao_imposto', label: 'Restituição IR', icon: 'file' },
-                { id: 'cashback', label: 'Cashback', icon: 'refresh-cw' },
-                { id: 'venda_bem', label: 'Venda de Bem', icon: 'tag' },
-
-                // OUTROS
-                { id: 'outros_ganhos', label: 'Outras Entradas', icon: 'plus-circle' }
+                { id: 'salario_clt', label: 'Salário CLT' },
+                { id: 'salario_pj', label: 'Pró-Labore / PJ' },
+                { id: 'adiantamento_salarial', label: 'Adiantamento Salarial' },
+                { id: 'ferias', label: 'Férias' },
+                { id: 'decimo_terceiro', label: '13º Salário' },
+                { id: 'rescisao', label: 'Rescisão' },
+                { id: 'bonus', label: 'Bônus / PLR' },
+                { id: 'comissao', label: 'Comissões' },
+                { id: 'freelance', label: 'Freelance' },
+                { id: 'consultoria', label: 'Consultoria' },
+                { id: 'hora_extra', label: 'Hora Extra' },
+                { id: 'bico', label: 'Trabalho Informal' },
+                { id: 'aluguel_recebido', label: 'Aluguel Recebido' },
+                { id: 'dividendos', label: 'Dividendos / JCP' },
+                { id: 'venda_ativos', label: 'Venda de Ativos' },
+                { id: 'restituicao_ir', label: 'Restituição IR' },
+                { id: 'presente_recebido', label: 'Presente / Doação' },
+                { id: 'reembolso', label: 'Reembolso' },
+                { id: 'venda_usados', label: 'Venda de Itens' },
+                { id: 'outras_entradas', label: 'Outras Entradas' }
             ],
             expense: [
-                // MORADIA
-                { id: 'aluguel', label: 'Aluguel', icon: 'home' },
-                { id: 'financiamento_imovel', label: 'Financiamento Imóvel', icon: 'file-text' },
-                { id: 'condominio', label: 'Condomínio', icon: 'building' },
-                { id: 'iptu', label: 'IPTU', icon: 'map' },
-                { id: 'agua', label: 'Água', icon: 'droplet' },
-                { id: 'luz', label: 'Energia Elétrica', icon: 'zap' },
-                { id: 'gas', label: 'Gás', icon: 'flame' },
-                { id: 'internet', label: 'Internet', icon: 'wifi' },
-                { id: 'telefone', label: 'Telefone', icon: 'phone' },
-                { id: 'manutencao_casa', label: 'Manutenção da Casa', icon: 'tool' },
-
-                // ALIMENTAÇÃO
-                { id: 'supermercado', label: 'Supermercado', icon: 'shopping-cart' },
-                { id: 'padaria', label: 'Padaria', icon: 'coffee' },
-                { id: 'restaurante', label: 'Restaurante', icon: 'utensils' },
-                { id: 'delivery', label: 'Delivery', icon: 'truck' },
-                { id: 'ifood', label: 'Apps de Comida', icon: 'smartphone' },
-
-                // TRANSPORTE
-                { id: 'combustivel', label: 'Combustível', icon: 'droplet' },
-                { id: 'uber', label: 'Uber / App', icon: 'car' },
-                { id: 'transporte_publico', label: 'Transporte Público', icon: 'bus' },
-                { id: 'manutencao_carro', label: 'Manutenção Veículo', icon: 'tool' },
-                { id: 'seguro_veiculo', label: 'Seguro Veicular', icon: 'shield' },
-                { id: 'ipva', label: 'IPVA', icon: 'file' },
-                { id: 'estacionamento', label: 'Estacionamento', icon: 'square' },
-                { id: 'pedagio', label: 'Pedágio', icon: 'navigation' },
-
-                // SAÚDE
-                { id: 'plano_saude', label: 'Plano de Saúde', icon: 'heart' },
-                { id: 'consulta_medica', label: 'Consulta Médica', icon: 'stethoscope' },
-                { id: 'exames', label: 'Exames', icon: 'activity' },
-                { id: 'farmacia', label: 'Farmácia', icon: 'pill' },
-                { id: 'terapia', label: 'Terapia', icon: 'brain' },
-                { id: 'academia', label: 'Academia', icon: 'dumbbell' },
-
-                // EDUCAÇÃO
-                { id: 'mensalidade', label: 'Mensalidade', icon: 'book' },
-                { id: 'curso_online', label: 'Curso Online', icon: 'monitor' },
-                { id: 'material_escolar', label: 'Material Escolar', icon: 'pen-tool' },
-                { id: 'livros', label: 'Livros', icon: 'book-open' },
-
-                // LAZER
-                { id: 'cinema', label: 'Cinema', icon: 'film' },
-                { id: 'streaming', label: 'Streaming', icon: 'tv' },
-                { id: 'viagem', label: 'Viagem', icon: 'plane' },
-                { id: 'hotel', label: 'Hotel', icon: 'map-pin' },
-                { id: 'bares', label: 'Bares', icon: 'beer' },
-                { id: 'shows', label: 'Shows / Eventos', icon: 'music' },
-
-                // FINANCEIRO
-                { id: 'cartao_credito', label: 'Fatura Cartão', icon: 'credit-card' },
-                { id: 'emprestimo', label: 'Empréstimo', icon: 'alert-triangle' },
-                { id: 'juros', label: 'Juros / Multas', icon: 'percent' },
-                { id: 'taxas_bancarias', label: 'Taxas Bancárias', icon: 'banknote' },
-                { id: 'impostos', label: 'Impostos', icon: 'file-text' },
-
-                // COMPRAS
-                { id: 'roupas', label: 'Roupas', icon: 'shopping-bag' },
-                { id: 'eletronicos', label: 'Eletrônicos', icon: 'cpu' },
-                { id: 'moveis', label: 'Móveis', icon: 'box' },
-                { id: 'presentes', label: 'Presentes Dados', icon: 'gift' },
-
-                // FAMILIAR
-                { id: 'filhos', label: 'Despesas com Filhos', icon: 'users' },
-                { id: 'pets', label: 'Pets', icon: 'heart' },
-                { id: 'pensao_paga', label: 'Pensão Paga', icon: 'user' },
-
-                // OUTROS
-                { id: 'imprevistos', label: 'Imprevistos', icon: 'alert-circle' },
-                { id: 'outros_gastos', label: 'Outros Gastos', icon: 'more-horizontal' }
+                { id: 'alimentacao', label: 'Alimentação' },
+                { id: 'mercado', label: 'Supermercado' },
+                { id: 'restaurante', label: 'Restaurante / Delivery' },
+                { id: 'aluguel_pago', label: 'Aluguel / Prestação' },
+                { id: 'condominio', label: 'Condomínio' },
+                { id: 'luz_agua_gas', label: 'Luz / Água / Gás' },
+                { id: 'internet_celular', label: 'Internet / Celular' },
+                { id: 'manutencao_casa', label: 'Manutenção da Casa' },
+                { id: 'combustivel', label: 'Combustível' },
+                { id: 'transporte_publico', label: 'Transporte Público' },
+                { id: 'uber_taxi', label: 'Uber / Táxi' },
+                { id: 'manutencao_carro', label: 'Manutenção Veículo' },
+                { id: 'seguro_ipva', label: 'Seguro / IPVA' },
+                { id: 'saude_plano', label: 'Plano de Saúde' },
+                { id: 'farmacia', label: 'Farmácia' },
+                { id: 'dentista_exames', label: 'Dentista / Exames' },
+                { id: 'escola_faculdade', label: 'Escola / Faculdade' },
+                { id: 'cursos_livros', label: 'Cursos / Livros' },
+                { id: 'cinema_teatro', label: 'Cinema / Teatro' },
+                { id: 'viagem_lazer', label: 'Viagens' },
+                { id: 'academia_esporte', label: 'Academia / Esporte' },
+                { id: 'assinaturas_streaming', label: 'Netflix / Spotify / SaaS' },
+                { id: 'roupas', label: 'Roupas' },
+                { id: 'eletronicos', label: 'Eletrônicos' },
+                { id: 'filhos', label: 'Despesas com Filhos' },
+                { id: 'pets', label: 'Pets' },
+                { id: 'imprevistos', label: 'Imprevistos' },
+                { id: 'outros_gastos', label: 'Outros Gastos' }
             ],
             savings: [
-                { id: 'reserva_emergencia', label: 'Reserva de Emergência', icon: 'shield-check' },
-                { id: 'fundo_viagem', label: 'Fundo de Viagem', icon: 'palmtree' },
-                { id: 'aposentadoria', label: 'Aposentadoria', icon: 'lock' },
-                { id: 'compra_imovel', label: 'Compra de Imóvel', icon: 'home' },
-                { id: 'compra_veiculo', label: 'Compra de Veículo', icon: 'car' },
-                { id: 'educacao_futura', label: 'Educação Futura', icon: 'book' },
-                { id: 'fundo_casamento', label: 'Casamento', icon: 'heart' },
-                { id: 'fundo_filhos', label: 'Futuro dos Filhos', icon: 'users' },
-                { id: 'meta_especifica', label: 'Meta Específica', icon: 'target' },
-                { id: 'investimento_longo_prazo', label: 'Investimento LP', icon: 'trending-up' }
+                { id: 'reserva_emergencia', label: 'Reserva de Emergência' },
+                { id: 'fundo_viagem', label: 'Fundo de Viagem' },
+                { id: 'aposentadoria', label: 'Aposentadoria' },
+                { id: 'compra_imovel', label: 'Compra de Imóvel' },
+                { id: 'compra_veiculo', label: 'Compra de Veículo' },
+                { id: 'investimento_lp', label: 'Investimento Longo Prazo' },
+                { id: 'educacao_futura', label: 'Fundo de Educação' },
+                { id: 'outras_reservas', label: 'Outras Reservas' }
             ]
+        };
+
+        const Storage = {
+            save: (data) => localStorage.setItem('rd_nasa_v15_full', JSON.stringify(data)),
+            get: () => JSON.parse(localStorage.getItem('rd_nasa_v15_full')) || []
         };
 
         const Format = {
@@ -439,15 +290,10 @@
             }
         };
 
-        const Storage = {
-            save: (data) => localStorage.setItem('rd_nasa_final_v13', JSON.stringify(data)),
-            get: () => JSON.parse(localStorage.getItem('rd_nasa_final_v13')) || []
-        };
-
         const App = {
             data: [],
+            charts: {},
             editingId: null,
-            charts: { radar: null, cat: null, flow: null },
 
             init() {
                 this.data = Storage.get();
@@ -458,52 +304,65 @@
 
             updateCalendar() {
                 const now = new Date();
-                document.getElementById('cal-month').innerHTML = `<i data-lucide="calendar" size="16"></i> ${now.toLocaleString('pt-BR', { month: 'short' }).toUpperCase().replace('.', '')}`;
+                document.getElementById('cal-month').textContent = now.toLocaleString('pt-BR', { month: 'short' }).toUpperCase();
                 document.getElementById('cal-day').textContent = now.getDate();
-                const weekday = now.toLocaleString('pt-BR', { weekday: 'long' });
-                document.getElementById('cal-weekday').textContent = weekday.charAt(0).toUpperCase() + weekday.slice(1);
+                document.getElementById('cal-weekday').textContent = now.toLocaleString('pt-BR', { weekday: 'long' });
                 document.getElementById('date-label').textContent = now.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
             },
 
             toggleInsights() {
                 const panel = document.getElementById('insights-panel');
-                const isActive = panel.classList.toggle('active');
-                if (isActive) this.updateCharts();
+                panel.classList.toggle('active');
+                if (panel.classList.contains('active')) this.updateCharts();
             },
 
             openDrawer(type, param) {
                 const drawer = document.getElementById('drawer');
+                const overlay = document.getElementById('overlay');
                 this.editingId = null;
 
                 if (type === 'menu') {
                     drawer.innerHTML = `
-                        <h2 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 2rem;">O que deseja fazer?</h2>
-                        <div onclick="App.openDrawer('form', 'income')" style="padding:1.5rem; background:#f8fafc; border-radius:14px; margin-bottom:12px; cursor:pointer; font-weight:900; display:flex; align-items:center; gap:12px;"><i data-lucide="arrow-up-circle" color="#10b981"></i> Ganhei</div>
-                        <div onclick="App.openDrawer('form', 'expense')" style="padding:1.5rem; background:#f8fafc; border-radius:14px; margin-bottom:12px; cursor:pointer; font-weight:900; display:flex; align-items:center; gap:12px;"><i data-lucide="arrow-down-circle" color="#ef4444"></i> Gastei</div>
-                        <div onclick="App.openDrawer('form', 'savings')" style="padding:1.5rem; background:#f8fafc; border-radius:14px; margin-bottom:12px; cursor:pointer; font-weight:900; display:flex; align-items:center; gap:12px;"><i data-lucide="piggy-bank" color="#0f172a"></i> Guardei</div>
+                        <h2 style="font-weight: 900; margin-bottom: 2rem;">Novo Registro</h2>
+                        <div onclick="App.openDrawer('form', 'income')" style="padding: 1.5rem; background: #f8fafc; border-radius: 16px; margin-bottom: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; gap: 12px;"><i data-lucide="arrow-up-right" color="#10b981"></i> Ganhei</div>
+                        <div onclick="App.openDrawer('form', 'expense')" style="padding: 1.5rem; background: #f8fafc; border-radius: 16px; margin-bottom: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; gap: 12px;"><i data-lucide="arrow-down-left" color="#ef4444"></i> Gastei</div>
+                        <div onclick="App.openDrawer('form', 'savings')" style="padding: 1.5rem; background: #f8fafc; border-radius: 16px; margin-bottom: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; gap: 12px;"><i data-lucide="piggy-bank" color="#0f172a"></i> Guardei</div>
                     `;
                 } else if (type === 'form') {
                     this.renderForm(param);
                 }
 
-                drawer.classList.add('active');
-                document.getElementById('overlay').classList.add('active');
+                drawer.style.bottom = '0';
+                overlay.style.display = 'block';
                 lucide.createIcons();
             },
 
             renderForm(type, existing = null) {
-                const cats = FinanceCategories[type];
-                const labels = { income: 'Ganhei', expense: 'Gastei', savings: 'Guardei' };
+                const cats = FinanceCategories[type] || [];
                 const colors = { income: 'var(--primary)', expense: 'var(--error-red)', savings: 'var(--black)' };
-                
                 document.getElementById('drawer').innerHTML = `
-                    <h2 style="font-weight: 900; font-size: 2rem; margin-bottom: 2.5rem;">${existing ? 'Editar Registro' : labels[type]}</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="font-weight: 900;">${existing ? 'Editar' : 'Registrar'}</h2>
+                        <button onclick="App.closeDrawer()" style="background: none; border: none; cursor: pointer;"><i data-lucide="x"></i></button>
+                    </div>
                     <form onsubmit="App.handleSave(event, '${type}')">
-                        <div class="form-group"><label>Valor Total</label><input type="number" step="0.01" id="f-val" value="${existing ? existing.amount : ''}" required style="color: ${colors[type]}; font-size: 2.5rem;"></div>
-                        <div class="form-group"><label>Categoria do Fluxo</label><select id="f-cat">${cats.map(c => `<option value="${c.label}" ${existing && existing.cat === c.label ? 'selected' : ''}>${c.label}</option>`).join('')}</select></div>
-                        <div class="form-group"><label>O que aconteceu?</label><input type="text" id="f-desc" value="${existing ? existing.desc : ''}" required></div>
-                        <button type="submit" class="btn-submit" style="background: ${colors[type]}"><i data-lucide="check" size="20"></i> ${existing ? 'Atualizar Dados' : 'Confirmar Registro'}</button>
-                        ${existing ? `<button type="button" class="btn-submit btn-delete" onclick="App.handleDelete('${existing.id}')"><i data-lucide="trash-2" size="20"></i> Excluir Registro</button>` : ''}
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display:block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">VALOR</label>
+                            <input type="number" step="0.01" id="f-val" value="${existing ? existing.amount : ''}" required style="width:100%; padding: 1rem; border-radius:12px; border:none; background:#f1f5f9; font-size: 2rem; font-weight: 900; color: ${colors[type]}">
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display:block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">CATEGORIA</label>
+                            <select id="f-cat" style="width:100%; padding: 1rem; border-radius:12px; border:none; background:#f1f5f9; font-weight: 700; outline: none;">
+                                ${cats.map(c => `<option value="${c.label}" ${existing && existing.cat === c.label ? 'selected' : ''}>${c.label}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display:block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">DESCRIÇÃO</label>
+                            <input type="text" id="f-desc" value="${existing ? existing.desc : ''}" required style="width:100%; padding: 1rem; border-radius:12px; border:none; background:#f1f5f9; font-weight: 700;">
+                        </div>
+                        <button type="submit" style="width:100%; padding:1.2rem; background:${colors[type]}; color:white; border:none; border-radius:16px; font-weight:900; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <i data-lucide="check"></i> Salvar
+                        </button>
                     </form>
                 `;
                 lucide.createIcons();
@@ -514,37 +373,28 @@
                 const amount = parseFloat(document.getElementById('f-val').value);
                 const desc = document.getElementById('f-desc').value;
                 const cat = document.getElementById('f-cat').value;
-
                 if (this.editingId) {
                     const idx = this.data.findIndex(x => x.id == this.editingId);
                     this.data[idx] = { ...this.data[idx], amount, desc, cat };
                 } else {
                     this.data.unshift({ id: Date.now(), type, amount, desc, cat, date: new Date().toISOString() });
                 }
-
                 Storage.save(this.data);
                 this.render();
                 this.closeDrawer();
-            },
-
-            handleDelete(id) {
-                this.data = this.data.filter(x => x.id != id);
-                Storage.save(this.data);
-                this.render();
-                this.closeDrawer();
-            },
-
-            closeDrawer() {
-                document.getElementById('drawer').classList.remove('active');
-                document.getElementById('overlay').classList.remove('active');
             },
 
             editTransaction(id) {
                 const t = this.data.find(x => x.id == id);
                 this.editingId = id;
                 this.renderForm(t.type, t);
-                document.getElementById('drawer').classList.add('active');
-                document.getElementById('overlay').classList.add('active');
+                document.getElementById('drawer').style.bottom = '0';
+                document.getElementById('overlay').style.display = 'block';
+            },
+
+            closeDrawer() {
+                document.getElementById('drawer').style.bottom = '-100%';
+                document.getElementById('overlay').style.display = 'none';
             },
 
             updateCharts() {
@@ -552,62 +402,39 @@
                 const spent = this.data.filter(t => t.type === 'expense').reduce((a, c) => a + c.amount, 0);
                 const saved = this.data.filter(t => t.type === 'savings').reduce((a, c) => a + c.amount, 0);
 
-                // --- Radar Chart ---
-                const consumption = gain > 0 ? Math.min((spent / gain) * 100, 100) : 0;
-                const security = gain > 0 ? Math.min((saved / gain) * 100, 100) : 0;
-                const growth = (gain + saved) > 0 ? Math.min(((saved * 1.5) / (gain + spent)) * 100, 100) : 0;
-
                 if (this.charts.radar) this.charts.radar.destroy();
                 this.charts.radar = new Chart(document.getElementById('radarChart'), {
                     type: 'radar',
-                    data: {
-                        labels: ['Gastador', 'Poupador', 'Investidor'],
-                        datasets: [{
-                            data: [consumption, security, growth],
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            borderColor: '#10b981',
-                            borderWidth: 2,
-                            pointBackgroundColor: '#10b981'
-                        }]
-                    },
-                    options: { maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: '#f1f5f9' }, pointLabels: { font: { weight: 900, size: 10 } } } }, plugins: { legend: { display: false } } }
+                    data: { labels: ['Gastador', 'Poupador', 'Investidor'], datasets: [{ data: [60, 40, 20], backgroundColor: 'rgba(16, 185, 129, 0.2)', borderColor: '#10b981', borderWidth: 2 }] },
+                    options: { maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false } } }, plugins: { legend: { display: false } } }
                 });
 
-                // --- Doughnut ---
-                const cats = this.data.filter(t => t.type === 'expense').reduce((acc, curr) => {
+                if (this.charts.cat) this.charts.cat.destroy();
+                const catData = this.data.filter(t => t.type === 'expense').reduce((acc, curr) => {
                     acc[curr.cat] = (acc[curr.cat] || 0) + curr.amount;
                     return acc;
                 }, {});
-                if (this.charts.cat) this.charts.cat.destroy();
                 this.charts.cat = new Chart(document.getElementById('categoryChart'), {
                     type: 'doughnut',
-                    data: { labels: Object.keys(cats), datasets: [{ data: Object.values(cats), backgroundColor: ['#0f172a', '#10b981', '#ef4444', '#f59e0b', '#6366f1'], borderWidth: 0 }] },
-                    options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { weight: 800, size: 9 } } } } }
+                    data: { labels: Object.keys(catData).slice(0, 5), datasets: [{ data: Object.values(catData).slice(0, 5), backgroundColor: ['#0f172a', '#10b981', '#ef4444', '#f59e0b', '#6366f1'] }] },
+                    options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
                 });
 
-                // --- Bar ---
                 if (this.charts.flow) this.charts.flow.destroy();
                 this.charts.flow = new Chart(document.getElementById('flowChart'), {
                     type: 'bar',
-                    data: { labels: ['+', '-', '→'], datasets: [{ data: [gain, spent, saved], backgroundColor: ['#10b981', '#ef4444', '#0f172a'], borderRadius: 6 }] },
-                    options: { maintainAspectRatio: false, scales: { y: { display: false }, x: { grid: { display: false }, ticks: { font: { weight: 900 } } } }, plugins: { legend: { display: false } } }
+                    data: { labels: ['+', '-', '→'], datasets: [{ data: [gain, spent, saved], backgroundColor: ['#10b981', '#ef4444', '#0f172a'] }] },
+                    options: { maintainAspectRatio: false, scales: { y: { display: false } }, plugins: { legend: { display: false } } }
                 });
-
-                let profile = "Equilibrado";
-                if (consumption > 70) profile = "Gastador";
-                else if (security > 40) profile = "Poupador";
-                else if (growth > 50) profile = "Investidor";
-                document.getElementById('user-profile-tag').textContent = profile;
-                document.getElementById('nerd-profile-name').textContent = profile;
             },
 
             render() {
                 const gain = this.data.filter(t => t.type === 'income').reduce((a, c) => a + c.amount, 0);
                 const spent = this.data.filter(t => t.type === 'expense').reduce((a, c) => a + c.amount, 0);
                 const saved = this.data.filter(t => t.type === 'savings').reduce((a, c) => a + c.amount, 0);
-                const balance = gain - spent - saved;
+                const bal = gain - spent - saved;
 
-                document.getElementById('main-balance').textContent = Format.currency(balance);
+                document.getElementById('main-balance').textContent = Format.currency(bal);
                 document.getElementById('stat-income').textContent = Format.currency(gain);
                 document.getElementById('stat-expense').textContent = Format.currency(spent);
                 document.getElementById('stat-savings').textContent = Format.currency(saved);
@@ -616,23 +443,25 @@
                 const avg = spent / today;
                 document.getElementById('nerd-daily-avg').textContent = Format.currency(avg || 0);
                 document.getElementById('nerd-projection').textContent = Format.currency(avg * 30 || 0);
-                document.getElementById('nerd-liquidity').textContent = `${gain > 0 ? ((balance / gain) * 100).toFixed(0) : 0}%`;
+                document.getElementById('nerd-liquidity').textContent = `${gain > 0 ? ((bal / gain) * 100).toFixed(0) : 0}%`;
 
                 const list = document.getElementById('transactions-list');
-                list.innerHTML = this.data.map(t => {
+                list.innerHTML = this.data.length > 0 ? this.data.map(t => {
                     const colors = { income: 'var(--primary)', expense: 'var(--error-red)', savings: 'var(--black)' };
-                    const icons = { income: 'trending-up', expense: 'shopping-bag', savings: 'piggy-bank' };
-                    return `<div class="transaction-row" onclick="App.editTransaction(${t.id})">
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div style="width: 44px; height: 44px; background: var(--bg-body); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: ${colors[t.type]};"><i data-lucide="${icons[t.type]}" size="20"></i></div>
-                            <div><p style="font-weight: 900; font-size: 1.05rem;">${t.desc}</p><p style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">${Format.date(t.date)} • ${t.cat}</p></div>
-                        </div>
-                        <span style="font-weight: 900; font-size: 1.1rem; color: ${colors[t.type]};">${t.type === 'income' ? '+' : t.type === 'expense' ? '-' : '→'} ${Format.currency(t.amount)}</span>
-                    </div>`;
-                }).join('');
+                    const iconMap = { income: 'arrow-up-right', expense: 'shopping-bag', savings: 'piggy-bank' };
+                    return `
+                        <div class="transaction-row" onclick="App.editTransaction(${t.id})">
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <div style="width:44px; height:44px; background:#f1f5f9; border-radius:12px; display:flex; align-items:center; justify-content:center; color:${colors[t.type]}">
+                                    <i data-lucide="${iconMap[t.type]}" size="20"></i>
+                                </div>
+                                <div><p style="font-weight:900;">${t.desc}</p><small style="color:var(--text-muted); font-weight:700;">${Format.date(t.date)} • ${t.cat}</small></div>
+                            </div>
+                            <span style="font-weight:900; color:${colors[t.type]}">${t.type === 'income' ? '+' : t.type === 'expense' ? '-' : '→'} ${Format.currency(t.amount)}</span>
+                        </div>`;
+                }).join('') : '<p style="text-align: center; color: var(--text-muted); padding: 40px;">Nenhuma atividade registrada.</p>';
                 
                 lucide.createIcons();
-                this.updateCharts();
             },
 
             exportCSV() {
