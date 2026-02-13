@@ -162,6 +162,10 @@
         }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(20px); }
+
+		form {
+    		padding-bottom: 2rem; /* Garante que nada fique escondido sob a borda da tela */
+		}
     </style>
 </head>
 <body>
@@ -531,6 +535,7 @@
                 this.renderForm(t.type, t);
                 document.getElementById('drawer').style.bottom = '0';
                 document.getElementById('overlay').style.display = 'block';
+				lucide.createIcons();
             },
 
             closeDrawer() {
