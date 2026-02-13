@@ -7,7 +7,7 @@ const ASSETS_TO_CACHE = [
   './config.js',
   './icon-192x192.png',
   './icon-512x512.png',
-  /* Ficheiros da estrutura do repositório */
+  /* Estrutura modular detectada no repositório */
   './src/main.js',
   './src/core/auth.js',
   './src/core/engine.js',
@@ -17,16 +17,13 @@ const ASSETS_TO_CACHE = [
   './src/ui/TransactionItem.js',
   './src/utils/categories.js',
   './src/utils/formatters.js',
-  './src/utils/validators.js',
-  /* Recursos Externos */
-  'https://unpkg.com/lucide@latest',
-  'https://cdn.jsdelivr.net/npm/chart.js',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+  './src/utils/validators.js'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      // Usando addAll para garantir que todos os arquivos sejam baixados
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
