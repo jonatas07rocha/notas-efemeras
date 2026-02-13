@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rico Dinheirinho | Gestão Inteligente</title>
+	
+	<!-- PWA: Manifesto e Cores -->
+	<link rel="manifest" href="manifest.json">
+	<meta name="theme-color" content="#10b981">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Favicon: Vetor Lucide DollarSign (Esmeralda) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='12' y1='1' x2='12' y2='23'></line><path d='M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'></path></svg>">
@@ -233,75 +239,150 @@
         // DICIONÁRIO COMPLETO (INTEGRADO DO CATEGORIES.JS)
         const FinanceCategories = {
             income: [
-                { id: 'salario_clt', label: 'Salário CLT', icon: 'briefcase' },
-                { id: 'salario_pj', label: 'Pró-Labore / PJ', icon: 'building' },
-                { id: 'adiantamento_salarial', label: 'Adiantamento Salarial', icon: 'calendar' },
-                { id: 'ferias', label: 'Férias', icon: 'sun' },
-                { id: 'decimo_terceiro', label: '13º Salário', icon: 'gift' },
-                { id: 'rescisao', label: 'Rescisão', icon: 'file-text' },
-                { id: 'bonus', label: 'Bônus / PLR', icon: 'award' },
-                { id: 'comissao', label: 'Comissões', icon: 'percent' },
-                { id: 'freelance', label: 'Freelance', icon: 'laptop' },
-                { id: 'consultoria', label: 'Consultoria', icon: 'clipboard' },
-                { id: 'hora_extra', label: 'Hora Extra', icon: 'clock' },
-                { id: 'bico', label: 'Trabalho Informal', icon: 'user' },
-                { id: 'aluguel_recebido', label: 'Aluguel Recebido', icon: 'home' },
-                { id: 'dividendos', label: 'Dividendos / JCP', icon: 'trending-up' },
-                { id: 'venda_ativos', label: 'Venda de Ativos', icon: 'dollar-sign' },
-                { id: 'restituicao_ir', label: 'Restituição IR', icon: 'file-check' },
-                { id: 'presente_recebido', label: 'Presente / Doação', icon: 'gift' },
-                { id: 'reembolso', label: 'Reembolso', icon: 'rotate-ccw' },
-                { id: 'venda_usados', label: 'Venda de Itens', icon: 'shopping-cart' },
-                { id: 'outras_entradas', label: 'Outras Entradas', icon: 'plus-circle' }
+                // RENDA PRINCIPAL
+				{ id: 'salario_clt', label: 'Salário CLT', icon: 'briefcase' },
+				{ id: 'salario_pj', label: 'Pró-Labore / PJ', icon: 'building' },
+				{ id: 'adiantamento_salarial', label: 'Adiantamento Salarial', icon: 'calendar' },
+				{ id: 'ferias', label: 'Férias', icon: 'sun' },
+				{ id: 'decimo_terceiro', label: '13º Salário', icon: 'gift' },
+				{ id: 'rescisao', label: 'Rescisão', icon: 'file-text' },
+				{ id: 'bonus', label: 'Bônus / PLR', icon: 'award' },
+        		{ id: 'comissao', label: 'Comissões', icon: 'percent' },
+
+        		// TRABALHOS EXTRAS
+        		{ id: 'freelance', label: 'Freelance', icon: 'laptop' },
+        		{ id: 'consultoria', label: 'Consultoria', icon: 'clipboard' },
+        		{ id: 'hora_extra', label: 'Hora Extra', icon: 'clock' },
+        		{ id: 'bico', label: 'Trabalho Informal', icon: 'tool' },
+
+		        // EMPREENDEDORISMO
+		        { id: 'venda_produto', label: 'Venda de Produto', icon: 'shopping-bag' },
+		        { id: 'venda_servico', label: 'Venda de Serviço', icon: 'settings' },
+		        { id: 'ecommerce', label: 'E-commerce', icon: 'shopping-cart' },
+        		{ id: 'afiliados', label: 'Marketing de Afiliados', icon: 'link' },
+
+        		// INVESTIMENTOS
+        		{ id: 'rendimentos_cdi', label: 'Rendimento CDI', icon: 'trending-up' },
+		        { id: 'dividendos', label: 'Dividendos', icon: 'bar-chart' },
+		        { id: 'juros_titulos', label: 'Juros de Títulos', icon: 'activity' },
+		        { id: 'renda_fixa', label: 'Renda Fixa', icon: 'shield' },
+		        { id: 'renda_variavel', label: 'Renda Variável', icon: 'trending-up' },
+		        { id: 'fundos_imobiliarios', label: 'FIIs', icon: 'home' },
+		        { id: 'cripto', label: 'Criptomoedas', icon: 'cpu' },
+		        { id: 'poupanca', label: 'Poupança', icon: 'archive' },
+
+        		// BENEFÍCIOS E AUXÍLIOS
+		        { id: 'vale_refeicao', label: 'Vale Refeição', icon: 'credit-card' },
+		        { id: 'vale_transporte', label: 'Vale Transporte', icon: 'bus' },
+		        { id: 'auxilio_governo', label: 'Auxílio Governamental', icon: 'flag' },
+		        { id: 'seguro_desemprego', label: 'Seguro-Desemprego', icon: 'umbrella' },
+		        { id: 'pensao_recebida', label: 'Pensão Recebida', icon: 'users' },
+
+		        // EVENTUAIS
+		        { id: 'presente_recebido', label: 'Presente Recebido', icon: 'gift' },
+		        { id: 'reembolso', label: 'Reembolso', icon: 'rotate-ccw' },
+		        { id: 'devolucao_imposto', label: 'Restituição IR', icon: 'file' },
+		        { id: 'cashback', label: 'Cashback', icon: 'refresh-cw' },
+        		{ id: 'venda_bem', label: 'Venda de Bem', icon: 'tag' },
+
+        		// OUTROS
+        		{ id: 'outros_ganhos', label: 'Outras Entradas', icon: 'plus-circle' }
             ],
+            
+			
             expense: [
-                { id: 'alimentacao', label: 'Alimentação', icon: 'utensils' },
-                { id: 'mercado', label: 'Supermercado', icon: 'shopping-cart' },
-                { id: 'restaurante', label: 'Restaurante / Delivery', icon: 'pizza' },
-                { id: 'aluguel_pago', label: 'Aluguel / Prestação', icon: 'home' },
-                { id: 'condominio', label: 'Condomínio', icon: 'building-2' },
-                { id: 'luz_agua_gas', label: 'Luz / Água / Gás', icon: 'droplet' },
-                { id: 'internet_celular', label: 'Internet / Celular', icon: 'wifi' },
+                // MORADIA
+                { id: 'aluguel', label: 'Aluguel', icon: 'home' },
+                { id: 'financiamento_imovel', label: 'Financiamento Imóvel', icon: 'file-text' },
+                { id: 'condominio', label: 'Condomínio', icon: 'building' },
+                { id: 'iptu', label: 'IPTU', icon: 'map' },
+                { id: 'agua', label: 'Água', icon: 'droplet' },
+                { id: 'luz', label: 'Energia Elétrica', icon: 'zap' },
+                { id: 'gas', label: 'Gás', icon: 'flame' },
+                { id: 'internet', label: 'Internet', icon: 'wifi' },
+                { id: 'telefone', label: 'Telefone', icon: 'phone' },
                 { id: 'manutencao_casa', label: 'Manutenção da Casa', icon: 'tool' },
-                { id: 'combustivel', label: 'Combustível', icon: 'fuel' },
+
+                // ALIMENTAÇÃO
+                { id: 'supermercado', label: 'Supermercado', icon: 'shopping-cart' },
+                { id: 'padaria', label: 'Padaria', icon: 'coffee' },
+                { id: 'restaurante', label: 'Restaurante', icon: 'utensils' },
+                { id: 'delivery', label: 'Delivery', icon: 'truck' },
+                { id: 'ifood', label: 'Apps de Comida', icon: 'smartphone' },
+
+                // TRANSPORTE
+                { id: 'combustivel', label: 'Combustível', icon: 'droplet' },
+                { id: 'uber', label: 'Uber / App', icon: 'car' },
                 { id: 'transporte_publico', label: 'Transporte Público', icon: 'bus' },
-                { id: 'uber_taxi', label: 'Uber / Táxi', icon: 'car' },
-                { id: 'manutencao_carro', label: 'Manutenção Veículo', icon: 'wrench' },
-                { id: 'seguro_ipva', label: 'Seguro / IPVA', icon: 'shield' },
-                { id: 'saude_plano', label: 'Plano de Saúde', icon: 'activity' },
+                { id: 'manutencao_carro', label: 'Manutenção Veículo', icon: 'tool' },
+                { id: 'seguro_veiculo', label: 'Seguro Veicular', icon: 'shield' },
+                { id: 'ipva', label: 'IPVA', icon: 'file' },
+                { id: 'estacionamento', label: 'Estacionamento', icon: 'square' },
+                { id: 'pedagio', label: 'Pedágio', icon: 'navigation' },
+
+                // SAÚDE
+                { id: 'plano_saude', label: 'Plano de Saúde', icon: 'heart' },
+                { id: 'consulta_medica', label: 'Consulta Médica', icon: 'stethoscope' },
+                { id: 'exames', label: 'Exames', icon: 'activity' },
                 { id: 'farmacia', label: 'Farmácia', icon: 'pill' },
-                { id: 'dentista_exames', label: 'Dentista / Exames', icon: 'heart-pulse' },
-                { id: 'escola_faculdade', label: 'Escola / Faculdade', icon: 'graduation-cap' },
-                { id: 'cursos_livros', label: 'Cursos / Livros', icon: 'book' },
-                { id: 'cinema_teatro', label: 'Cinema / Teatro', icon: 'film' },
-                { id: 'viagem_lazer', label: 'Viagens', icon: 'palmtree' },
-                { id: 'academia_esporte', label: 'Academia / Esporte', icon: 'dumbbell' },
-                { id: 'assinaturas_streaming', label: 'Netflix / Spotify / SaaS', icon: 'play' },
+                { id: 'terapia', label: 'Terapia', icon: 'brain' },
+                { id: 'academia', label: 'Academia', icon: 'dumbbell' },
+
+                // EDUCAÇÃO
+                { id: 'mensalidade', label: 'Mensalidade', icon: 'book' },
+                { id: 'curso_online', label: 'Curso Online', icon: 'monitor' },
+                { id: 'material_escolar', label: 'Material Escolar', icon: 'pen-tool' },
+                { id: 'livros', label: 'Livros', icon: 'book-open' },
+
+                // LAZER
+                { id: 'cinema', label: 'Cinema', icon: 'film' },
+                { id: 'streaming', label: 'Streaming', icon: 'tv' },
+                { id: 'viagem', label: 'Viagem', icon: 'plane' },
+                { id: 'hotel', label: 'Hotel', icon: 'map-pin' },
+                { id: 'bares', label: 'Bares', icon: 'beer' },
+                { id: 'shows', label: 'Shows / Eventos', icon: 'music' },
+
+                // FINANCEIRO
+                { id: 'cartao_credito', label: 'Fatura Cartão', icon: 'credit-card' },
+                { id: 'emprestimo', label: 'Empréstimo', icon: 'alert-triangle' },
+                { id: 'juros', label: 'Juros / Multas', icon: 'percent' },
+                { id: 'taxas_bancarias', label: 'Taxas Bancárias', icon: 'banknote' },
+                { id: 'impostos', label: 'Impostos', icon: 'file-text' },
+
+                // COMPRAS
                 { id: 'roupas', label: 'Roupas', icon: 'shopping-bag' },
                 { id: 'eletronicos', label: 'Eletrônicos', icon: 'cpu' },
                 { id: 'moveis', label: 'Móveis', icon: 'box' },
                 { id: 'presentes', label: 'Presentes Dados', icon: 'gift' },
+
+                // FAMILIAR
                 { id: 'filhos', label: 'Despesas com Filhos', icon: 'users' },
                 { id: 'pets', label: 'Pets', icon: 'heart' },
                 { id: 'pensao_paga', label: 'Pensão Paga', icon: 'user' },
+
+                // OUTROS
                 { id: 'imprevistos', label: 'Imprevistos', icon: 'alert-circle' },
                 { id: 'outros_gastos', label: 'Outros Gastos', icon: 'more-horizontal' }
             ],
-            savings: [
-                { id: 'reserva_emergencia', label: 'Reserva de Emergência', icon: 'shield-check' },
-                { id: 'fundo_viagem', label: 'Fundo de Viagem', icon: 'palmtree' },
-                { id: 'aposentadoria', label: 'Aposentadoria', icon: 'lock' },
-                { id: 'compra_imovel', label: 'Compra de Imóvel', icon: 'home' },
-                { id: 'compra_veiculo', label: 'Compra de Veículo', icon: 'car' },
-                { id: 'investimento_lp', label: 'Investimento Longo Prazo', icon: 'trending-up' },
-                { id: 'educacao_futura', label: 'Fundo de Educação', icon: 'graduation-cap' },
-                { id: 'outras_reservas', label: 'Outras Reservas', icon: 'plus-square' }
-            ]
-        };
+			
+			savings: [
+
+			{ id: 'reserva_emergencia', label: 'Reserva de Emergência', icon: 'shield-check' },
+			{ id: 'fundo_viagem', label: 'Fundo de Viagem', icon: 'palmtree' },
+			{ id: 'aposentadoria', label: 'Aposentadoria', icon: 'lock' },
+			{ id: 'compra_imovel', label: 'Compra de Imóvel', icon: 'home' },
+			{ id: 'compra_veiculo', label: 'Compra de Veículo', icon: 'car' },
+			{ id: 'educacao_futura', label: 'Educação Futura', icon: 'book' },
+			{ id: 'fundo_casamento', label: 'Casamento', icon: 'heart' },
+			{ id: 'fundo_filhos', label: 'Futuro dos Filhos', icon: 'users' },
+			{ id: 'meta_especifica', label: 'Meta Específica', icon: 'target' },
+			{ id: 'investimento_longo_prazo', label: 'Investimento LP', icon: 'trending-up' }
+		]
+	};
 
         const Storage = {
-            save: (data) => localStorage.setItem('rd_nasa_v18_final', JSON.stringify(data)),
-            get: () => JSON.parse(localStorage.getItem('rd_nasa_v18_final')) || []
+            save: (data) => localStorage.setItem('rd_nasa_v17_complete', JSON.stringify(data)),
+            get: () => JSON.parse(localStorage.getItem('rd_nasa_v17_complete')) || []
         };
 
         const Format = {
@@ -322,6 +403,10 @@
                 this.processRecurrence();
                 this.updateCalendar();
                 this.render();
+				
+				// CHAMADA CRÍTICA: Ativa a lógica PWA após o carregamento inicial
+				this.registerSW();
+				
                 lucide.createIcons();
             },
 
@@ -458,7 +543,6 @@
                 const spent = this.data.filter(t => t.type === 'expense').reduce((a, c) => a + c.amount, 0);
                 const saved = this.data.filter(t => t.type === 'savings').reduce((a, c) => a + c.amount, 0);
 
-                // Gráfico Radar: Perfil NASA
                 if (this.charts.radar) this.charts.radar.destroy();
                 this.charts.radar = new Chart(document.getElementById('radarChart'), {
                     type: 'radar',
@@ -466,7 +550,6 @@
                     options: { maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false } } }, plugins: { legend: { display: false } } }
                 });
 
-                // Gráfico de Alocação (Doughnut)
                 if (this.charts.cat) this.charts.cat.destroy();
                 const catData = this.data.filter(t => t.type === 'expense').reduce((acc, curr) => {
                     acc[curr.cat] = (acc[curr.cat] || 0) + curr.amount;
@@ -474,33 +557,27 @@
                 }, {});
                 this.charts.cat = new Chart(document.getElementById('categoryChart'), {
                     type: 'doughnut',
-                    data: { labels: Object.keys(catData).slice(0, 5), datasets: [{ data: Object.values(catData).slice(0, 5), backgroundColor: ['#0f172a', '#10b981', '#ef4444', '#f59e0b', '#6366f1'], borderWidth: 0 }] },
-                    options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { weight: 800, size: 9 } } } } }
+                    data: { labels: Object.keys(catData).slice(0, 5), datasets: [{ data: Object.values(catData).slice(0, 5), backgroundColor: ['#0f172a', '#10b981', '#ef4444', '#f59e0b', '#6366f1'] }] },
+                    options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
                 });
 
-                // Gráfico de Vetor de Fluxo (Barra Horizontal para simetria NASA)
                 if (this.charts.flow) this.charts.flow.destroy();
                 this.charts.flow = new Chart(document.getElementById('flowChart'), {
                     type: 'bar',
-                    data: { 
-                        labels: ['Ganhei', 'Gastei', 'Guardei'], 
-                        datasets: [{ 
-                            data: [gain, spent, saved], 
-                            backgroundColor: ['#10b981', '#ef4444', '#0f172a'],
-                            borderRadius: 6
-                        }] 
-                    },
-                    options: { 
-                        indexAxis: 'y', // TROCA PARA HORIZONTAL
-                        maintainAspectRatio: false, 
-                        scales: { 
-                            x: { display: false, grid: { display: false } }, 
-                            y: { grid: { display: false }, ticks: { font: { weight: 900, size: 10 } } } 
-                        }, 
-                        plugins: { legend: { display: false } } 
-                    }
+                    data: { labels: ['+', '-', '→'], datasets: [{ data: [gain, spent, saved], backgroundColor: ['#10b981', '#ef4444', '#0f172a'] }] },
+                    options: { maintainAspectRatio: false, scales: { y: { display: false } }, plugins: { legend: { display: false } } }
                 });
             },
+			
+			registerSW() {
+				if ('serviceWorker' in navigator) {
+					window.addEventListener('load', () => {
+						navigator.serviceWorker.register('./sw.js')
+							.then(reg => console.log('🚀 PWA: Ativo'))
+							.catch(err => console.error('❌ PWA: Falha', err));
+					});
+				}
+			},
 
             render() {
                 const gain = this.data.filter(t => t.type === 'income').reduce((a, c) => a + c.amount, 0);
@@ -522,6 +599,8 @@
                 const list = document.getElementById('transactions-list');
                 list.innerHTML = this.data.length > 0 ? this.data.map(t => {
                     const colors = { income: 'var(--primary)', expense: 'var(--error-red)', savings: 'var(--black)' };
+                    
+                    // Lógica para encontrar o ícone correto baseado na categoria
                     const categoryObj = FinanceCategories[t.type].find(c => c.label === t.cat);
                     const lucideIcon = categoryObj ? categoryObj.icon : 'activity';
 
