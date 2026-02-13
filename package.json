@@ -1,1 +1,7 @@
 
+{
+  "name": "rico-dinheirinho",
+  "version": "1.0.0",
+  "description": "Gestão financeira inteligente com PWA",
+  "private": true
+}
