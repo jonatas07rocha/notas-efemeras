@@ -367,18 +367,18 @@
 			
 			savings: [
 
-			{ id: 'reserva_emergencia', label: 'Reserva de Emergência', icon: 'shield-check' },
-			{ id: 'fundo_viagem', label: 'Fundo de Viagem', icon: 'palmtree' },
-			{ id: 'aposentadoria', label: 'Aposentadoria', icon: 'lock' },
-			{ id: 'compra_imovel', label: 'Compra de Imóvel', icon: 'home' },
-			{ id: 'compra_veiculo', label: 'Compra de Veículo', icon: 'car' },
-			{ id: 'educacao_futura', label: 'Educação Futura', icon: 'book' },
-			{ id: 'fundo_casamento', label: 'Casamento', icon: 'heart' },
-			{ id: 'fundo_filhos', label: 'Futuro dos Filhos', icon: 'users' },
-			{ id: 'meta_especifica', label: 'Meta Específica', icon: 'target' },
-			{ id: 'investimento_longo_prazo', label: 'Investimento LP', icon: 'trending-up' }
-		]
-	};
+				{ id: 'reserva_emergencia', label: 'Reserva de Emergência', icon: 'shield-check' },
+				{ id: 'fundo_viagem', label: 'Fundo de Viagem', icon: 'palmtree' },
+				{ id: 'aposentadoria', label: 'Aposentadoria', icon: 'lock' },
+				{ id: 'compra_imovel', label: 'Compra de Imóvel', icon: 'home' },
+				{ id: 'compra_veiculo', label: 'Compra de Veículo', icon: 'car' },
+				{ id: 'educacao_futura', label: 'Educação Futura', icon: 'book' },
+				{ id: 'fundo_casamento', label: 'Casamento', icon: 'heart' },
+				{ id: 'fundo_filhos', label: 'Futuro dos Filhos', icon: 'users' },
+				{ id: 'meta_especifica', label: 'Meta Específica', icon: 'target' },
+				{ id: 'investimento_longo_prazo', label: 'Investimento LP', icon: 'trending-up' }
+			]
+		};
 
         const Storage = {
             save: (data) => localStorage.setItem('rd_nasa_v17_complete', JSON.stringify(data)),
@@ -487,7 +487,7 @@
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display:block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">CATEGORIA</label>
                             <select id="f-cat" style="width:100%; padding: 1rem; border-radius:12px; border:none; background:#f1f5f9; font-weight: 700; outline: none;">
-                                ${cats.map(c => `<option value="${c.label}" ${existing && existing.cat === c.label ? 'selected' : ''}>${c.label}</option>`).join('')}
+                                ${cats.map(c => `<option value="${c.id}" ${existing && existing.cat === c.id ? 'selected' : ''}>${c.label}</option>`).join('')}
                             </select>
                         </div>
                         <div style="margin-bottom: 1.5rem;">
@@ -601,8 +601,10 @@
                     const colors = { income: 'var(--primary)', expense: 'var(--error-red)', savings: 'var(--black)' };
                     
                     // Lógica para encontrar o ícone correto baseado na categoria
-                    const categoryObj = FinanceCategories[t.type].find(c => c.label === t.cat);
-                    const lucideIcon = categoryObj ? categoryObj.icon : 'activity';
+                    const categoryObj = FinanceCategories[t.type].find(c => c.id === t.cat);
+					const lucideIcon = categoryObj ? categoryObj.icon : 'activity';
+					const categoryLabel = categoryObj ? categoryObj.label : t.cat;
+
 
                     return `
                         <div class="transaction-row" onclick="App.editTransaction(${t.id})">
@@ -615,7 +617,7 @@
                                         ${t.desc} 
                                         ${t.isRecurring ? '<i data-lucide="refresh-cw" size="12" style="margin-left:5px; opacity:0.5"></i>' : ''}
                                     </p>
-                                    <small style="color:var(--text-muted); font-weight:700;">${Format.date(t.date)} • ${t.cat}</small>
+                                    <small style="color:var(--text-muted); font-weight:700;">${Format.date(t.date)} • ${categoryLabel}</small>
                                 </div>
                             </div>
                             <span style="font-weight:900; color:${colors[t.type]}">${t.type === 'income' ? '+' : t.type === 'expense' ? '-' : '→'} ${Format.currency(t.amount)}</span>
