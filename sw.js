@@ -3,7 +3,7 @@
  * Responsável pelo cache de arquivos e funcionamento offline.
  */
 
-const CACHE_NAME = 'rico-dinheirinho-v1';
+const CACHE_NAME = 'rico-dinheirinho-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
